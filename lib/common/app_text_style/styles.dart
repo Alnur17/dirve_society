@@ -57,7 +57,7 @@ final subTitleStyle = GoogleFonts.roboto(
   fontSize: 14,
 );
 final appBarStyle = GoogleFonts.roboto(
-  color: AppColors.white,
+  color: AppColors.black,
   fontWeight: FontWeight.w700,
   fontSize: 20,
 );

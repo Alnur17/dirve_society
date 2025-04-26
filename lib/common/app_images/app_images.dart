@@ -12,16 +12,21 @@ class AppImages {
   static const checkBoxFilledSquare = "assets/icons/checkbox filled square.png";
   static const eyeClose = "assets/icons/eye close.png";
   static const message = "assets/icons/message.png";
-  static const person = "assets/icons/User_light.png";
+  static const person = "assets/icons/person.png";
+  static const personRed = "assets/icons/person red.png";
+  static const marketPlace = "assets/icons/market place.png";
+  static const marketPlaceRed = "assets/icons/marketplace red.png";
   static const personFilled = "assets/icons/User_fill.png";
   static const home = "assets/icons/home.png";
-  static const homeFilled = "assets/icons/Home_fill.png";
+  static const homeRed = "assets/icons/home red.png";
   static const order = "assets/icons/Order.png";
   static const orderTwo = "assets/icons/order 2.png";
   static const chatTwo = "assets/icons/chat 2.png";
-  static const chatThree = "assets/icons/Chat 3.png";
-  static const chat = "assets/icons/Chat_alt_light.png";
-  static const chatRound = "assets/icons/chat round.png";
+  static const addGroup = "assets/icons/add group.png";
+  static const wheelIcon = "assets/icons/wheel icon.png";
+  static const steeringWheel = "assets/icons/steering wheel.png";
+  static const chat = "assets/icons/chat.png";
+  static const chatRed = "assets/icons/chat red.png";
   static const chatFilled = "assets/icons/Chat_alt_fill.png";
   static const basket = "assets/icons/Basket_alt_3.png";
   static const basketFilled = "assets/icons/Basket_alt_3_fill.png";
@@ -43,7 +48,8 @@ class AppImages {
   static const addRound = "assets/icons/add round.png";
   static const minusRound = "assets/icons/minus_round.png";
   static const minus = "assets/icons/minus.png";
-  static const locationFilled = "assets/icons/location filled.png";
+  static const location = "assets/icons/location.png";
+  static const locationRed = "assets/icons/location red.png";
   static const locationRound = "assets/icons/location round.png";
   static const locationRoundTwo = "assets/icons/location round 2.png";
   static const favorite = "assets/icons/Favorite.png";
@@ -64,11 +70,13 @@ class AppImages {
   static const call = "assets/icons/call.png";
   static const callRound = "assets/icons/call round.png";
   static const close = "assets/icons/close.png";
+  static const groupLight = "assets/icons/group light.png";
+  static const public = "assets/icons/public.png";
 
   static const starCard = "assets/icons/star card.png";
   static const starCardTwo = "assets/icons/star card 2.png";
   static const starFilled = "assets/icons/star filled.png";
-  static const threeDot = "assets/icons/three dot.png";
+  static const menu = "assets/icons/menu.png";
   static const pause = "assets/icons/pause.png";
   static const play = "assets/icons/play.png";
   static const unMute = "assets/icons/unmute.png";
@@ -97,6 +105,11 @@ class AppImages {
   static const homePromo = "assets/images/home promo image.png";
   static const storeImage = 'assets/images/store image.png';
   static const productImage = 'assets/images/product image.jpg';
+  static const carImage = 'assets/images/car image 1.jpg';
+  static const carImageTwo = 'assets/images/car image 2.jpg';
+  static const carImageThree = 'assets/images/car image 3.jpg';
+  static const carImageFour = 'assets/images/car image 4.jpg';
+  static const carImageFive = 'assets/images/car image 5.jpg';
 
   static const onboardingBackTwo = "assets/images/onboarding background 2.png";
   static const authFlower = "assets/images/auth flower.png";

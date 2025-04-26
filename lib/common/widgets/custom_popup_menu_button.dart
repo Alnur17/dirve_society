@@ -16,7 +16,7 @@ class CustomPopupMenuButton extends StatelessWidget {
     return PopupMenuButton<String>(
       color: AppColors.black,
       icon: Image.asset(
-        AppImages.threeDot,
+        AppImages.menu,
         scale: 4,
       ),
       onSelected: (value) {
