@@ -1,3 +1,6 @@
+import 'package:dirve_society/common/app_color/app_colors.dart';
+import 'package:dirve_society/common/app_images/app_images.dart';
+import 'package:dirve_society/common/size_box/custom_sizebox.dart';
 import 'package:flutter/material.dart';
 
 import '../app_text_style/styles.dart';
@@ -6,12 +9,12 @@ class CustomRowHeader extends StatelessWidget {
   const CustomRowHeader({
     super.key,
     required this.title,
-    required this.subtitle,
+   // required this.subtitle,
     required this.onTap,
   });
 
   final String title;
-  final Widget subtitle;
+  //final Widget subtitle;
   final VoidCallback onTap;
 
   @override
@@ -21,11 +24,17 @@ class CustomRowHeader extends StatelessWidget {
       children: [
         Text(
           title,
-          style: h4.copyWith(fontWeight: FontWeight.bold),
+          style: h3,
         ),
         GestureDetector(
           onTap: onTap,
-          child: subtitle,
+          child: Row(
+            children: [
+              Text('See All',style: h6.copyWith(color: AppColors.darkRed),),
+              sw5,
+              Image.asset(AppImages.arrowRight,scale: 4,color: AppColors.darkRed,)
+            ],
+          ),
         ),
       ],
     );

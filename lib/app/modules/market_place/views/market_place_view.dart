@@ -1,4 +1,5 @@
-import 'package:dirve_society/common/app_images/app_images.dart';
+import 'package:dirve_society/app/data/dummy_data.dart';
+import 'package:dirve_society/app/modules/market_place/views/listing_details_view.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:dirve_society/common/widgets/search_filed.dart';
 import 'package:flutter/material.dart';
@@ -6,50 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../common/app_color/app_colors.dart';
+import '../../../../common/helper/market_place_widget.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../controllers/market_place_controller.dart';
 
 class MarketPlaceView extends GetView<MarketPlaceController> {
-  MarketPlaceView({super.key});
-
-  final List<Map<String, String>> cars = [
-    {
-      'name': 'Nissan R35 GTR',
-      'price': '£500,000',
-      'date': 'April 4',
-      'image': AppImages.carImageFive
-    },
-    {
-      'name': 'Nissan R35 GTR',
-      'price': '£500,000',
-      'date': 'April 4',
-      'image': AppImages.carImageThree
-    },
-    {
-      'name': 'Nissan R35 GTR',
-      'price': '£500,000',
-      'date': 'April 4',
-      'image': AppImages.carImageTwo
-    },
-    {
-      'name': 'Nissan R35 GTR',
-      'price': '£500,000',
-      'date': 'April 4',
-      'image': AppImages.carImageFour
-    },
-    {
-      'name': 'Nissan R35 GTR',
-      'price': '£500,000',
-      'date': 'April 4',
-      'image': AppImages.carImageFour
-    },
-    {
-      'name': 'Nissan R35 GTR',
-      'price': '£500,000',
-      'date': 'April 4',
-      'image': AppImages.carImageFour
-    },
-  ];
+  const MarketPlaceView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +33,6 @@ class MarketPlaceView extends GetView<MarketPlaceController> {
           children: [
             SearchFiled(
               onChanged: (value) {},
-
             ),
             sh16,
             Expanded(
@@ -82,15 +44,15 @@ class MarketPlaceView extends GetView<MarketPlaceController> {
                   mainAxisSpacing: 16,
                   mainAxisExtent: 250
                 ),
-                itemCount: cars.length,
+                itemCount: DummyData.cars.length,
                 itemBuilder: (context, index) {
-                  return CarCard(
-                    name: cars[index]['name']!,
-                    price: cars[index]['price']!,
-                    date: cars[index]['date']!,
-                    imageUrl: cars[index]['image']!,
+                  return MarketPlaceWidget(
+                    name: DummyData.cars[index]['name']!,
+                    price: DummyData.cars[index]['price']!,
+                    date: DummyData.cars[index]['date']!,
+                    imageUrl: DummyData.cars[index]['image']!,
                     onTap: () {
-                      print('object');
+                      Get.to(()=> ListingDetailsView());
                     },
                   );
                 },
@@ -103,103 +65,3 @@ class MarketPlaceView extends GetView<MarketPlaceController> {
   }
 }
 
-class CarCard extends StatelessWidget {
-  final String name;
-  final String price;
-  final String date;
-  final String imageUrl;
-  final VoidCallback onTap;
-
-  const CarCard({
-    super.key,
-    required this.name,
-    required this.price,
-    required this.date,
-    required this.imageUrl,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            // Background image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                imageUrl,
-                height: double.infinity,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            // Text content overlay
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(8),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          price,
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          date,
-                          style: TextStyle(
-                            color: Colors.grey[300],
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

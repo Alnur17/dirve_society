@@ -11,6 +11,7 @@ abstract class Routes {
   static const DASHBOARD = _Paths.DASHBOARD;
   static const CHAT = _Paths.CHAT;
   static const MARKET_PLACE = _Paths.MARKET_PLACE;
+  static const CLUB = _Paths.CLUB;
 }
 
 abstract class _Paths {
@@ -23,4 +24,5 @@ abstract class _Paths {
   static const DASHBOARD = '/dashboard';
   static const CHAT = '/chat';
   static const MARKET_PLACE = '/market-place';
+  static const CLUB = '/club';
 }

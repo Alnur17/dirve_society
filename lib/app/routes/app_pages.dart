@@ -10,6 +10,8 @@ import '../modules/auth/splash/bindings/splash_binding.dart';
 import '../modules/auth/splash/views/splash_view.dart';
 import '../modules/chat/bindings/chat_binding.dart';
 import '../modules/chat/views/chat_view.dart';
+import '../modules/club/bindings/club_binding.dart';
+import '../modules/club/views/club_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -64,6 +66,11 @@ class AppPages {
       name: _Paths.MARKET_PLACE,
       page: () => MarketPlaceView(),
       binding: MarketPlaceBinding(),
+    ),
+    GetPage(
+      name: _Paths.CLUB,
+      page: () => const ClubView(),
+      binding: ClubBinding(),
     ),
   ];
 }

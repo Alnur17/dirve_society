@@ -7,15 +7,7 @@ import 'package:get/get.dart';
 import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../../../common/widgets/custom_circular_container.dart';
-
-// Controller to manage tab state
-class ConnectController extends GetxController {
-  var isUsersSelected = true.obs; // true for Users, false for Groups
-
-  void toggleTab() {
-    isUsersSelected.value = !isUsersSelected.value;
-  }
-}
+import '../controllers/connect_controller.dart';
 
 class ConnectView extends StatefulWidget {
   const ConnectView({super.key});
@@ -51,8 +43,9 @@ class _ConnectViewState extends State<ConnectView> {
         children: [
           Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            padding: EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: AppColors.silver,
               borderRadius: BorderRadius.circular(25),
             ),
             child: Row(

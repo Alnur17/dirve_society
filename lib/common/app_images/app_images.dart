@@ -24,6 +24,7 @@ class AppImages {
   static const chatTwo = "assets/icons/chat 2.png";
   static const addGroup = "assets/icons/add group.png";
   static const wheelIcon = "assets/icons/wheel icon.png";
+  static const wheelIconRed = "assets/icons/wheel icon red.png";
   static const steeringWheel = "assets/icons/steering wheel.png";
   static const chat = "assets/icons/chat.png";
   static const chatRed = "assets/icons/chat red.png";
@@ -35,6 +36,8 @@ class AppImages {
   static const language = "assets/icons/world.png";
   static const languageTwo = "assets/icons/language 2.png";
   static const back = "assets/icons/back.png";
+  static const like = "assets/icons/like.png";
+  static const unLike = "assets/icons/unlike.png";
   static const facebook = "assets/icons/facebook.png";
   static const google = "assets/icons/google.png";
   static const apple = "assets/icons/apple.png";
@@ -45,6 +48,7 @@ class AppImages {
   static const edit = "assets/icons/Edit.png";
   static const editRound = "assets/icons/edit round.png";
   static const add = "assets/icons/add.png";
+  static const invite = "assets/icons/invite.png";
   static const addRound = "assets/icons/add round.png";
   static const minusRound = "assets/icons/minus_round.png";
   static const minus = "assets/icons/minus.png";
@@ -54,7 +58,10 @@ class AppImages {
   static const locationRoundTwo = "assets/icons/location round 2.png";
   static const favorite = "assets/icons/Favorite.png";
   static const share = "assets/icons/share.png";
-  static const star = "assets/icons/stars.png";
+  static const stars = "assets/icons/stars.png";
+  static const fuel = "assets/icons/fuel station.png";
+  static const mileage = "assets/icons/mileage.png";
+  static const transmission = "assets/icons/transmission.png";
   static const upload = "assets/icons/upload.png";
   static const send = "assets/icons/send.png";
   static const attachFile = "assets/icons/attach file.png";
@@ -110,6 +117,7 @@ class AppImages {
   static const carImageThree = 'assets/images/car image 3.jpg';
   static const carImageFour = 'assets/images/car image 4.jpg';
   static const carImageFive = 'assets/images/car image 5.jpg';
+  static const coverImage = 'assets/images/cover image.png';
 
   static const onboardingBackTwo = "assets/images/onboarding background 2.png";
   static const authFlower = "assets/images/auth flower.png";
