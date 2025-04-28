@@ -64,4 +64,28 @@ class DummyData {
      'image': AppImages.carImageFour
    },
  ];
+
+ static final List<Map<String, dynamic>> carRatings = [
+   {
+     'image': AppImages.carImage,
+     'name': 'BMW M4',
+     'rating': 4.8,
+     'description': 'Nam posuere elit a facilisis hendrerit. sajhdjkdhf jsbdjsba djsabjdbak dbajsdjba  ajksbdbas a bsjbdjba dajksbndjbasda ajsbdjb  jb',
+   },
+   {
+     'image': AppImages.carImageTwo,
+     'name': 'Porsche 911',
+     'rating': 4.5,
+     'description': 'Phasellus cursus nisi vel tempor gravida.',
+   },
+   {
+     'image': AppImages.carImageThree,
+     'name': 'Audi R8',
+     'rating': 4.7,
+     'description': 'Vivamus sollicitudin a nisi eu aliquam.',
+   },
+ ];
+
+
+
 }

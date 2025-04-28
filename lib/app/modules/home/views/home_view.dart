@@ -1,6 +1,8 @@
+import 'package:dirve_society/app/data/dummy_data.dart';
 import 'package:dirve_society/app/modules/chat/views/chat_view.dart';
 import 'package:dirve_society/app/modules/home/views/connect_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
@@ -144,57 +146,131 @@ class TabbedFeed extends GetView<HomeController> {
             ),
           ),
         ),
-        // Horizontal List of Cars
-        SizedBox(
-          height: 80.0,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 10,
-            itemBuilder: (context, index) => Padding(
-              padding: EdgeInsets.only(
-                left: index == 0 ? 20 : 0,
-                right: index == 10 - 1 ? 20 : 8,
-              ),
-              child: StoryWidget(
-                image: AppImages.carImage,
-              ),
-            ),
-          ),
-        ),
         Expanded(
           child: Obx(
             () => controller.isFeedSelected.value
-                ? ListView.builder(
-                    padding: EdgeInsets.only(bottom: 30),
-                    itemCount: 10,
-                    itemBuilder: (context, index) => PostCard(
-                      clubName: 'MC20 Owners CLUB',
-                      userName: 'John Doe',
-                      postImages: [
-                        AppImages.carImage,
-                        AppImages.carImageThree,
-                        AppImages.carImageTwo,
-                      ],
-                      description:
-                          'Nam posuere elit a facilisis hendrerit. Phasellus cursus nisi vel tempor gravida. Vivamus sollicitudin a nisi eu aliquam aliqu...',
-                      hashtags: '#Blessed #MC20',
-                      date: 'April 4',
-                      likes: 100,
-                      comments: 100,
-                      onProfileTap: () {},
-                      onMenuTap: () {},
-                      onLikeTap: () {},
-                      onCommentTap: () {},
-                      onBookmarkTap: () {},
-                    ),
-                  )
-                : Center(
-                    child: Text(
-                      'Car Rating View',
-                      style: TextStyle(
-                        color: AppColors.black,
-                        fontSize: 20,
+                ? Column(
+                    children: [
+                      SizedBox(
+                        height: 80.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 10,
+                          itemBuilder: (context, index) => Padding(
+                            padding: EdgeInsets.only(
+                              left: index == 0 ? 20 : 0,
+                              right: index == 10 - 1 ? 20 : 8,
+                            ),
+                            child: StoryWidget(
+                              image: AppImages.carImage,
+                            ),
+                          ),
+                        ),
                       ),
+                      sh12,
+                      Expanded(
+                        child: ListView.builder(
+                          padding: EdgeInsets.only(bottom: 30),
+                          itemCount: 10,
+                          itemBuilder: (context, index) => PostCard(
+                            clubName: 'MC20 Owners CLUB',
+                            userName: 'John Doe',
+                            postImages: [
+                              AppImages.carImage,
+                              AppImages.carImageThree,
+                              AppImages.carImageTwo,
+                            ],
+                            description:
+                                'Nam posuere elit a facilisis hendrerit. Phasellus cursus nisi vel tempor gravida. Vivamus sollicitudin a nisi eu aliquam aliqu...',
+                            hashtags: '#Blessed #MC20',
+                            date: 'April 4',
+                            likes: 100,
+                            comments: 100,
+                            onProfileTap: () {},
+                            onMenuTap: () {},
+                            onLikeTap: () {},
+                            onCommentTap: () {},
+                            onBookmarkTap: () {},
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : CardSwiper(
+                    cardsCount: DummyData.carRatings.length,
+                    cardBuilder: (context, index, x, y) {
+                      final car = DummyData.carRatings[index];
+                      return Card(
+                        elevation: 4,
+                        //margin: EdgeInsets.symmetric(vertical: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.asset(
+                                car['image'],
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 16,
+                              left: 16,
+                              right: 16,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 25,
+                                    backgroundImage: AssetImage(
+                                      AppImages.carImageFive,
+                                    ),
+                                  ),
+                                  sw5,
+                                  Expanded(
+                                    child: Text(
+                                      car['description'],
+                                      style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 14,
+                                        shadows: [
+                                          Shadow(
+                                            color: AppColors.black,
+                                            offset: Offset(1, 1),
+                                            blurRadius: 2,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  sw12,
+                                  Image.asset(
+                                    AppImages.chatRed,
+                                    scale: 4,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    onSwipe: (previousIndex, currentIndex, direction) {
+                      print('Swiped card $previousIndex to $direction');
+                      return true;
+                    },
+                    allowedSwipeDirection: AllowedSwipeDirection.symmetric(
+                      horizontal: true,
+                    ),
+                    padding: EdgeInsets.only(
+                      bottom: 35,
+                      left: 20,
+                      right: 20,
+                      top: 8,
                     ),
                   ),
           ),

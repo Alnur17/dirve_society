@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:readmore/readmore.dart';
 
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
@@ -48,40 +49,22 @@ class MyPostView extends GetView {
                       )),
                 ),
               ),
-              // Positioned(
-              //   right: 20,
-              //   top: 40,
-              //   child: GestureDetector(
-              //     onTap: () {},
-              //     child: Container(
-              //       padding: EdgeInsets.all(8),
-              //       decoration: ShapeDecoration(
-              //         shape: CircleBorder(),
-              //         color: AppColors.black.withOpacity(0.3),
-              //       ),
-              //       child: Image.asset(
-              //         AppImages.menu,
-              //         scale: 4,
-              //         color: AppColors.white,
-              //       ),
-              //     ),
-              //   ),
-              // ),
               Positioned(
-                bottom: -50,
+                bottom: -25,
                 left: 20,
                 child: CircleAvatar(
-                  radius: 50,
+                  radius: 45,
                   backgroundColor: AppColors.white,
                   backgroundImage: AssetImage(AppImages.carImageFive),
                 ),
               ),
               Positioned(
                 right: 20,
-                left: Get.width * 0.365,
-                bottom: -80,
-                child: Column(
+                left: Get.width * 0.32,
+                bottom: 0,
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'Nissan R35 GTR',
@@ -90,68 +73,85 @@ class MyPostView extends GetView {
                         color: AppColors.darkRed,
                       ),
                     ),
-                    sh5,
+                    sw8,
                     Row(
                       children: [
                         Icon(
                           Icons.star,
-                          size: 20,
+                          size: 22,
                           color: AppColors.darkRed,
                         ),
                         sw5,
                         Text(
                           '4.7',
-                          style: h6,
+                          style: h3.copyWith(
+                            color: AppColors.darkRed,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
-                    sh5,
-                    Text(
-                      '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
-                      style: h6,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    )
-                    // ReadMoreText(
+                    //sh5,
+                    // Text(
                     //   '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
-                    //   trimLines: 2,
-                    //   trimMode: TrimMode.Line,
-                    //   trimCollapsedText: 'Show More',
-                    //   trimExpandedText: ' Show Less',
                     //   style: h6,
-                    //   moreStyle: h6.copyWith(
-                    //     color: AppColors.grey,
-                    //     fontWeight: FontWeight.w600,
-                    //   ),
-                    //   lessStyle: h6.copyWith(
-                    //     color: AppColors.grey,
-                    //     fontWeight: FontWeight.w600,
-                    //   ),
-                    // ),
+                    //   maxLines: 3,
+                    //   overflow: TextOverflow.ellipsis,
+                    // )
                   ],
-                ),
-              ),
-              Positioned(
-                left: 20,
-                bottom: -60,
-                right: Get.width * 0.67,
-                child: Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.orange[600],
-                  ),
-                  child: Center(
-                    child: Text(
-                      '190 Points',
-                      style: h6,
-                    ),
-                  ),
                 ),
               ),
             ],
           ),
-          sh87,
+          sh40,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Descriptions',
+                      style: h5.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.orange[600],
+                      ),
+                      child: Center(
+                        child: Text(
+                          '190 Points',
+                          style: h6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                sh5,
+                ReadMoreText(
+                  '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
+                  trimLines: 2,
+                  trimMode: TrimMode.Line,
+                  trimCollapsedText: 'Show More',
+                  trimExpandedText: ' Show Less',
+                  style: h6,
+                  moreStyle: h6.copyWith(
+                    color: AppColors.grey,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  lessStyle: h6.copyWith(
+                    color: AppColors.grey,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          sh20,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(

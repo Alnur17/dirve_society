@@ -51,19 +51,19 @@ class EditProfileDetailsView extends GetView {
                 ),
               ),
               Positioned(
-                bottom: -50,
+                bottom: -25,
                 left: 20,
                 child: CircleAvatar(
-                  radius: 50,
+                  radius: 45,
                   backgroundColor: AppColors.white,
                   backgroundImage: AssetImage(AppImages.carImageFive),
                 ),
               ),
               Positioned(
-                bottom: 0,
-                left: 100,
+                bottom: -10,
+                left: 90,
                 child: Container(
-                  padding: EdgeInsets.all(4),
+                  padding: EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: AppColors.darkRed,
@@ -76,8 +76,7 @@ class EditProfileDetailsView extends GetView {
               ),
             ],
           ),
-          sh12,
-          sh60, // Kept for spacing after profile section
+          sh40,
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
