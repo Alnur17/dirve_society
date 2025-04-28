@@ -78,7 +78,7 @@ class ClubView extends GetView<ClubController> {
                     ],
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.15),
+                SizedBox(height: screenHeight * 0.13),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20,),
                   child: Row(

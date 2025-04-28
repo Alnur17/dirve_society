@@ -23,6 +23,7 @@ class AppImages {
   static const orderTwo = "assets/icons/order 2.png";
   static const chatTwo = "assets/icons/chat 2.png";
   static const addGroup = "assets/icons/add group.png";
+  static const addCircle = "assets/icons/add circle.png";
   static const wheelIcon = "assets/icons/wheel icon.png";
   static const wheelIconRed = "assets/icons/wheel icon red.png";
   static const steeringWheel = "assets/icons/steering wheel.png";
@@ -45,7 +46,7 @@ class AppImages {
   static const bookmarkSmall = "assets/icons/bookmark-small.png";
   static const delete = "assets/icons/delete.png";
   static const deleteTwo = "assets/icons/delete 2.png";
-  static const edit = "assets/icons/Edit.png";
+  static const edit = "assets/icons/edit.png";
   static const editRound = "assets/icons/edit round.png";
   static const add = "assets/icons/add.png";
   static const invite = "assets/icons/invite.png";
@@ -67,11 +68,13 @@ class AppImages {
   static const attachFile = "assets/icons/attach file.png";
   static const account = "assets/icons/account.png";
   static const aboutUs = "assets/icons/about us.png";
-  static const helpCenter = "assets/icons/help center.png";
+  static const termsAndConditions = "assets/icons/terms and conditions.png";
   static const myOrder = "assets/icons/my order.png";
   static const notification = "assets/icons/notification.png";
   static const payment = "assets/icons/payment.png";
-  static const policy = "assets/icons/policy.png";
+  static const privacy = "assets/icons/privacy.png";
+  static const garage = "assets/icons/garage.png";
+  static const keyLight = "assets/icons/key light.png";
   static const logout = "assets/icons/logout.png";
   static const filter = "assets/icons/Filter_big.png";
   static const call = "assets/icons/call.png";

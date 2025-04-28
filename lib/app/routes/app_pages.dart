@@ -18,6 +18,10 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/market_place/bindings/market_place_binding.dart';
 import '../modules/market_place/views/market_place_view.dart';
+import '../modules/meets/bindings/meets_binding.dart';
+import '../modules/meets/views/meets_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
 
 part 'app_routes.dart';
 
@@ -71,6 +75,16 @@ class AppPages {
       name: _Paths.CLUB,
       page: () => const ClubView(),
       binding: ClubBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.MEETS,
+      page: () => const MeetsView(),
+      binding: MeetsBinding(),
     ),
   ];
 }

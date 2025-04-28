@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class MarketPlaceWidget extends StatelessWidget {
   final String name;
   final String price;
@@ -51,6 +52,26 @@ class MarketPlaceWidget extends StatelessWidget {
               ),
             ),
             // Text content overlay
+            // Container(
+            //   padding: EdgeInsets.symmetric(
+            //     horizontal: 8,
+            //     vertical: 4,
+            //   ),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.only(
+            //       topRight: Radius.circular(8),
+            //       topLeft: Radius.circular(8),
+            //       bottomRight: Radius.circular(8),
+            //     ),
+            //     color: AppColors.darkRed,
+            //   ),
+            //   child: Text(
+            //     'For Sale',
+            //     style: h7.copyWith(
+            //       color: AppColors.white,
+            //     ),
+            //   ),
+            // ),
             Positioned(
               bottom: 0,
               left: 0,

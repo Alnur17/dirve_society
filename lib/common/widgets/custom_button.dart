@@ -13,6 +13,7 @@ class CustomButton extends StatelessWidget {
   final double? width;
   final String? imageAssetPath;
   final double? borderRadius;
+  final Color? iconColor;
 
   const CustomButton({
     super.key,
@@ -25,7 +26,7 @@ class CustomButton extends StatelessWidget {
     this.width = double.infinity,
     this.borderColor,
     this.imageAssetPath,
-    this.borderRadius = 40,
+    this.borderRadius = 40,this.iconColor,
   });
 
   @override
@@ -51,6 +52,7 @@ class CustomButton extends StatelessWidget {
                   child: Image.asset(
                     imageAssetPath!,
                     scale: 4,
+                    color: iconColor,
                   ),
                 ),
               ],

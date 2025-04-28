@@ -12,6 +12,8 @@ abstract class Routes {
   static const CHAT = _Paths.CHAT;
   static const MARKET_PLACE = _Paths.MARKET_PLACE;
   static const CLUB = _Paths.CLUB;
+  static const PROFILE = _Paths.PROFILE;
+  static const MEETS = _Paths.MEETS;
 }
 
 abstract class _Paths {
@@ -25,4 +27,6 @@ abstract class _Paths {
   static const CHAT = '/chat';
   static const MARKET_PLACE = '/market-place';
   static const CLUB = '/club';
+  static const PROFILE = '/profile';
+  static const MEETS = '/meets';
 }

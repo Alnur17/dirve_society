@@ -2,6 +2,8 @@ import 'package:dirve_society/app/modules/club/views/club_view.dart';
 import 'package:dirve_society/app/modules/dashboard/controllers/dashboard_controller.dart';
 import 'package:dirve_society/app/modules/dashboard/views/widget/bottom_nav_item.dart';
 import 'package:dirve_society/app/modules/market_place/views/market_place_view.dart';
+import 'package:dirve_society/app/modules/meets/views/meets_view.dart';
+import 'package:dirve_society/app/modules/profile/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
@@ -16,24 +18,21 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  final DashboardController dashboardController =
+      Get.put(DashboardController());
 
-  final DashboardController dashboardController = Get.put(DashboardController());
-
-  final List<Widget> _screens = [
-    const HomeView(),
-    Container(
-      color: AppColors.red,
-    ),
+  final List<Widget> _screens = const [
+    HomeView(),
+    MeetsView(),
     MarketPlaceView(),
-    Container(
-      color: AppColors.blue,
-    ),
+    ProfileView(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(() => _screens[dashboardController.selectedIndex.value]), // Reactive body
+      body: Obx(() => _screens[dashboardController.selectedIndex.value]),
+      // Reactive body
       bottomNavigationBar: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -49,39 +48,43 @@ class _DashboardViewState extends State<DashboardView> {
                   GestureDetector(
                     onTap: () => dashboardController.changeTabIndex(0),
                     child: Obx(() => NavBarItem(
-                      selectedIcon: AppImages.homeRed,
-                      unselectedIcon: AppImages.home,
-                      label: "Home",
-                      isSelected: dashboardController.selectedIndex.value == 0,
-                    )),
+                          selectedIcon: AppImages.homeRed,
+                          unselectedIcon: AppImages.home,
+                          label: "Home",
+                          isSelected:
+                              dashboardController.selectedIndex.value == 0,
+                        )),
                   ),
                   GestureDetector(
                     onTap: () => dashboardController.changeTabIndex(1),
                     child: Obx(() => NavBarItem(
-                      selectedIcon: AppImages.locationRed,
-                      unselectedIcon: AppImages.location,
-                      label: "   Meets   ",
-                      isSelected: dashboardController.selectedIndex.value == 1,
-                    )),
+                          selectedIcon: AppImages.locationRed,
+                          unselectedIcon: AppImages.location,
+                          label: "   Meets   ",
+                          isSelected:
+                              dashboardController.selectedIndex.value == 1,
+                        )),
                   ),
                   SizedBox(width: Get.width * 0.10),
                   GestureDetector(
                     onTap: () => dashboardController.changeTabIndex(2),
                     child: Obx(() => NavBarItem(
-                      selectedIcon: AppImages.marketPlaceRed,
-                      unselectedIcon: AppImages.marketPlace,
-                      label: "Market Place",
-                      isSelected: dashboardController.selectedIndex.value == 2,
-                    )),
+                          selectedIcon: AppImages.marketPlaceRed,
+                          unselectedIcon: AppImages.marketPlace,
+                          label: "Market Place",
+                          isSelected:
+                              dashboardController.selectedIndex.value == 2,
+                        )),
                   ),
                   GestureDetector(
                     onTap: () => dashboardController.changeTabIndex(3),
                     child: Obx(() => NavBarItem(
-                      selectedIcon: AppImages.personRed,
-                      unselectedIcon: AppImages.person,
-                      label: "Profile",
-                      isSelected: dashboardController.selectedIndex.value == 3,
-                    )),
+                          selectedIcon: AppImages.personRed,
+                          unselectedIcon: AppImages.person,
+                          label: "Profile",
+                          isSelected:
+                              dashboardController.selectedIndex.value == 3,
+                        )),
                   ),
                 ],
               ),
@@ -101,7 +104,7 @@ class _DashboardViewState extends State<DashboardView> {
                   splashColor: Colors.red[50],
                   backgroundColor: AppColors.transparent,
                   onPressed: () {
-                     Get.to(() => ClubView());
+                    Get.to(() => ClubView());
                   },
                   shape: const CircleBorder(),
                   elevation: 0,
@@ -118,5 +121,3 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 }
-
-
