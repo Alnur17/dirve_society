@@ -25,7 +25,7 @@ class SignUpView extends GetView<SignUpController> {
         backgroundColor: AppColors.transparent,
         title: Text(
           'Signup',
-          style: appBarStyle,
+          style: appBarStyle.copyWith(color: AppColors.white),
         ),
         centerTitle: true,
         leading: GestureDetector(
@@ -83,7 +83,9 @@ class SignUpView extends GetView<SignUpController> {
                       hintText: 'Your mobile number',
                     ),
                     sh12,
-                    Text('Email', style: h4),
+                    Text('Email', style: h4.copyWith(
+                      color: AppColors.white,
+                    ),),
                     sh8,
                     const CustomTextField(
                       hintText: 'Your email',

@@ -1,4 +1,3 @@
-import 'package:dirve_society/common/helper/upload_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -6,13 +5,14 @@ import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
+import '../../../../common/helper/upload_widget.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_circular_container.dart';
 import '../../../../common/widgets/custom_textfield.dart';
 
-class CreateClubView extends GetView {
-  const CreateClubView({super.key});
+class AddCarView extends GetView {
+  const AddCarView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class CreateClubView extends GetView {
         backgroundColor: AppColors.mainColor,
         scrolledUnderElevation: 0,
         title: Text(
-          'Create Club',
+          'Add Car',
           style: appBarStyle,
         ),
         centerTitle: true,
@@ -45,17 +45,34 @@ class CreateClubView extends GetView {
             children: [
               sh30,
               Text(
-                'Club Name',
+                'Brand',
                 style: h5,
               ),
               sh8,
               CustomTextField(
-                hintText: 'Enter your club name',
-
+                hintText: 'Enter your car brand name',
               ),
               sh16,
               Text(
-                'Privacy',
+                'Model',
+                style: h5,
+              ),
+              sh8,
+              CustomTextField(
+                hintText: 'Enter your car model name',
+              ),
+              sh16,
+              Text(
+                'Mileage (Miles)',
+                style: h5,
+              ),
+              sh8,
+              CustomTextField(
+                hintText: '4',
+              ),
+              sh16,
+              Text(
+                'Transmission',
                 style: h5,
               ),
               sh8,
@@ -76,8 +93,8 @@ class CreateClubView extends GetView {
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
-                value: 'Public Club',
-                items: ['Public Club', 'Private Club']
+                value: 'Gasoline ',
+                items: ['Gasoline ', 'Diesel']
                     .map((String value) => DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -87,16 +104,58 @@ class CreateClubView extends GetView {
               ),
               sh16,
               Text(
-                'Description',
+                'Transmission',
+                style: h5,
+              ),
+              sh8,
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                value: 'Manual',
+                items: ['Manual', 'Automatic']
+                    .map((String value) => DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        ))
+                    .toList(),
+                onChanged: (newValue) {},
+              ),
+              sh16,
+              Text(
+                'Selling Price',
                 style: h5,
               ),
               sh8,
               CustomTextField(
-                hintText: 'Describe about your club',
+                hintText: '\$4000',
               ),
               sh16,
               Text(
-                'Profile Photo',
+                'Car Description',
+                style: h5,
+              ),
+              sh8,
+              CustomTextField(
+                height: 120,
+                hintText: 'Describe your car so people know what it\'s about.',
+              ),
+              sh16,
+              Text(
+                'Car Photo',
                 style: h5,
               ),
               sh8,
@@ -106,17 +165,29 @@ class CreateClubView extends GetView {
                 label: 'Upload',
                 iconSize: 48,
               ),
-              sh16,
-              Text(
-                'Cover Photo',
-                style: h5,
-              ),
               sh8,
-              UploadWidget(
-                onTap: () {},
-                imagePath: AppImages.upload,
-                label: 'Upload',
-                iconSize: 48,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  UploadWidget(
+                      height: 100,
+                      width: 100,
+                      onTap: () {},
+                      imagePath: AppImages.add,
+                      label: 'Front'),
+                  UploadWidget(
+                      height: 100,
+                      width: 100,
+                      onTap: () {},
+                      imagePath: AppImages.add,
+                      label: 'Side'),
+                  UploadWidget(
+                      height: 100,
+                      width: 100,
+                      onTap: () {},
+                      imagePath: AppImages.add,
+                      label: 'Sole'),
+                ],
               ),
               sh100,
             ],

@@ -26,7 +26,7 @@ class LoginView extends GetView<LoginController> {
         backgroundColor: AppColors.transparent,
         title: Text(
           'Login',
-          style: appBarStyle,
+          style: appBarStyle.copyWith(color: AppColors.white),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,

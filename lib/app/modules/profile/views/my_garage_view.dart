@@ -1,4 +1,6 @@
 import 'package:dirve_society/app/data/dummy_data.dart';
+import 'package:dirve_society/app/modules/profile/views/add_car_view.dart';
+import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -157,9 +159,24 @@ class MyGarageView extends GetView {
           sh20,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'My Garage',
-              style: h1.copyWith(fontSize: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'My Garage',
+                  style: h1.copyWith(fontSize: 20),
+                ),
+                CustomButton(
+                  height: 38,
+                  width: 135,
+                  text: 'Add Car',
+                  imageAssetPath: AppImages.add,
+                  iconColor: AppColors.white,
+                  onPressed: () {
+                    Get.to(()=> AddCarView());
+                  },
+                ),
+              ],
             ),
           ),
           Expanded(

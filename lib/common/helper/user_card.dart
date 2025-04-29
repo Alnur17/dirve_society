@@ -12,6 +12,7 @@ class UserCard extends StatelessWidget {
   final String description;
   final bool isAdded;
   final VoidCallback onButtonPressed;
+  final VoidCallback onUserDetails;
 
   const UserCard({
     super.key,
@@ -19,69 +20,72 @@ class UserCard extends StatelessWidget {
     required this.rating,
     required this.description,
     required this.isAdded,
-    required this.onButtonPressed,
+    required this.onButtonPressed, required this.onUserDetails,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundColor: Colors.grey[300],
-            backgroundImage: AssetImage(AppImages.carImage),
-          ),
-          SizedBox(height: 10),
-          Text(
-            title,
-            style: h1.copyWith(fontSize: 20),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.star,
-                color: AppColors.darkRed,
-              ),
-              sw5,
-              Text(
-                rating.toString(),
-                style: h3,
-              ),
-            ],
-          ),
-          sh5,
-          Text(
-            description,
-            style: h6.copyWith(color: AppColors.grey),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          sh12,
-          CustomButton(
-            height: 32,
-            text: isAdded ? 'Remove' : '+ Add',
-            onPressed: onButtonPressed,
-            backgroundColor: isAdded ? AppColors.grey : AppColors.darkRed,
-          ),
-        ],
+    return GestureDetector(
+      onTap: onUserDetails,
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.grey[300],
+              backgroundImage: AssetImage(AppImages.carImage),
+            ),
+            SizedBox(height: 10),
+            Text(
+              title,
+              style: h1.copyWith(fontSize: 20),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.star,
+                  color: AppColors.darkRed,
+                ),
+                sw5,
+                Text(
+                  rating.toString(),
+                  style: h3,
+                ),
+              ],
+            ),
+            sh5,
+            Text(
+              description,
+              style: h6.copyWith(color: AppColors.grey),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            sh12,
+            CustomButton(
+              height: 32,
+              text: isAdded ? 'Remove' : '+ Add',
+              onPressed: onButtonPressed,
+              backgroundColor: isAdded ? AppColors.grey : AppColors.darkRed,
+            ),
+          ],
+        ),
       ),
     );
   }

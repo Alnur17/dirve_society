@@ -1,3 +1,4 @@
+import 'package:dirve_society/app/modules/profile/views/profile_view_mode_view.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:flutter/material.dart';
@@ -88,6 +89,9 @@ class _ConnectViewState extends State<ConnectView> {
                             setState(() {
                               buttonStates[index] = !buttonStates[index];
                             });
+                          },
+                          onUserDetails: (){
+                            Get.to(()=> ProfileViewModeView());
                           },
                         );
                       },

@@ -2,21 +2,9 @@ import 'package:get/get.dart';
 
 class ProfileController extends GetxController {
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
+  var isPostSelected = true.obs;
 
-  @override
-  void onReady() {
-    super.onReady();
+  void toggleTab() {
+    isPostSelected.value = !isPostSelected.value;
   }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }
