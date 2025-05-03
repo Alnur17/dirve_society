@@ -1,5 +1,6 @@
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:flutter/material.dart';
+import '../app_color/app_colors.dart';
 import 'custom_textfield.dart';
 
 class SearchFiled extends StatelessWidget {
@@ -16,7 +17,7 @@ class SearchFiled extends StatelessWidget {
       preIcon: Image.asset(
         AppImages.search,
         scale: 4,
-        color: Colors.grey,
+        color: AppColors.grey,
       ),
     );
   }

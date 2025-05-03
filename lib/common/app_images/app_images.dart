@@ -76,7 +76,7 @@ class AppImages {
   static const garage = "assets/icons/garage.png";
   static const keyLight = "assets/icons/key light.png";
   static const logout = "assets/icons/logout.png";
-  static const filter = "assets/icons/Filter_big.png";
+  static const filter = "assets/icons/filter.png";
   static const call = "assets/icons/call.png";
   static const callRound = "assets/icons/call round.png";
   static const close = "assets/icons/close.png";
