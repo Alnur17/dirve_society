@@ -1,8 +1,5 @@
-import 'package:dirve_society/app/modules/auth/sign_up/views/sign_up_view.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import '../../../../../common/app_color/app_colors.dart';
 import '../../../../../common/app_images/app_images.dart';
 import '../../../../../common/app_text_style/styles.dart';
@@ -13,12 +10,22 @@ import '../../../../../common/widgets/custom_textfield.dart';
 import '../../../dashboard/views/dashboard_view.dart';
 import '../../forgot_password/views/forgot_password_view.dart';
 import '../controllers/login_controller.dart';
+import '../../sign_up/views/sign_up_view.dart';
 
-class LoginView extends GetView<LoginController> {
-  const LoginView({super.key});
+class LoginView extends GetView {
+   LoginView({super.key});
+
+  final TextEditingController emailController = TextEditingController(text: "emonhasan7650@gmail.com");
+  final TextEditingController passwordController = TextEditingController(text: "user123");
+
+  final LoginController loginController = Get.put(LoginController());
+
 
   @override
   Widget build(BuildContext context) {
+
+    final RxBool isRememberMeChecked = false.obs;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
@@ -64,8 +71,12 @@ class LoginView extends GetView<LoginController> {
                       ),
                     ),
                     sh8,
-                    const CustomTextField(
+                    CustomTextField(
                       hintText: 'Your email',
+                      controller: emailController,
+                      onChange: (value) {
+                        // Handle email input if needed
+                      },
                     ),
                     const SizedBox(height: 12),
                     Text(
@@ -76,11 +87,9 @@ class LoginView extends GetView<LoginController> {
                     ),
                     sh8,
                     CustomTextField(
-                      sufIcon: Image.asset(
-                        AppImages.eyeClose,
-                        scale: 4,
-                      ),
                       hintText: '**********',
+                      isPassword: true,
+                      controller: passwordController,
                     ),
                   ],
                 ),
@@ -92,11 +101,14 @@ class LoginView extends GetView<LoginController> {
                       children: [
                         GestureDetector(
                           onTap: () {
-
+                            isRememberMeChecked.value = !isRememberMeChecked.value;
                           },
-                          child: Image.asset(
-                            AppImages.checkBoxCircle,
-                            scale: 4,
+                          child: Obx(
+                                () =>
+                              isRememberMeChecked.value
+                                  ? Icon(Icons.check_box_outline_blank, color: AppColors.white) // Update to checked image if available
+                                  : Icon(Icons.check_box,color: AppColors.white,) ,
+
                           ),
                         ),
                         sw16,
@@ -120,12 +132,24 @@ class LoginView extends GetView<LoginController> {
                   ],
                 ),
                 sh24,
-                CustomButton(
+                Obx(() =>  CustomButton(
+                  isLoading: loginController.isLoading.value,
                   text: 'Login',
                   onPressed: () {
-                    Get.to(() => const DashboardView());
+                    if (emailController.text.isNotEmpty &&
+                        passwordController.text.isNotEmpty) {
+                      loginController.login(email: emailController.text.trim(), password: passwordController.text.trim());
+
+                    } else {
+                      Get.snackbar(
+                        'Error',
+                        'Please enter both email and password',
+                        backgroundColor: AppColors.darkRed,
+                        colorText: AppColors.white,
+                      );
+                    }
                   },
-                ),
+                ),),
                 sh20,
                 GestureDetector(
                   onTap: () {

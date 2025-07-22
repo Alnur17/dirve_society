@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../app_color/app_colors.dart';
 import '../app_text_style/styles.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final double? height;
   final TextEditingController? controller;
   final String? hintText;
@@ -13,6 +13,7 @@ class CustomTextField extends StatelessWidget {
   final double borderRadius;
   final Color? containerColor;
   final Color? borderColor;
+  final bool isPassword;
 
   const CustomTextField({
     super.key,
@@ -26,29 +27,57 @@ class CustomTextField extends StatelessWidget {
     this.borderRadius = 12,
     this.containerColor,
     this.borderColor,
+    this.isPassword = false,
   });
+
+  @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool _obscureText = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.isPassword;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
+      height: widget.height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(color: borderColor ?? AppColors.borderColor),
-        color: containerColor,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        border: Border.all(color: widget.borderColor ?? AppColors.borderColor),
+        color: widget.containerColor,
       ),
       child: TextField(
         textInputAction: TextInputAction.done,
-        onChanged: onChange,
-        controller: controller,
-        maxLines: null,
-        keyboardType: TextInputType.multiline,
+        onChanged: widget.onChange,
+        controller: widget.controller,
+        maxLines: widget.isPassword ? 1 : null, // Single line for password
+        keyboardType: widget.isPassword ? TextInputType.text : TextInputType.multiline, // No multiline for password
+        obscureText: widget.isPassword ? _obscureText : false,
+        style: const TextStyle(color: AppColors.white),
         decoration: InputDecoration(
-          hintText: hintText ?? '',
-          hintStyle: hintTextStyle ?? h5.copyWith(color: AppColors.grey),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          prefixIcon: preIcon,
-          suffixIcon: sufIcon,
+          hintText: widget.hintText ?? '',
+          hintStyle: widget.hintTextStyle ?? h5.copyWith(color: AppColors.white),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          prefixIcon: widget.preIcon,
+          suffixIcon: widget.isPassword
+              ? IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility_off : Icons.visibility,
+              color: AppColors.grey,
+            ),
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+          )
+              : widget.sufIcon,
           border: InputBorder.none,
         ),
       ),

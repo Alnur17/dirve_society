@@ -14,6 +14,7 @@ class CustomButton extends StatelessWidget {
   final String? imageAssetPath;
   final double? borderRadius;
   final Color? iconColor;
+  final bool isLoading; // New parameter for loading state
 
   const CustomButton({
     super.key,
@@ -26,13 +27,15 @@ class CustomButton extends StatelessWidget {
     this.width = double.infinity,
     this.borderColor,
     this.imageAssetPath,
-    this.borderRadius = 40,this.iconColor,
+    this.borderRadius = 40,
+    this.iconColor,
+    this.isLoading = false, // Default to false
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: isLoading ? null : onPressed, // Disable tap when loading
       child: Container(
         height: height,
         width: width,
@@ -46,7 +49,19 @@ class CustomButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (imageAssetPath != null) ...[
+              if (isLoading) ...[
+                const Padding(
+                  padding: EdgeInsets.only(right: 8.0),
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: AppColors.white,
+                      strokeWidth: 2.5,
+                    ),
+                  ),
+                ),
+              ] else if (imageAssetPath != null) ...[
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Image.asset(

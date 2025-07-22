@@ -167,7 +167,7 @@ class SignUpView extends GetView<SignUpController> {
                 sh20,
                 GestureDetector(
                   onTap: () {
-                    Get.offAll(() => const LoginView());
+                    Get.offAll(() =>  LoginView());
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
