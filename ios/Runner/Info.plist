@@ -41,6 +41,14 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	<!-- Location Permissions -->
+    	<key>NSLocationWhenInUseUsageDescription</key>
+    	<string>Gas Dash requires your location to find nearby gas stations and provide navigation.</string>
+    	<!-- Optional: For background location updates -->
+    	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    	<string>Gas Dash needs your location to provide real-time navigation and updates even when the app is in the background.</string>
+
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
