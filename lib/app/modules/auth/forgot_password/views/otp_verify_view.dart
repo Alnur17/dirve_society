@@ -24,7 +24,7 @@ class OtpVerifyView extends GetView {
         backgroundColor: AppColors.transparent,
         title: Text(
           'Forgot Password',
-          style: appBarStyle,
+          style: appBarStyle.copyWith(color: AppColors.white),
         ),
         centerTitle: true,
         leading: GestureDetector(
@@ -58,7 +58,7 @@ class OtpVerifyView extends GetView {
               ),
               sh30,
               PinCodeTextField(
-                length: 4,
+                length: 6,
                 obscureText: false,
                 keyboardType: TextInputType.number,
                 animationType: AnimationType.fade,

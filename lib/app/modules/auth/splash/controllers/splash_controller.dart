@@ -1,7 +1,12 @@
 import 'package:dirve_society/app/modules/auth/login/views/login_view.dart';
+import 'package:dirve_society/app/modules/dashboard/views/dashboard_view.dart';
+import 'package:dirve_society/common/app_constant/app_constant.dart';
+import 'package:dirve_society/common/local_store/local_store.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class SplashController extends GetxController {
+
   var position = 0.0.obs;
   var isSwiped = false.obs;
   var maxSwipe = 200.0.obs;
@@ -20,7 +25,15 @@ class SplashController extends GetxController {
       isSwiped.value = true;
       position.value = maxSwipe.value;
       Future.delayed(Duration(milliseconds: 100), () {
-        Get.to(() => LoginView());
+        String? token = LocalStorage.getData(key: AppConstant.token);
+        debugPrint(token);
+        if(token != null){
+         // Get.offAll(() => DashboardView());
+          Get.offAll(() => LoginView());
+        }else{
+          Get.offAll(() => LoginView());
+        }
+
       });
     } else {
       position.value = 0.0;

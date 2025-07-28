@@ -3,6 +3,7 @@ import 'package:dirve_society/app/modules/dashboard/controllers/dashboard_contro
 import 'package:dirve_society/app/modules/dashboard/views/widget/bottom_nav_item.dart';
 import 'package:dirve_society/app/modules/market_place/views/market_place_view.dart';
 import 'package:dirve_society/app/modules/meets/views/meets_view.dart';
+import 'package:dirve_society/app/modules/profile/views/my_clubs_view.dart';
 import 'package:dirve_society/app/modules/profile/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -104,7 +105,7 @@ class _DashboardViewState extends State<DashboardView> {
                   splashColor: Colors.red[50],
                   backgroundColor: AppColors.transparent,
                   onPressed: () {
-                    Get.to(() => ClubView());
+                    Get.to(() => MyClubsView());
                   },
                   shape: const CircleBorder(),
                   elevation: 0,

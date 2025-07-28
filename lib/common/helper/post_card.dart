@@ -74,27 +74,27 @@ class PostCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Text(
-                        'BY $userName'.toUpperCase(),
-                        style: h7,
-                      ),
+                      // Text(
+                      //   'BY $userName'.toUpperCase(),
+                      //   style: h7,
+                      // ),
                     ],
                   ),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: onMenuTap,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: ShapeDecoration(
-                        shape: CircleBorder(),
-                        color: AppColors.silver,
-                      ),
-                      child: Image.asset(
-                        AppImages.menu,
-                        scale: 4,
-                      ),
-                    ),
-                  ),
+                  // Spacer(),
+                  // GestureDetector(
+                  //   onTap: onMenuTap,
+                  //   child: Container(
+                  //     padding: EdgeInsets.all(8),
+                  //     decoration: ShapeDecoration(
+                  //       shape: CircleBorder(),
+                  //       color: AppColors.silver,
+                  //     ),
+                  //     child: Image.asset(
+                  //       AppImages.menu,
+                  //       scale: 4,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -221,17 +221,17 @@ class PostCard extends StatelessWidget {
                         style: h6.copyWith(fontWeight: FontWeight.w600),
                       ),
                       sw8,
-                      Expanded(
-                        child: Text(
-                          hashtags,
-                          style: h6.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.red,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      )
+                      // Expanded(
+                      //   child: Text(
+                      //     hashtags,
+                      //     style: h6.copyWith(
+                      //       fontWeight: FontWeight.w600,
+                      //       color: AppColors.red,
+                      //     ),
+                      //     maxLines: 1,
+                      //     overflow: TextOverflow.ellipsis,
+                      //   ),
+                      // )
                     ],
                   ),
                   sh5,

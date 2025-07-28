@@ -40,16 +40,16 @@ class HomeView extends GetView<HomeController> {
               scale: 4,
             ),
           ),
-          sw12,
-          GestureDetector(
-            onTap: () {
-              //Get.to(() => SearchView());
-            },
-            child: Image.asset(
-              AppImages.search,
-              scale: 4,
-            ),
-          ),
+          // sw12,
+          // GestureDetector(
+          //   onTap: () {
+          //     Get.to(() => SearchView());
+          //   },
+          //   child: Image.asset(
+          //     AppImages.search,
+          //     scale: 4,
+          //   ),
+          // ),
           sw12,
           GestureDetector(
             onTap: () {
