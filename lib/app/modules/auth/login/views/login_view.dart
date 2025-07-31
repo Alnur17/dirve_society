@@ -1,29 +1,35 @@
+import 'package:dirve_society/app/modules/dashboard/views/dashboard_view.dart';
+import 'package:dirve_society/app/modules/profile/controllers/profile_controller.dart';
+import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../common/app_color/app_colors.dart';
-import '../../../../../common/app_images/app_images.dart';
 import '../../../../../common/app_text_style/styles.dart';
 import '../../../../../common/size_box/custom_sizebox.dart';
 import '../../../../../common/widgets/custom_background.dart';
 import '../../../../../common/widgets/custom_button.dart';
 import '../../../../../common/widgets/custom_textfield.dart';
-import '../../../dashboard/views/dashboard_view.dart';
 import '../../forgot_password/views/forgot_password_view.dart';
 import '../controllers/login_controller.dart';
 import '../../sign_up/views/sign_up_view.dart';
 
-class LoginView extends GetView {
-   LoginView({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
-  final TextEditingController emailController = TextEditingController(text: "emonhasan7650@gmail.com");
-  final TextEditingController passwordController = TextEditingController(text: "user123");
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
 
+class _LoginViewState extends State<LoginView> {
+  final TextEditingController emailController =
+      TextEditingController(text: "gobom61544@ikanteri.com");
+  final TextEditingController passwordController =
+      TextEditingController(text: "1234567");
   final LoginController loginController = Get.put(LoginController());
-
+  final ProfileController profileController = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
-
     final RxBool isRememberMeChecked = false.obs;
 
     return Scaffold(
@@ -101,14 +107,18 @@ class LoginView extends GetView {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            isRememberMeChecked.value = !isRememberMeChecked.value;
+                            isRememberMeChecked.value =
+                                !isRememberMeChecked.value;
                           },
                           child: Obx(
-                                () =>
-                              isRememberMeChecked.value
-                                  ? Icon(Icons.check_box_outline_blank, color: AppColors.white) // Update to checked image if available
-                                  : Icon(Icons.check_box,color: AppColors.white,) ,
-
+                            () => isRememberMeChecked.value
+                                ? Icon(Icons.check_box_outline_blank,
+                                    color: AppColors
+                                        .white) // Update to checked image if available
+                                : Icon(
+                                    Icons.check_box,
+                                    color: AppColors.white,
+                                  ),
                           ),
                         ),
                         sw16,
@@ -132,28 +142,20 @@ class LoginView extends GetView {
                   ],
                 ),
                 sh24,
-                Obx(() =>  CustomButton(
-                  isLoading: loginController.isLoading.value,
+                CustomButton(
+                  //isLoading: loginController.isLoading.value,
                   text: 'Login',
                   onPressed: () {
-                    if (emailController.text.isNotEmpty &&
-                        passwordController.text.isNotEmpty) {
-                      loginController.login(email: emailController.text.trim(), password: passwordController.text.trim());
-
-                    } else {
-                      Get.snackbar(
-                        'Error',
-                        'Please enter both email and password',
-                        backgroundColor: AppColors.darkRed,
-                        colorText: AppColors.white,
-                      );
-                    }
+                    logInFunction(
+                      emailController.text,
+                      passwordController.text,
+                    );
                   },
-                ),),
+                ),
                 sh20,
                 GestureDetector(
                   onTap: () {
-                    Get.to(() => const SignUpView());
+                    Get.to(() => SignUpView());
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -177,5 +179,29 @@ class LoginView extends GetView {
         ),
       ),
     );
+  }
+
+  Future<void> logInFunction(
+    String email,
+    String password,
+  ) async {
+    final bool isSuccess = await loginController.login(
+      email,
+      password,
+    );
+
+    if (isSuccess) {
+      showSnackBarMessage(context, 'Successfully done');
+
+      profileController.fetchProfileData();
+      //  Get.offAll(() =>  LoginView());
+      Get.to(DashboardView());
+    } else {
+      showSnackBarMessage(
+        context,
+        loginController.errorMessage ?? 'failed',
+        true,
+      );
+    }
   }
 }

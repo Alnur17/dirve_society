@@ -1,58 +1,67 @@
-import 'dart:convert';
+// ignore_for_file: avoid_print
 
-import 'package:dirve_society/app/data/api.dart';
-import 'package:dirve_society/app/data/base_client.dart';
-import 'package:dirve_society/app/modules/dashboard/views/dashboard_view.dart';
-import 'package:dirve_society/common/app_color/app_colors.dart';
-import 'package:dirve_society/common/app_constant/app_constant.dart';
-import 'package:dirve_society/common/local_store/local_store.dart';
-import 'package:dirve_society/common/widgets/custom_snackbar.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dirve_society/get_storage.dart';
+import 'package:dirve_society/services/network_caller/network_caller.dart';
+import 'package:dirve_society/services/network_caller/network_response.dart';
+import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-  var isLoading = false.obs;
+  // final OtpVerifyController otpVerifyController = OtpVerifyController();
+  final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      isLoading(true);
-      final map = {
-        "email": email.toLowerCase(),
-        "password": password,
-      };
+  final RxBool _inProgress = false.obs;
+  bool get inProgress => _inProgress.value;
 
-      final headers = {
-        'Content-Type': 'application/json',
-      };
+  RxString? _errorMessage = ''.obs;
+  String? get errorMessage => _errorMessage?.value;
 
-      dynamic responseBody = await BaseClient.handleResponse(
-        await BaseClient.postRequest(
-          api: Api.login,
-          body: jsonEncode(map),
-          headers: headers,
-        ),
+  // final Rx<CategoryModel?> _categoryModel = Rx<CategoryModel?>(null);
+  // List<CategoryData>? get categoryData => _categoryModel.value!.data?.data ?? [];
+
+  @override
+  void onInit() {
+    super.onInit();
+  }
+
+  String? _otpToken;
+  String? get otpToken => _otpToken;
+
+  Future<bool> login(String email, String password) async {
+    var accessToken = await StorageUtil.getData(StorageUtil.userAccessToken);
+    // final token = StorageUtil.getData(StorageUtil.userAccessToken);
+    // if (token == null) {
+    //   // Get.off(SignInScreen());
+    //   return false;
+    // }
+
+    _inProgress.value = true;
+
+    Map<String, dynamic> requestBody = {"email": email, "password": password};
+
+    final NetworkResponse response = await Get.find<NetworkCaller>()
+        .postRequest(Urls.loginUrl, requestBody, accesToken: accessToken);
+
+    if (response.isSuccess) {
+      _errorMessage = null;
+
+      print('Response roken');
+      print(response.responseData['data']['accessToken']);
+      StorageUtil.saveData(
+        StorageUtil.userAccessToken,
+        response.responseData['data']['accessToken'],
       );
+  
+ 
+      print('Response roken');
+      print(response.responseData);
 
-      if (responseBody != null) {
-
-        final accessToken = responseBody['data']['accessToken'].toString();
-
-        debugPrint("accessToken>>: $accessToken");
-        LocalStorage.saveData(key: AppConstant.token, data: accessToken);
-
-
-        Get.offAll(() => DashboardView());
-      } else {
-        throw 'Login Failed!';
-      }
-    } catch (e) {
-      print("Catch Error: $e");
-      kSnackBar(message: e.toString(), bgColor: AppColors.red);
-    } finally {
-      isLoading(false);
+      _inProgress.value = false;
+      return true;
+    } else {
+      _errorMessage?.value = response.errorMessage;
+      _inProgress.value = false;
+      return false;
     }
   }
 }

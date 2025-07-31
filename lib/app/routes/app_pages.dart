@@ -41,16 +41,16 @@ class AppPages {
       page: () => const SplashView(),
       binding: SplashBinding(),
     ),
-    GetPage(
-      name: _Paths.LOGIN,
-      page: () =>  LoginView(),
-      binding: LoginBinding(),
-    ),
-    GetPage(
-      name: _Paths.SIGN_UP,
-      page: () => const SignUpView(),
-      binding: SignUpBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.LOGIN,
+    //   page: () =>  LoginView(),
+    //   binding: LoginBinding(),
+    // ),
+    // GetPage(
+    //   name: _Paths.SIGN_UP,
+    //   page: () => const SignUpView(),
+    //   binding: SignUpBinding(),
+    // ),
     GetPage(
       name: _Paths.FORGOT_PASSWORD,
       page: () => const ForgotPasswordView(),

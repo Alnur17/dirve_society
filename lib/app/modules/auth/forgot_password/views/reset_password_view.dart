@@ -90,7 +90,7 @@ class ResetPasswordView extends GetView {
               CustomButton(
                 text: 'Update Password',
                 onPressed: () {
-                  Get.offAll(()=> LoginView());
+                //  Get.offAll(()=> LoginView());
                 },
               ),
             ],

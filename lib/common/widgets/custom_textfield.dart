@@ -14,6 +14,7 @@ class CustomTextField extends StatefulWidget {
   final Color? containerColor;
   final Color? borderColor;
   final bool isPassword;
+  final Color? textColor;
 
   const CustomTextField({
     super.key,
@@ -28,6 +29,7 @@ class CustomTextField extends StatefulWidget {
     this.containerColor,
     this.borderColor,
     this.isPassword = false,
+    this.textColor,
   });
 
   @override
@@ -57,26 +59,30 @@ class _CustomTextFieldState extends State<CustomTextField> {
         onChanged: widget.onChange,
         controller: widget.controller,
         maxLines: widget.isPassword ? 1 : null, // Single line for password
-        keyboardType: widget.isPassword ? TextInputType.text : TextInputType.multiline, // No multiline for password
+        keyboardType: widget.isPassword
+            ? TextInputType.text
+            : TextInputType.multiline, // No multiline for password
         obscureText: widget.isPassword ? _obscureText : false,
-        style: const TextStyle(color: AppColors.white),
+        style: TextStyle(color: widget.textColor ?? AppColors.white),
         decoration: InputDecoration(
           hintText: widget.hintText ?? '',
-          hintStyle: widget.hintTextStyle ?? h5.copyWith(color: AppColors.white),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          hintStyle:
+              widget.hintTextStyle ?? h5.copyWith(color: AppColors.white),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           prefixIcon: widget.preIcon,
           suffixIcon: widget.isPassword
               ? IconButton(
-            icon: Icon(
-              _obscureText ? Icons.visibility_off : Icons.visibility,
-              color: AppColors.grey,
-            ),
-            onPressed: () {
-              setState(() {
-                _obscureText = !_obscureText;
-              });
-            },
-          )
+                  icon: Icon(
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: AppColors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                )
               : widget.sufIcon,
           border: InputBorder.none,
         ),

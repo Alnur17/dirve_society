@@ -1,19 +1,27 @@
 import 'package:dirve_society/app/data/dummy_data.dart';
 import 'package:dirve_society/app/modules/chat/views/chat_view.dart';
+import 'package:dirve_society/app/modules/home/controllers/all_feed_controller.dart';
 import 'package:dirve_society/app/modules/home/views/connect_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
-import '../../../../common/helper/post_card.dart';
 import '../../../../common/helper/story_widget.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../controllers/home_controller.dart';
 
-class HomeView extends GetView<HomeController> {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,16 +48,6 @@ class HomeView extends GetView<HomeController> {
               scale: 4,
             ),
           ),
-          // sw12,
-          // GestureDetector(
-          //   onTap: () {
-          //     Get.to(() => SearchView());
-          //   },
-          //   child: Image.asset(
-          //     AppImages.search,
-          //     scale: 4,
-          //   ),
-          // ),
           sw12,
           GestureDetector(
             onTap: () {
@@ -74,8 +72,24 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-class TabbedFeed extends GetView<HomeController> {
+class TabbedFeed extends StatefulWidget {
   const TabbedFeed({super.key});
+
+  @override
+  State<TabbedFeed> createState() => _TabbedFeedState();
+}
+
+class _TabbedFeedState extends State<TabbedFeed> {
+  
+  final AllFeedController feedController = Get.put(AllFeedController());
+   
+
+  @override
+  void initState() {
+    feedController.getAllFeed();
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -167,33 +181,7 @@ class TabbedFeed extends GetView<HomeController> {
                           ),
                         ),
                       ),
-                      sh12,
-                      Expanded(
-                        child: ListView.builder(
-                          padding: EdgeInsets.only(bottom: 30),
-                          itemCount: 10,
-                          itemBuilder: (context, index) => PostCard(
-                            clubName: 'MC20 Owners CLUB',
-                            userName: 'John Doe',
-                            postImages: [
-                              AppImages.carImage,
-                              AppImages.carImageThree,
-                              AppImages.carImageTwo,
-                            ],
-                            description:
-                                'Nam posuere elit a facilisis hendrerit. Phasellus cursus nisi vel tempor gravida. Vivamus sollicitudin a nisi eu aliquam aliqu...',
-                            hashtags: '#Blessed #MC20',
-                            date: 'April 4',
-                            likes: 100,
-                            comments: 100,
-                            onProfileTap: () {},
-                            onMenuTap: () {},
-                            onLikeTap: () {},
-                            onCommentTap: () {},
-                            onBookmarkTap: () {},
-                          ),
-                        ),
-                      ),
+                      sh12
                     ],
                   )
                 : CardSwiper(

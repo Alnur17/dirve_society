@@ -6,6 +6,7 @@ import 'package:dirve_society/app/modules/profile/views/my_post_view.dart';
 import 'package:dirve_society/app/modules/profile/views/privacy_and_security_view.dart';
 import 'package:dirve_society/app/modules/profile/views/saved_view.dart';
 import 'package:dirve_society/app/modules/profile/views/terms_and_conditions_view.dart';
+import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:readmore/readmore.dart';
@@ -34,8 +35,9 @@ class ProfileView extends GetView<ProfileController> {
                 child: SizedBox(
                   height: 240,
                   width: double.infinity,
-                  child: Image.asset(
-                    AppImages.coverImage,
+                  child: Image.network(
+                    StorageUtil.getData(StorageUtil.profileCoverPhoto) ??
+                        'https://fastly.picsum.photos/id/1/200/300.jpg?hmac=jH5bDkLr6Tgy3oAg5khKCHeunZMHq0ehBZr6vGifPLY',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -64,7 +66,9 @@ class ProfileView extends GetView<ProfileController> {
                 child: CircleAvatar(
                   radius: 45,
                   backgroundColor: AppColors.white,
-                  backgroundImage: AssetImage(AppImages.carImageFive),
+                  backgroundImage: NetworkImage(StorageUtil.getData(
+                          StorageUtil.profilePhotoUrl) ??
+                      'https://fastly.picsum.photos/id/1/200/300.jpg?hmac=jH5bDkLr6Tgy3oAg5khKCHeunZMHq0ehBZr6vGifPLY'),
                 ),
               ),
               Positioned(

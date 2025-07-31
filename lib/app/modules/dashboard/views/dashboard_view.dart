@@ -1,4 +1,3 @@
-import 'package:dirve_society/app/modules/club/views/club_view.dart';
 import 'package:dirve_society/app/modules/dashboard/controllers/dashboard_controller.dart';
 import 'package:dirve_society/app/modules/dashboard/views/widget/bottom_nav_item.dart';
 import 'package:dirve_society/app/modules/market_place/views/market_place_view.dart';
@@ -8,7 +7,7 @@ import 'package:dirve_society/app/modules/profile/views/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
-import '../../../../common/app_images/app_images.dart';
+import '../../../../common/app_images/app_images.dart'; 
 import '../../home/views/home_view.dart';
 
 class DashboardView extends StatefulWidget {

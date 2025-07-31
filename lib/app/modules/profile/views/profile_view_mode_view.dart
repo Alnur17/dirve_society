@@ -158,153 +158,153 @@ class ProfileViewModeView extends GetView {
             ),
           ),
           sh20,
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomButton(
-                  text: 'Add',
-                  onPressed: () {},
-                  width: 100,
-                  height: 40,
-                  iconColor: AppColors.white,
-                  textStyle: h5.copyWith(
-                    color: controller.isPostSelected.value
-                        ? AppColors.white
-                        : AppColors.black,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  imageAssetPath: AppImages.add,
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 20),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       CustomButton(
+          //         text: 'Add',
+          //         onPressed: () {},
+          //         width: 100,
+          //         height: 40,
+          //         iconColor: AppColors.white,
+          //         textStyle: h5.copyWith(
+          //           color: controller.isPostSelected.value
+          //               ? AppColors.white
+          //               : AppColors.black,
+          //           fontWeight: FontWeight.w600,
+          //         ),
+          //         imageAssetPath: AppImages.add,
 
-                ),
-                Obx(
-                  () => Container(
-                    width: 150,
-                    padding: EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                        color: AppColors.silver,
-                        borderRadius: BorderRadius.circular(30)),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              controller.isPostSelected.value = true;
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
-                              decoration: BoxDecoration(
-                                color: controller.isPostSelected.value
-                                    ? AppColors.darkRed
-                                    : AppColors.transparent,
-                                borderRadius: BorderRadius.circular(25.0),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Posts',
-                                  style: h5.copyWith(
-                                    color: controller.isPostSelected.value
-                                        ? AppColors.white
-                                        : AppColors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        sw8,
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              controller.isPostSelected.value = false;
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
-                              decoration: BoxDecoration(
-                                color: controller.isPostSelected.value
-                                    ? AppColors.transparent
-                                    : AppColors.darkRed,
-                                borderRadius: BorderRadius.circular(25.0),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Garage',
-                                  style: h5.copyWith(
-                                    color: controller.isPostSelected.value
-                                        ? AppColors.black
-                                        : AppColors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Obx(
-            () => controller.isPostSelected.value
-                ? Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: GridView.builder(
-                        padding: EdgeInsets.only(
-                          top: 12,
-                          bottom: 75,
-                        ),
-                        shrinkWrap: true,
-                        //primary: false,
-                        itemCount: 24,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                          mainAxisExtent: 150,
-                        ),
-                        itemBuilder: (context, index) => ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            AppImages.carImageThree,
-                            scale: 4,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                : Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: DummyData.cars.length,
-                        itemBuilder: (context, index) => Padding(
-                          padding: EdgeInsets.only(
-                            top: index == 0 ? 12 : 8,
-                            bottom: index == DummyData.cars.length - 1 ? 20 : 0,
-                          ),
-                          child: MarketPlaceWidget(
-                            height: 200,
-                            name: DummyData.cars[index]['name']!,
-                            price: DummyData.cars[index]['price']!,
-                            date: DummyData.cars[index]['date']!,
-                            imageUrl: DummyData.cars[index]['image']!,
-                            onTap: () {
-                              Get.to(() => ListingDetailsView());
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-          ),
+          //       ),
+          //       Obx(
+          //         () => Container(
+          //           width: 150,
+          //           padding: EdgeInsets.all(6),
+          //           decoration: BoxDecoration(
+          //               color: AppColors.silver,
+          //               borderRadius: BorderRadius.circular(30)),
+          //           child: Row(
+          //             children: [
+          //               Expanded(
+          //                 child: GestureDetector(
+          //                   onTap: () {
+          //                     controller.isPostSelected.value = true;
+          //                   },
+          //                   child: Container(
+          //                     padding: EdgeInsets.symmetric(vertical: 8.0),
+          //                     decoration: BoxDecoration(
+          //                       color: controller.isPostSelected.value
+          //                           ? AppColors.darkRed
+          //                           : AppColors.transparent,
+          //                       borderRadius: BorderRadius.circular(25.0),
+          //                     ),
+          //                     child: Center(
+          //                       child: Text(
+          //                         'Posts',
+          //                         style: h5.copyWith(
+          //                           color: controller.isPostSelected.value
+          //                               ? AppColors.white
+          //                               : AppColors.black,
+          //                           fontWeight: FontWeight.w600,
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //               sw8,
+          //               Expanded(
+          //                 child: GestureDetector(
+          //                   onTap: () {
+          //                     controller.isPostSelected.value = false;
+          //                   },
+          //                   child: Container(
+          //                     padding: EdgeInsets.symmetric(vertical: 8.0),
+          //                     decoration: BoxDecoration(
+          //                       color: controller.isPostSelected.value
+          //                           ? AppColors.transparent
+          //                           : AppColors.darkRed,
+          //                       borderRadius: BorderRadius.circular(25.0),
+          //                     ),
+          //                     child: Center(
+          //                       child: Text(
+          //                         'Garage',
+          //                         style: h5.copyWith(
+          //                           color: controller.isPostSelected.value
+          //                               ? AppColors.black
+          //                               : AppColors.white,
+          //                           fontWeight: FontWeight.w600,
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // Obx(
+          //   () => controller.isPostSelected.value
+          //       ? Expanded(
+          //           child: Padding(
+          //             padding: const EdgeInsets.symmetric(horizontal: 20),
+          //             child: GridView.builder(
+          //               padding: EdgeInsets.only(
+          //                 top: 12,
+          //                 bottom: 75,
+          //               ),
+          //               shrinkWrap: true,
+          //               //primary: false,
+          //               itemCount: 24,
+          //               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //                 crossAxisCount: 2,
+          //                 mainAxisSpacing: 8,
+          //                 crossAxisSpacing: 8,
+          //                 mainAxisExtent: 150,
+          //               ),
+          //               itemBuilder: (context, index) => ClipRRect(
+          //                 borderRadius: BorderRadius.circular(12),
+          //                 child: Image.asset(
+          //                   AppImages.carImageThree,
+          //                   scale: 4,
+          //                   fit: BoxFit.cover,
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         )
+          //       : Expanded(
+          //           child: Padding(
+          //             padding: const EdgeInsets.symmetric(horizontal: 20),
+          //             child: ListView.builder(
+          //               padding: EdgeInsets.zero,
+          //               itemCount: DummyData.cars.length,
+          //               itemBuilder: (context, index) => Padding(
+          //                 padding: EdgeInsets.only(
+          //                   top: index == 0 ? 12 : 8,
+          //                   bottom: index == DummyData.cars.length - 1 ? 20 : 0,
+          //                 ),
+          //                 child: MarketPlaceWidget(
+          //                   height: 200,
+          //                   name: DummyData.cars[index]['name']!,
+          //                   price: DummyData.cars[index]['price']!,
+          //                   date: DummyData.cars[index]['date']!,
+          //                   imageUrl: DummyData.cars[index]['image']!,
+          //                   onTap: () {
+          //                     Get.to(() => ListingDetailsView());
+          //                   },
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          // ),
         ],
       ),
     );

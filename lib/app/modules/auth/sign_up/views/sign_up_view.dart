@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:dirve_society/app/modules/auth/forgot_password/views/otp_verify_view.dart';
+import 'package:dirve_society/app/modules/auth/sign_up/controllers/sign_up_controller.dart';
 import 'package:dirve_society/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:dirve_society/common/widgets/custom_background.dart';
+import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import '../../../../../common/app_color/app_colors.dart';
 import '../../../../../common/app_images/app_images.dart';
 import '../../../../../common/app_text_style/styles.dart';
@@ -11,13 +14,20 @@ import '../../../../../common/size_box/custom_sizebox.dart';
 import '../../../../../common/widgets/custom_button.dart';
 import '../../../../../common/widgets/custom_textfield.dart';
 import '../../login/views/login_view.dart';
-import '../controllers/sign_up_controller.dart';
 
-class SignUpView extends GetView<SignUpController> {
-  const SignUpView({super.key});
+class SignUpView extends GetView {
+  SignUpView({super.key});
+
+  final SignUpController signUpController = Get.put(SignUpController());
 
   @override
   Widget build(BuildContext context) {
+    // You may want to use controllers to access the field values
+    final nameController = TextEditingController();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    final addressController = TextEditingController();
+
     return Scaffold(
       backgroundColor: AppColors.transparent,
       extendBodyBehindAppBar: true,
@@ -59,7 +69,7 @@ class SignUpView extends GetView<SignUpController> {
                 sh12,
                 Text(
                   'Please fill your detail information.',
-                  style:  h4.copyWith(
+                  style: h4.copyWith(
                     color: AppColors.white,
                   ),
                 ),
@@ -67,76 +77,58 @@ class SignUpView extends GetView<SignUpController> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Full Name', style:  h4.copyWith(
-                      color: AppColors.white,
-                    ),),
+                    Text(
+                      'Full Name',
+                      style: h4.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
                     sh8,
-                    const CustomTextField(
+                    CustomTextField(
+                      controller: nameController,
                       hintText: 'Enter your full name',
                     ),
                     sh12,
-                    Text('Mobile Number', style:  h4.copyWith(
-                      color: AppColors.white,
-                    ),),
+                    Text(
+                      'Address',
+                      style: h4.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
                     sh8,
-                    const CustomTextField(
-                      hintText: 'Your mobile number',
+                    CustomTextField(
+                      controller: addressController,
+                      hintText: 'Your address',
                     ),
                     sh12,
-                    Text('Email', style: h4.copyWith(
-                      color: AppColors.white,
-                    ),),
+                    Text(
+                      'Email',
+                      style: h4.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
                     sh8,
-                    const CustomTextField(
+                    CustomTextField(
+                      controller: emailController,
                       hintText: 'Your email',
                     ),
                     sh12,
-                    Text('Create a Password', style:  h4.copyWith(
-                      color: AppColors.white,
-                    ),),
+                    Text(
+                      'Create a Password',
+                      style: h4.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
                     sh8,
                     CustomTextField(
+                      controller: passwordController,
                       sufIcon: Image.asset(
                         AppImages.eyeClose,
                         scale: 4,
                       ),
                       hintText: '**********',
+                      isPassword: true,
                     ),
-                    // sh20,
-                    // Text(
-                    //   'What are you more interest in?',
-                    //   style: h3,
-                    // ),
-                    // sh12,
-                    // Row(
-                    //   children: [
-                    //     Container(
-                    //       padding:
-                    //           EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                    //       decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(40),
-                    //         border: Border.all(color: AppColors.borderColor),
-                    //       ),
-                    //       child: Text(
-                    //         'Buying',
-                    //         style: h4,
-                    //       ),
-                    //     ),
-                    //     sw16,
-                    //     Container(
-                    //       padding:
-                    //           EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                    //       decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(40),
-                    //         border: Border.all(color: AppColors.borderColor),
-                    //       ),
-                    //       child: Text(
-                    //         'Selling',
-                    //         style: h4,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                     sh20,
                     Row(
                       children: [
@@ -148,7 +140,7 @@ class SignUpView extends GetView<SignUpController> {
                         Expanded(
                           child: Text(
                             'I agree to the Terms & Conditions and Privacy Policy',
-                            style:  h4.copyWith(
+                            style: h4.copyWith(
                               color: AppColors.white,
                             ),
                           ),
@@ -161,20 +153,26 @@ class SignUpView extends GetView<SignUpController> {
                 CustomButton(
                   text: 'Sign Up',
                   onPressed: () {
-                     Get.offAll(() => const DashboardView());
+                    signUpFunction(
+                      context,
+                      nameController.text.trim(),
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                      addressController.text.trim(),
+                    );
                   },
                 ),
                 sh20,
                 GestureDetector(
                   onTap: () {
-                    Get.offAll(() =>  LoginView());
+                    // Get.offAll(() => LoginView());
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Already have an account? ',
-                        style:  h4.copyWith(
+                        style: h4.copyWith(
                           color: AppColors.white,
                         ),
                       ),
@@ -192,5 +190,32 @@ class SignUpView extends GetView<SignUpController> {
         ),
       ),
     );
+  }
+
+  Future<void> signUpFunction(
+    BuildContext context,
+    String name,
+    String email,
+    String password,
+    String address,
+  ) async {
+    final bool isSuccess = await signUpController.createUser(
+      name,
+      email,
+      password,
+      address,
+    );
+
+    if (isSuccess) {
+      showSnackBarMessage(context, 'Successfully done');
+      //  Get.offAll(() =>  LoginView());
+      Get.to(OtpVerifyView(email));
+    } else {
+      showSnackBarMessage(
+        context,
+        signUpController.errorMessage ?? 'failed',
+        true,
+      );
+    }
   }
 }

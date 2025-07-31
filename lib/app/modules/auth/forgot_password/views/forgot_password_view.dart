@@ -1,5 +1,7 @@
+import 'package:dirve_society/app/modules/auth/forgot_password/controllers/forgot_password_controller.dart';
 import 'package:dirve_society/app/modules/auth/forgot_password/views/otp_verify_view.dart';
 import 'package:dirve_society/common/widgets/custom_background.dart';
+import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -10,10 +12,19 @@ import '../../../../../common/app_text_style/styles.dart';
 import '../../../../../common/size_box/custom_sizebox.dart';
 import '../../../../../common/widgets/custom_button.dart';
 import '../../../../../common/widgets/custom_textfield.dart';
-import '../controllers/forgot_password_controller.dart';
 
-class ForgotPasswordView extends GetView<ForgotPasswordController> {
+class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
+
+  @override
+  State<ForgotPasswordView> createState() => _ForgotPasswordViewState();
+}
+
+class _ForgotPasswordViewState extends State<ForgotPasswordView> {
+  final ForgotPasswordController _forgotPasswordController =
+      Get.put(ForgotPasswordController());
+  final TextEditingController _emailController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +34,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
         backgroundColor: AppColors.transparent,
         title: Text(
           'Forgot Password',
-          style: appBarStyle,
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
         leading: GestureDetector(
@@ -64,18 +75,22 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                     style: h4.copyWith(color: AppColors.white),
                   )),
               sh8,
-              CustomTextField(
-                hintText: 'Enter your email',
-                preIcon: Image.asset(
-                  AppImages.message,
-                  scale: 4,
+              Form(
+                key: _formKey,
+                child: CustomTextField(
+                  controller: _emailController,
+                  hintText: 'Enter your email',
+                  preIcon: Image.asset(
+                    AppImages.message,
+                    scale: 4,
+                  ),
                 ),
               ),
               sh30,
               CustomButton(
                 text: 'Send',
                 onPressed: () {
-                  Get.to(() => OtpVerifyView());
+                  otpVerifyFunction(_emailController.text);
                 },
               ),
             ],
@@ -83,5 +98,21 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
         ),
       ),
     );
+  }
+
+  Future<void> otpVerifyFunction(String email) async {
+    final bool isSuccess =
+        await _forgotPasswordController.forgotPassword(email);
+
+    if (isSuccess) {
+      showSnackBarMessage(context, 'Successfully done');
+      Get.to(OtpVerifyView(email));
+    } else {
+      showSnackBarMessage(
+        context,
+        _forgotPasswordController.errorMessage ?? 'failed',
+        true,
+      );
+    }
   }
 }

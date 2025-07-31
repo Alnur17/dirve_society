@@ -6,7 +6,7 @@ import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class SignUpController extends GetxController {
+class OtpVerifyController extends GetxController {
   // final OtpVerifyController otpVerifyController = OtpVerifyController();
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
@@ -27,8 +27,8 @@ class SignUpController extends GetxController {
   String? _otpToken;
   String? get otpToken => _otpToken;
 
-  Future<bool> createUser(
-      String name, String email, String password, String address) async {
+  Future<bool> otpVerify(String otp) async {
+    var token = await StorageUtil.getData(StorageUtil.otpToken);
     // final token = StorageUtil.getData(StorageUtil.userAccessToken);
     // if (token == null) {
     //   // Get.off(SignInScreen());
@@ -37,29 +37,26 @@ class SignUpController extends GetxController {
 
     _inProgress.value = true;
 
-    Map<String, dynamic> requestBody = {
-      "name": name,
-      "email": email,
-      "password": password,
-      "adderss": address
-    };
+    Map<String, dynamic> requestBody = {"otp": otp};
 
-    final NetworkResponse response =
-        await Get.find<NetworkCaller>().postRequest(
-      Urls.signUpUrl,
-      requestBody,
-    );
+    final NetworkResponse response = await Get.find<NetworkCaller>()
+        .postRequest(Urls.otpVerifyUrl, requestBody, accesToken: token);
 
     if (response.isSuccess) {
+      // delete otp token
+      await StorageUtil.deleteData(StorageUtil.otpToken);
+
+      // print('Response roken');
+      // print(response.responseData['data']['accessToken']);
+      // StorageUtil.saveData(
+      //   StorageUtil.userAccessToken,
+      //   response.responseData['data']['accessToken'],
+      // );
       _errorMessage = null;
 
-      // _categoryModel.value = CategoryModel.fromJson(response.responseData);
       print('Response roken');
-      print(response.responseData['data']['otpToken']['token']);
-      StorageUtil.saveData(
-        StorageUtil.otpToken,
-        response.responseData['data']['otpToken']['token'],
-      );
+      print(response.responseData);
+
       _inProgress.value = false;
       return true;
     } else {
