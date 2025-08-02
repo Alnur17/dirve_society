@@ -19,9 +19,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,16 +77,13 @@ class TabbedFeed extends StatefulWidget {
 }
 
 class _TabbedFeedState extends State<TabbedFeed> {
-  
   final AllFeedController feedController = Get.put(AllFeedController());
-   
 
   @override
   void initState() {
     feedController.getAllFeed();
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
