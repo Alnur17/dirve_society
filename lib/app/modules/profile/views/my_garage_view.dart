@@ -1,4 +1,6 @@
 import 'package:dirve_society/app/data/dummy_data.dart';
+import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
+import 'package:dirve_society/app/modules/profile/controllers/my_garage_controller.dart';
 import 'package:dirve_society/app/modules/profile/views/add_car_view.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +15,21 @@ import '../../../../common/helper/market_place_widget.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../market_place/views/listing_details_view.dart';
 
-class MyGarageView extends GetView {
+class MyGarageView extends StatefulWidget {
   const MyGarageView({super.key});
+
+  @override
+  State<MyGarageView> createState() => _MyGarageViewState();
+}
+
+class _MyGarageViewState extends State<MyGarageView> {
+  final MyGarageController myGarageController = Get.put(MyGarageController());
+
+  @override
+  void initState() {
+    myGarageController.getMyGarage();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,37 +188,51 @@ class MyGarageView extends GetView {
                   imageAssetPath: AppImages.add,
                   iconColor: AppColors.white,
                   onPressed: () {
-                    Get.to(()=> AddCarView());
+                    Get.to(() => AddCarView());
                   },
                 ),
               ],
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: DummyData.cars.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: EdgeInsets.only(
-                    top: index == 0 ? 12 : 8,
-                    bottom: index == DummyData.cars.length - 1 ? 20 : 0,
-                  ),
-                  child: MarketPlaceWidget(
-                    height: 200,
-                    name: DummyData.cars[index]['name']!,
-                    price: DummyData.cars[index]['price']!,
-                    date: DummyData.cars[index]['date']!,
-                    imageUrl: DummyData.cars[index]['image']!,
-                    onTap: () {
-                      Get.to(() => ListingDetailsView());
-                    },
-                  ),
-                ),
+          GetBuilder<MyGarageController>(builder: (controller) {
+            if (controller.inProgress) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: controller.myGarageList?.length,
+                    itemBuilder: (context, index) {
+                      final dateFormatter = DateFormatter(
+                          controller.myGarageList?[index].createdAt ??
+                              DateTime.now());
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          top: index == 0 ? 12 : 8,
+                          bottom: index == DummyData.cars.length - 1 ? 20 : 0,
+                        ),
+                        child: MarketPlaceWidget(
+                          height: 200,
+                          name: controller.myGarageList?[index].brand ?? '',
+                          price: controller.myGarageList?[index].price
+                                  .toString() ??
+                              '',
+                          date: dateFormatter.getFullDateFormat(),
+                          imageUrl:
+                              controller.myGarageList?[index].images[0] ?? '',
+                          onTap: () {
+                            Get.to(() => ListingDetailsView(
+                                  id: '',
+                                ));
+                          },
+                        ),
+                      );
+                    }),
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );

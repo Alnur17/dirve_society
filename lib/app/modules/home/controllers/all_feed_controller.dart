@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 
 import 'package:dirve_society/app/modules/home/model/all_feed_model.dart';
 import 'package:dirve_society/get_storage.dart';
@@ -16,7 +15,7 @@ class AllFeedController extends GetxController {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  List<AllFeedItemModel> postList = [];
+  var postList = <AllFeedItemModel>[].obs;
   List<AllFeedItemModel> get allPostList => postList;
 
   String? _otpToken;
@@ -100,7 +99,7 @@ class AllFeedController extends GetxController {
         isFavorite: post.isFavorite,
         isHide: post.isHide,
       );
-      update();
+      postList.refresh();
     }
   }
 
@@ -125,12 +124,11 @@ class AllFeedController extends GetxController {
         isFavorite: isSaved,
         isHide: post.isHide,
       );
-      update();
+      postList.refresh();
     }
   }
 
   void updatePostUnSave(String postId, bool isSaved) {
-    // Note: This method seems redundant with updatePostSave; consider merging or clarifying use case
     updatePostSave(postId, isSaved);
   }
 
@@ -155,7 +153,7 @@ class AllFeedController extends GetxController {
         isFavorite: post.isFavorite,
         isHide: isHidden,
       );
-      update();
+      postList.refresh();
     }
   }
 
@@ -193,7 +191,7 @@ class AllFeedController extends GetxController {
 
     if (updated) {
       print('Post(s) updated successfully for userId: $userId');
-      update();
+      postList.refresh();
     } else {
       print('No posts found for userId: $userId');
     }

@@ -1,13 +1,11 @@
-// ignore_for_file: avoid_print
-
-import 'package:dirve_society/app/modules/market_place/model/all_marketplace_model.dart';
+import 'package:dirve_society/app/modules/home/model/all_feed_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class AllMarketplaceController extends GetxController {
+class MyFeedController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
@@ -16,14 +14,13 @@ class AllMarketplaceController extends GetxController {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
+  AllFeedModel? _allFeedModel;
+  List<AllFeedItemModel>? get allFeedList => _allFeedModel?.data;
 
-  AllMarketPlaceModel? _allMarketPlaceModel;
-  List<AllMarketPlaceItemModel>? get allMarketPlaceList =>
-      _allMarketPlaceModel?.data;
+  final int _limit = 5;
+  int page = 0;
 
-  int? lastPage;
-
-  Future<bool> getAllMarketPlace() async {
+  Future<bool> getMyFeed() async {
     if (_inProgress) {
       return false;
     }
@@ -33,11 +30,9 @@ class AllMarketplaceController extends GetxController {
     _inProgress = true;
     update();
 
-    Map<String, dynamic> queryParams = {
-      'limit': 99999,
-    };
+    Map<String, dynamic> queryParams = {'limit': _limit, 'page': page};
     final NetworkResponse response = await networkCaller.getRequest(
-      Urls.allmarketPlaceUrl,
+      Urls.myfeedUrl,
       queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
@@ -46,8 +41,7 @@ class AllMarketplaceController extends GetxController {
       _errorMessage = null;
       isSuccess = true;
 
-      _allMarketPlaceModel =
-          AllMarketPlaceModel.fromJson(response.responseData);
+      _allFeedModel = AllFeedModel.fromJson(response.responseData);
 
       _errorMessage = null;
     } else {

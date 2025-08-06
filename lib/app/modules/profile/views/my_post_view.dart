@@ -1,3 +1,5 @@
+import 'package:dirve_society/app/modules/profile/controllers/my_feed_controller.dart';
+import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -8,8 +10,21 @@ import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 
-class MyPostView extends GetView {
+class MyPostView extends StatefulWidget {
   const MyPostView({super.key});
+
+  @override
+  State<MyPostView> createState() => _MyPostViewState();
+}
+
+class _MyPostViewState extends State<MyPostView> {
+  final MyFeedController myFeedController = Get.put(MyFeedController());
+
+  @override
+  void initState() {
+    myFeedController.getMyFeed();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +40,8 @@ class MyPostView extends GetView {
                 child: SizedBox(
                   height: 240,
                   width: double.infinity,
-                  child: Image.asset(
-                    AppImages.coverImage,
+                  child: Image.network(
+                    StorageUtil.getData(StorageUtil.profileCoverPhoto)!,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -55,7 +70,8 @@ class MyPostView extends GetView {
                 child: CircleAvatar(
                   radius: 45,
                   backgroundColor: AppColors.white,
-                  backgroundImage: AssetImage(AppImages.carImageFive),
+                  backgroundImage: NetworkImage(
+                      StorageUtil.getData(StorageUtil.profilePhotoUrl) ?? ''),
                 ),
               ),
               Positioned(
@@ -67,7 +83,7 @@ class MyPostView extends GetView {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Nissan R35 GTR',
+                      StorageUtil.getData(StorageUtil.profileName) ?? '',
                       style: h1.copyWith(
                         fontSize: 20,
                         color: AppColors.darkRed,
@@ -133,7 +149,7 @@ class MyPostView extends GetView {
                 ),
                 sh5,
                 ReadMoreText(
-                  '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
+                  StorageUtil.getData(StorageUtil.profileBio) ?? '',
                   trimLines: 2,
                   trimMode: TrimMode.Line,
                   trimCollapsedText: 'Show More',
@@ -159,34 +175,39 @@ class MyPostView extends GetView {
               style: h1.copyWith(fontSize: 20),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: GridView.builder(
-                padding: EdgeInsets.only(
-                  top: 12,
-                  bottom: 75,
-                ),
-                shrinkWrap: true,
-                //primary: false,
-                itemCount: 24,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  mainAxisExtent: 150,
-                ),
-                itemBuilder: (context, index) => ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    AppImages.carImageThree,
-                    scale: 4,
-                    fit: BoxFit.cover,
+          GetBuilder<MyFeedController>(builder: (context) {
+            if (myFeedController.inProgress) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: GridView.builder(
+                  padding: EdgeInsets.only(
+                    top: 12,
+                    bottom: 75,
+                  ),
+                  shrinkWrap: true,
+                  //primary: false,
+                  itemCount: myFeedController.allFeedList?.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    mainAxisExtent: 150,
+                  ),
+                  itemBuilder: (context, index) => ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      myFeedController.allFeedList?[index].content[0] ?? '',
+                      scale: 4,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
       floatingActionButton: ClipRRect(

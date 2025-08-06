@@ -1,3 +1,4 @@
+import 'package:dirve_society/app/modules/home/controllers/all_connection_controller.dart';
 import 'package:dirve_society/app/modules/profile/views/profile_view_mode_view.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
@@ -17,8 +18,19 @@ class ConnectView extends StatefulWidget {
 }
 
 class _ConnectViewState extends State<ConnectView> {
-  List<bool> buttonStates = List.generate(6, (_) => false);
   final ConnectController controller = Get.put(ConnectController());
+  final AllPendingConnectionController allPendingController =
+      Get.put(AllPendingConnectionController());
+
+  // Initialize buttonStates dynamically based on data length
+  late List<bool> buttonStates;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with a default size, will be updated when data is loaded
+    buttonStates = List.generate(6, (_) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +48,14 @@ class _ConnectViewState extends State<ConnectView> {
             padding: 4,
           ),
         ),
-        title: Text('Connect'),
+        title: const Text('Connect'),
         centerTitle: true,
       ),
       body: Column(
         children: [
           Container(
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            padding: EdgeInsets.all(6),
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: AppColors.silver,
               borderRadius: BorderRadius.circular(25),
@@ -68,42 +80,95 @@ class _ConnectViewState extends State<ConnectView> {
             child: Obx(() {
               // Switch between Users and Groups content based on tab selection
               return controller.isUsersSelected.value
-                  ? GridView.builder(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                        mainAxisExtent: 250,
-                      ),
-                      itemCount: 6,
-                      itemBuilder: (context, index) {
-                        return UserCard(
-                          title: 'SUPER CAR',
-                          rating: 4.7,
-                          description:
-                              'Duis vitae egestas sapien. Quisque onaaque in',
-                          isAdded: buttonStates[index],
-                          onButtonPressed: () {
-                            setState(() {
-                              buttonStates[index] = !buttonStates[index];
-                            });
-                          },
-                          onUserDetails: (){
-                            Get.to(()=> ProfileViewModeView());
-                          },
-                        );
-                      },
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text(
+                            'Connect Requests',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 300,
+                          child: GetBuilder<AllPendingConnectionController>(
+                            builder: (allPendingController) {
+                              if (allPendingController.inProgress) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (allPendingController.allPendingConnectionList == null ||
+                                  allPendingController.allPendingConnectionList!.isEmpty) {
+                                return const Center(
+                                  child: Text('No pending connections available'),
+                                );
+                              }
+                              // Update buttonStates to match the list length
+                              if (buttonStates.length !=
+                                  allPendingController.allPendingConnectionList!.length) {
+                                buttonStates = List.generate(
+                                  allPendingController.allPendingConnectionList!.length,
+                                  (_) => false,
+                                );
+                              }
+                              return ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                itemCount: allPendingController.allPendingConnectionList!.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: 200, // Ensure UserCard respects this width
+                                        child: UserCard(
+                                          title: allPendingController
+                                                  .allPendingConnectionList![index].modelType ??
+                                              '',
+                                          rating: 4.7,
+                                          description: 'Duis vitae egestas sapien. Quisque onaaque in',
+                                          isAdded: buttonStates[index],
+                                          onButtonPressed: () {
+                                            setState(() {
+                                              buttonStates[index] = !buttonStates[index];
+                                            });
+                                          },
+                                          onUserDetails: () {
+                                            Get.to(() => ProfileViewModeView());
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text(
+                            'Connect Requests',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     )
                   : GridView.builder(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
-                        mainAxisExtent: 235, // Adjusted for new card height
+                        mainAxisExtent: 235,
                       ),
                       itemCount: 6,
                       itemBuilder: (context, index) {
@@ -132,7 +197,7 @@ class _ConnectViewState extends State<ConnectView> {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.darkRed : AppColors.transparent,
             borderRadius: BorderRadius.circular(25),

@@ -1,13 +1,13 @@
 // ignore_for_file: avoid_print
 
-import 'package:dirve_society/app/modules/market_place/model/all_marketplace_model.dart';
+import 'package:dirve_society/app/modules/home/model/all_pending_connection_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class AllMarketplaceController extends GetxController {
+class AllPendingConnectionController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
@@ -16,14 +16,19 @@ class AllMarketplaceController extends GetxController {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-
-  AllMarketPlaceModel? _allMarketPlaceModel;
-  List<AllMarketPlaceItemModel>? get allMarketPlaceList =>
-      _allMarketPlaceModel?.data;
+  AllPendingConnectionModel? _allPendingConnectionModel;
+  List<AllPendingConnectionItemModel>? get allPendingConnectionList =>
+      _allPendingConnectionModel?.data;
 
   int? lastPage;
 
-  Future<bool> getAllMarketPlace() async {
+  @override
+  void onInit() {
+    getAllPendingConnection();
+    super.onInit();
+  }
+
+  Future<bool> getAllPendingConnection() async {
     if (_inProgress) {
       return false;
     }
@@ -37,7 +42,7 @@ class AllMarketplaceController extends GetxController {
       'limit': 99999,
     };
     final NetworkResponse response = await networkCaller.getRequest(
-      Urls.allmarketPlaceUrl,
+      Urls.allPendingConnection,
       queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
@@ -46,8 +51,8 @@ class AllMarketplaceController extends GetxController {
       _errorMessage = null;
       isSuccess = true;
 
-      _allMarketPlaceModel =
-          AllMarketPlaceModel.fromJson(response.responseData);
+      _allPendingConnectionModel =
+          AllPendingConnectionModel.fromJson(response.responseData);
 
       _errorMessage = null;
     } else {

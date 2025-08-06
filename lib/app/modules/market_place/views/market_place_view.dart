@@ -1,20 +1,32 @@
-import 'package:dirve_society/app/data/dummy_data.dart';
+import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
+import 'package:dirve_society/app/modules/market_place/controllers/market_place_controller.dart';
 import 'package:dirve_society/app/modules/market_place/views/filter_view.dart';
 import 'package:dirve_society/app/modules/market_place/views/listing_details_view.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:dirve_society/common/widgets/search_filed.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/helper/market_place_widget.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
-import '../controllers/market_place_controller.dart';
 
-class MarketPlaceView extends GetView<MarketPlaceController> {
+class MarketPlaceView extends StatefulWidget {
   const MarketPlaceView({super.key});
+
+  @override
+  State<MarketPlaceView> createState() => _MarketPlaceViewState();
+}
+
+class _MarketPlaceViewState extends State<MarketPlaceView> {
+  final AllMarketplaceController allMarketplaceController =
+      Get.put(AllMarketplaceController());
+
+  @override
+  void initState() {
+    allMarketplaceController.getAllMarketPlace();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +55,7 @@ class MarketPlaceView extends GetView<MarketPlaceController> {
                 sw8,
                 GestureDetector(
                   onTap: () {
-                    Get.to(()=> FilterView());
+                    Get.to(() => FilterView());
                   },
                   child: Container(
                     padding: EdgeInsets.all(12),
@@ -63,26 +75,39 @@ class MarketPlaceView extends GetView<MarketPlaceController> {
             ),
             sh16,
             Expanded(
-              child: GridView.builder(
-                padding: EdgeInsets.only(bottom: 20),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    mainAxisExtent: 250),
-                itemCount: DummyData.cars.length,
-                itemBuilder: (context, index) {
-                  return MarketPlaceWidget(
-                    name: DummyData.cars[index]['name']!,
-                    price: DummyData.cars[index]['price']!,
-                    date: DummyData.cars[index]['date']!,
-                    imageUrl: DummyData.cars[index]['image']!,
-                    onTap: () {
-                      Get.to(() => ListingDetailsView());
-                    },
-                  );
-                },
-              ),
+              child:
+                  GetBuilder<AllMarketplaceController>(builder: (controller) {
+                if (controller.inProgress) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return GridView.builder(
+                  padding: EdgeInsets.only(bottom: 20),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      mainAxisExtent: 250),
+                  itemCount: controller.allMarketPlaceList?.length,
+                  itemBuilder: (context, index) {
+                    final dateFormatter = DateFormatter(
+                        controller.allMarketPlaceList![index].createdAt ??
+                            DateTime.now());
+                    return MarketPlaceWidget(
+                      name: controller.allMarketPlaceList![index].brand ?? '',
+                      price: controller.allMarketPlaceList![index].price
+                          .toString(),
+                      date: dateFormatter.getRelativeTimeFormat(),
+                      imageUrl: controller.allMarketPlaceList![index].images[0],
+                      onTap: () {
+                        Get.to(() => ListingDetailsView(
+                              id: controller.allMarketPlaceList![index].id ??
+                                  '',
+                            ));
+                      },
+                    );
+                  },
+                );
+              }),
             ),
           ],
         ),

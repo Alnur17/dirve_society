@@ -44,7 +44,7 @@ class MarketPlaceWidget extends StatelessWidget {
             // Background image
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
+              child: Image.network(
                 imageUrl,
                 height: double.infinity,
                 width: double.infinity,

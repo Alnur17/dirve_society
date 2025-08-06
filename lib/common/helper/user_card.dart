@@ -20,7 +20,8 @@ class UserCard extends StatelessWidget {
     required this.rating,
     required this.description,
     required this.isAdded,
-    required this.onButtonPressed, required this.onUserDetails,
+    required this.onButtonPressed,
+    required this.onUserDetails,
   });
 
   @override
@@ -28,7 +29,9 @@ class UserCard extends StatelessWidget {
     return GestureDetector(
       onTap: onUserDetails,
       child: Container(
-        padding: EdgeInsets.all(12),
+        height: 300,
+        width: 200,
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -37,7 +40,7 @@ class UserCard extends StatelessWidget {
               color: Colors.grey.withOpacity(0.2),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -48,9 +51,9 @@ class UserCard extends StatelessWidget {
             CircleAvatar(
               radius: 40,
               backgroundColor: Colors.grey[300],
-              backgroundImage: AssetImage(AppImages.carImage),
+              backgroundImage: const AssetImage(AppImages.carImage),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               title,
               style: h1.copyWith(fontSize: 20),
@@ -58,7 +61,7 @@ class UserCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.star,
                   color: AppColors.darkRed,
                 ),
@@ -79,8 +82,15 @@ class UserCard extends StatelessWidget {
             ),
             sh12,
             CustomButton(
-              height: 32,
+              height: 28,
               text: isAdded ? 'Remove' : '+ Add',
+              onPressed: onButtonPressed,
+              backgroundColor: isAdded ? AppColors.grey : AppColors.darkRed,
+            ),
+             SizedBox(height: 4,),
+             CustomButton(
+              height: 28,
+              text: isAdded ? 'Remove' : 'Rejected',
               onPressed: onButtonPressed,
               backgroundColor: isAdded ? AppColors.grey : AppColors.darkRed,
             ),
