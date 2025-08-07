@@ -1,5 +1,6 @@
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 import 'package:get/get.dart';
 
@@ -9,7 +10,8 @@ import '../../../../common/const_text/const_text.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 
 class TermsAndConditionsView extends GetView {
-  const TermsAndConditionsView({super.key});
+  final String data;
+  const TermsAndConditionsView({ required this.data, super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,46 +38,7 @@ class TermsAndConditionsView extends GetView {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              sh30,
-              // Text(
-              //   'Terms & Conditions',
-              //   style: h2,
-              // ),
-              // sh24,
-              Text(
-                termsIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                termsIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                termsIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                termsIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                termsIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
+              Html(data: data),
             ],
           ),
         ),

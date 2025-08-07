@@ -273,7 +273,7 @@ class ClubView extends GetView<ClubController> {
       ),
       floatingActionButton: ClipRRect(
         borderRadius: BorderRadius.circular(40),
-        child: FloatingActionButton(
+        child: FloatingActionButton( 
           onPressed: () {},
           backgroundColor: AppColors.darkRed,
           child: Icon(Icons.add,size: 32,color: AppColors.white,),

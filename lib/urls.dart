@@ -13,9 +13,12 @@ class Urls {
   static const String myfeedUrl = '$_baseUrl/feeds/my-feed';
   static const String carRatingUrl = '$_baseUrl/car-ratings';
   static const String myGarageUrl = '$_baseUrl/cars/my-car';
+  static const String myClubUrl = '$_baseUrl/clubs/my-club';
+  static const String myFavouriteUrl = '$_baseUrl/favorite/my-favorite';
   static const String allPendingConnection =
       '$_baseUrl/connect-requests/my-connection';
   static const String allmarketPlaceUrl = '$_baseUrl/cars';
+  static const String contentUrl = '$_baseUrl/contents';
 
   static String getMarketPlaceUrlById(
     String id,
@@ -44,7 +47,6 @@ class Urls {
   static const String allBlockersUrl = '$_baseUrl/profile-block/my-block';
   static const String allUserssUrl = '$_baseUrl/users/public';
   static const String sendCommentUrl = '$_baseUrl/comments';
-  static const String contentUrl = '$_baseUrl/contents';
 
   static String commentByContentId(
     String id,

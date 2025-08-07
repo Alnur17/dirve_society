@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 import 'package:get/get.dart';
 
@@ -9,7 +10,8 @@ import '../../../../common/const_text/const_text.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 
 class AboutUsView extends GetView {
-  const AboutUsView({super.key});
+  final String data;
+  const AboutUsView({ required this.data, super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,53 +37,7 @@ class AboutUsView extends GetView {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              sh30,
-              // Text(
-              //   'About Us',
-              //   style: h2,
-              // ),
-              // sh24,
-              Text(
-                acceptance0fTerms,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                acceptance0fTerms,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                acceptance0fTerms,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                acceptance0fTerms,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                acceptance0fTerms,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                acceptance0fTerms,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
+              Html(data: data),
             ],
           ),
         ),

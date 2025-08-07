@@ -1,3 +1,4 @@
+import 'package:dirve_society/app/modules/profile/controllers/my_favourite_controller.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -8,8 +9,23 @@ import '../../../../common/app_images/app_images.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../../../common/widgets/custom_circular_container.dart';
 
-class SavedView extends GetView {
+class SavedView extends StatefulWidget {
   const SavedView({super.key});
+
+  @override
+  State<SavedView> createState() => _SavedViewState();
+}
+
+class _SavedViewState extends State<SavedView> {
+  final MyFavouriteController _myFavouriteController =
+      Get.put(MyFavouriteController());
+
+  @override
+  void initState() {
+    _myFavouriteController.getMyFavourite();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +43,10 @@ class SavedView extends GetView {
           ),
         ),
         scrolledUnderElevation: 0,
-        title:  Text('Saved',style: appBarStyle,),
+        title: Text(
+          'Saved',
+          style: appBarStyle,
+        ),
         centerTitle: true,
         actions: [
           CustomCircularContainer(
@@ -51,34 +70,39 @@ class SavedView extends GetView {
               style: h1.copyWith(fontSize: 20),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: GridView.builder(
-                padding: EdgeInsets.only(
-                  top: 12,
-                  bottom: 20,
-                ),
-                shrinkWrap: true,
-                //primary: false,
-                itemCount: 24,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  mainAxisExtent: 150,
-                ),
-                itemBuilder: (context, index) => ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    AppImages.carImageThree,
-                    scale: 4,
-                    fit: BoxFit.cover,
+          GetBuilder<MyFavouriteController>(builder: (controller) {
+            if (controller.inProgress) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: GridView.builder(
+                  padding: EdgeInsets.only(
+                    top: 12,
+                    bottom: 20,
+                  ),
+                  shrinkWrap: true,
+                  //primary: false,
+                  itemCount: controller.myFavouriteList?.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    mainAxisExtent: 150,
+                  ),
+                  itemBuilder: (context, index) => ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      controller.myFavouriteList![index].content?.content[0] ?? '',
+                      scale: 4,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );

@@ -1,15 +1,13 @@
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
-import '../../../../common/const_text/const_text.dart';
-import '../../../../common/size_box/custom_sizebox.dart';
 
 class PrivacyAndSecurityView extends GetView {
-  const PrivacyAndSecurityView({super.key});
+  final String data;
+  const PrivacyAndSecurityView({required this.data, super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +15,10 @@ class PrivacyAndSecurityView extends GetView {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         backgroundColor: AppColors.mainColor,
-        title: Text('Privacy Policy',style: appBarStyle,),
+        title: Text(
+          'Privacy Policy',
+          style: appBarStyle,
+        ),
         centerTitle: true,
         leading: GestureDetector(
           onTap: () {
@@ -32,50 +33,10 @@ class PrivacyAndSecurityView extends GetView {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16),
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              sh30,
-              // Text(
-              //   'Privacy Policy',
-              //   style: h2,
-              // ),
-              // sh24,
-              Text(
-                policyIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                policyIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                policyIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-              sh24,
-              Text(
-                policyIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ), sh24,
-              Text(
-                policyIntroduction,
-                style: h4.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-            ],
+            children: [Html(data: data)],
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:dirve_society/app/modules/profile/controllers/content_controller.dart';
 import 'package:dirve_society/app/modules/profile/views/changed_password_view.dart';
 import 'package:dirve_society/app/modules/profile/views/edit_profile_details_view.dart';
 import 'package:dirve_society/app/modules/profile/views/my_clubs_view.dart';
@@ -16,11 +17,23 @@ import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_list_tile.dart';
-import '../controllers/profile_controller.dart';
 import 'about_us_view.dart';
 
-class ProfileView extends GetView<ProfileController> {
+class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
+
+  @override
+  State<ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<ProfileView> {
+  final ContentController _contentController = Get.put(ContentController());
+
+  @override
+  void initState() {
+    _contentController.getMyContent();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,110 +178,116 @@ class ProfileView extends GetView<ProfileController> {
             ),
           ),
           sh20,
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomListTile(
-                      onTap: () {
-                        Get.to(() => EditProfileDetailsView());
-                      },
-                      leadingImage: AppImages.edit,
-                      title: 'Edit Profile Details',
-                      trailingImage: AppImages.arrowRightSmall,
-                    ),
-                    sh12,
-                    CustomListTile(
-                      onTap: () {
-                        Get.to(() => MyPostView());
-                      },
-                      leadingImage: AppImages.gallery,
-                      title: 'My Posts',
-                      trailingImage: AppImages.arrowRightSmall,
-                    ),
-                    sh12,
-                    CustomListTile(
-                      onTap: () {
-                        Get.to(() => MyGarageView());
-                      },
-                      leadingImage: AppImages.garage,
-                      title: 'My Garage',
-                      trailingImage: AppImages.arrowRightSmall,
-                    ),
-                    sh12,
-                    CustomListTile(
-                      onTap: () {
-                        Get.to(() => MyClubsView());
-                      },
-                      leadingImage: AppImages.edit,
-                      title: 'My Clubs',
-                      trailingImage: AppImages.arrowRightSmall,
-                    ),
-                    sh12,
-                    CustomListTile(
-                      onTap: () {
-                        Get.to(() => SavedView());
-                      },
-                      leadingImage: AppImages.favorite,
-                      title: 'Saved',
-                      trailingImage: AppImages.arrowRightSmall,
-                    ),
-                    sh12,
-                    CustomListTile(
-                      onTap: () {
-                        Get.to(() => ChangedPasswordView());
-                      },
-                      leadingImage: AppImages.keyLight,
-                      title: 'Change Password',
-                      trailingImage: AppImages.arrowRightSmall,
-                    ),
-                    sh12,
-                    CustomListTile(
-                      onTap: () {
-                        Get.to(() => PrivacyAndSecurityView());
-                      },
-                      leadingImage: AppImages.privacy,
-                      title: 'Privacy and security',
-                      trailingImage: AppImages.arrowRightSmall,
-                    ),
-                    sh12,
-                    CustomListTile(
-                      onTap: () {
-                        Get.to(() => TermsAndConditionsView());
-                      },
-                      leadingImage: AppImages.termsAndConditions,
-                      title: 'Terms & Conditions',
-                      trailingImage: AppImages.arrowRightSmall,
-                    ),
-                    sh12,
-                    CustomListTile(
-                      onTap: () {
-                        Get.to(() => AboutUsView());
-                      },
-                      leadingImage: AppImages.aboutUs,
-                      title: 'About Us',
-                      trailingImage: AppImages.arrowRightSmall,
-                    ),
-                    sh12,
-                    Center(
-                      child: CustomButton(
-                        text: 'Log Out',
-                        onPressed: () {},
-                        imageAssetPath: AppImages.logout,
-                        width: 150,
-                        textColor: AppColors.red,
-                        backgroundColor: Colors.red[50],
+          GetBuilder<ContentController>(builder: (controller) {
+            return Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => EditProfileDetailsView());
+                        },
+                        leadingImage: AppImages.edit,
+                        title: 'Edit Profile Details',
+                        trailingImage: AppImages.arrowRightSmall,
                       ),
-                    ),
-                    sh40,
-                  ],
+                      sh12,
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => MyPostView());
+                        },
+                        leadingImage: AppImages.gallery,
+                        title: 'My Posts',
+                        trailingImage: AppImages.arrowRightSmall,
+                      ),
+                      sh12,
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => MyGarageView());
+                        },
+                        leadingImage: AppImages.garage,
+                        title: 'My Garage',
+                        trailingImage: AppImages.arrowRightSmall,
+                      ),
+                      sh12,
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => MyClubsView());
+                        },
+                        leadingImage: AppImages.edit,
+                        title: 'My Clubs',
+                        trailingImage: AppImages.arrowRightSmall,
+                      ),
+                      sh12,
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => SavedView());
+                        },
+                        leadingImage: AppImages.favorite,
+                        title: 'Saved',
+                        trailingImage: AppImages.arrowRightSmall,
+                      ),
+                      sh12,
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => ChangedPasswordView());
+                        },
+                        leadingImage: AppImages.keyLight,
+                        title: 'Change Password',
+                        trailingImage: AppImages.arrowRightSmall,
+                      ),
+                      sh12,
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => PrivacyAndSecurityView(
+                                data:
+                                    controller.contectList?[0].privacyPolicy ??
+                                        '',
+                              ));
+                        },
+                        leadingImage: AppImages.privacy,
+                        title: 'Privacy and security',
+                        trailingImage: AppImages.arrowRightSmall,
+                      ),
+                      sh12,
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => TermsAndConditionsView(data: controller.contectList?[0].termsAndConditions ?? '',));
+                        },
+                        leadingImage: AppImages.termsAndConditions,
+                        title: 'Terms & Conditions',
+                        trailingImage: AppImages.arrowRightSmall,
+                      ),
+                      sh12,
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => AboutUsView(data: controller.contectList?[0].aboutUs ?? '',));
+                        },
+                        leadingImage: AppImages.aboutUs,
+                        title: 'About Us',
+                        trailingImage: AppImages.arrowRightSmall,
+                      ),
+                      sh12,
+                      Center(
+                        child: CustomButton(
+                          text: 'Log Out',
+                          onPressed: () {},
+                          imageAssetPath: AppImages.logout,
+                          width: 150,
+                          textColor: AppColors.red,
+                          backgroundColor: Colors.red[50],
+                        ),
+                      ),
+                      sh40,
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );

@@ -1,5 +1,8 @@
+import 'package:dirve_society/app/modules/club/views/club_view.dart';
+import 'package:dirve_society/app/modules/profile/controllers/my_club_controller.dart';
 import 'package:dirve_society/app/modules/profile/views/create_club_view.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
+import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -11,8 +14,21 @@ import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/helper/group_card.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 
-class MyClubsView extends GetView {
+class MyClubsView extends StatefulWidget {
   const MyClubsView({super.key});
+
+  @override
+  State<MyClubsView> createState() => _MyClubsViewState();
+}
+
+class _MyClubsViewState extends State<MyClubsView> {
+  final MyClubController myClubController = Get.put(MyClubController());
+
+  @override
+  void initState() {
+    myClubController.getMyClub();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +44,8 @@ class MyClubsView extends GetView {
                 child: SizedBox(
                   height: 240,
                   width: double.infinity,
-                  child: Image.asset(
-                    AppImages.coverImage,
+                  child: Image.network(
+                    StorageUtil.getData(StorageUtil.profileCoverPhoto)!,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -58,7 +74,8 @@ class MyClubsView extends GetView {
                 child: CircleAvatar(
                   radius: 45,
                   backgroundColor: AppColors.white,
-                  backgroundImage: AssetImage(AppImages.carImageFive),
+                  backgroundImage: NetworkImage(
+                      StorageUtil.getData(StorageUtil.profilePhotoUrl)!),
                 ),
               ),
               Positioned(
@@ -70,7 +87,7 @@ class MyClubsView extends GetView {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Nissan R35 GTR',
+                      '${StorageUtil.getData(StorageUtil.profileName)}',
                       style: h1.copyWith(
                         fontSize: 20,
                         color: AppColors.darkRed,
@@ -86,7 +103,7 @@ class MyClubsView extends GetView {
                         ),
                         sw5,
                         Text(
-                          '4.7',
+                          '${StorageUtil.getData(StorageUtil.profileAvgRating)}',
                           style: h3.copyWith(
                             color: AppColors.darkRed,
                             fontWeight: FontWeight.w700,
@@ -136,7 +153,7 @@ class MyClubsView extends GetView {
                 ),
                 sh5,
                 ReadMoreText(
-                  '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
+                  '${StorageUtil.getData(StorageUtil.profileBio)}',
                   trimLines: 2,
                   trimMode: TrimMode.Line,
                   trimCollapsedText: 'Show More',
@@ -169,7 +186,7 @@ class MyClubsView extends GetView {
                   height: 38,
                   text: 'Create Club',
                   onPressed: () {
-                    Get.to(()=> CreateClubView());
+                    Get.to(() => CreateClubView());
                   },
                   imageAssetPath: AppImages.add,
                   iconColor: AppColors.white,
@@ -177,31 +194,37 @@ class MyClubsView extends GetView {
               ],
             ),
           ),
-          Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.only(
-                top: 12,
-                bottom: 20,
-                left: 20,right: 20
+          GetBuilder<MyClubController>(builder: (controller) {
+            if (myClubController.inProgress) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return Expanded(
+              child: GridView.builder(
+                padding:
+                    EdgeInsets.only(top: 12, bottom: 20, left: 20, right: 20),
+                shrinkWrap: true,
+                //primary: false,
+                itemCount: controller.myClubList?.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  mainAxisExtent: 210,
+                ),
+                itemBuilder: (context, index) => GroupCard(
+                  ontap: () {
+                    Get.to(() => ClubView());
+                  },
+                  title: controller.myClubList?[index].name ?? 'Nissan R35 GTR',
+                  memberCount:
+                      '${controller.myClubList?[index].member ?? 0} Members',
+                  isPublic: true,
+                  isJoined: false,
+                  showButton: false,
+                ),
               ),
-              shrinkWrap: true,
-              //primary: false,
-              itemCount: 24,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                mainAxisExtent: 200,
-              ),
-              itemBuilder: (context, index) => GroupCard(
-                title: 'SUPER CAR',
-                memberCount: '10.1K Members',
-                isPublic: true,
-                isJoined: false,
-                showButton: false,
-              ),
-            ),
-          ),
+            );
+          }),
         ],
       ),
     );
