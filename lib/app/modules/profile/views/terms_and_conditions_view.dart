@@ -1,13 +1,10 @@
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-
 import 'package:get/get.dart';
-
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
-import '../../../../common/const_text/const_text.dart';
-import '../../../../common/size_box/custom_sizebox.dart';
+
 
 class TermsAndConditionsView extends GetView {
   final String data;

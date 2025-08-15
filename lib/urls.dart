@@ -24,6 +24,7 @@ class Urls {
   static const String addCarUrl = '$_baseUrl/cars';
   static const String reviewUrl = '$_baseUrl/reviews';
   static const String favouriteUrl = '$_baseUrl/favorite';
+  static const String allStoryUrl = '$_baseUrl/stories';
 
   static String getMarketPlaceUrlById(
     String id,

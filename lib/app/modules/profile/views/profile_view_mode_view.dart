@@ -1,17 +1,11 @@
 import 'package:dirve_society/app/modules/profile/controllers/profile_controller.dart';
-import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:readmore/readmore.dart';
-
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
-import '../../../../common/helper/market_place_widget.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
-import '../../../data/dummy_data.dart';
-import '../../market_place/views/listing_details_view.dart';
 
 class ProfileViewModeView extends GetView {
   const ProfileViewModeView({super.key});

@@ -1,64 +1,61 @@
+import 'package:dirve_society/get_storage.dart';
+import 'package:dirve_society/services/network_caller/network_caller.dart';
+import 'package:dirve_society/services/network_caller/network_response.dart';
+import 'package:dirve_society/urls.dart';
+import 'package:get/get.dart';
 
+class SendCommentController extends GetxController {
+  bool _inProgress = false;
+  bool get inProgress => _inProgress;
 
-// import 'package:get/get.dart';
-// import 'package:windx1999/app/modules/authentication/controllers/otp_verify_controller.dart';
-// import 'package:windx1999/app/services/network_caller/network_caller.dart';
-// import 'package:windx1999/app/services/network_caller/network_response.dart';
-// import 'package:windx1999/app/urls.dart';
-// import 'package:windx1999/get_storage.dart';
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
 
-// class SendCommentController extends GetxController {
-//   final OtpVerifyController otpVerifyController = OtpVerifyController();
-//   bool _inProgress = false;
-//   bool get inProgress => _inProgress;
+  String? _otpToken;
+  String? get otpToken => _otpToken;
 
-//   String? _errorMessage;
-//   String? get errorMessage => _errorMessage;
+  Future<bool> sendComment(String userId, String modelType, String contentId,
+      String comment, bool isReply, String? replyRef) async {
+    bool isSuccess = false;
 
-//   String? _otpToken;
-//   String? get otpToken => _otpToken;
+    _inProgress = true;
+    update();
+    Map<String, dynamic> requestBody;
 
-//   Future<bool> sendComment(String userId, String modelType, String contentId,
-//       String comment, bool isReply, String? replyRef) async {
-//     bool isSuccess = false;
+    {}
+    print('reply reference : $replyRef');
+    if (replyRef == null || replyRef.isEmpty) {
+      requestBody = {
+        "user": userId,
+        "model_type": modelType, // here modelType is: Wishlist | Feed | Reels
+        "content": contentId, // post id
+        "comment": comment,
+        "isReply": isReply
+      };
+    } else {
+      requestBody = {
+        "user": userId,
+        "model_type": modelType, // here modelType is: Wishlist | Feed | Reels
+        "content": contentId, // post id
+        "comment": comment,
+        "isReply": isReply,
+        "replyRef": replyRef
+      };
+    }
 
-//     _inProgress = true;
-//     update();
-//     Map<String, dynamic> requestBody;
+    final NetworkResponse response = await Get.find<NetworkCaller>()
+        .postRequest(Urls.sendCommentUrl, requestBody,
+            accesToken: StorageUtil.getData(StorageUtil.userAccessToken));
 
-//     print('reply reference : $replyRef');
-//     if (replyRef == null || replyRef.isEmpty) {
-//       requestBody = {
-//         "user": userId,
-//         "modelType": modelType, // here modelType is: Wishlist | Feed | Reels
-//         "content": contentId, // post id
-//         "comment": comment,
-//         "isReply": isReply
-//       };
-//     } else {
-//       requestBody = {
-//         "user": userId,
-//         "modelType": modelType, // here modelType is: Wishlist | Feed | Reels
-//         "content": contentId, // post id
-//         "comment": comment,
-//         "isReply": isReply,
-//         "replyRef": replyRef
-//       };
-//     }
+    if (response.isSuccess) {
+      _errorMessage = null;
+      isSuccess = true;
+    } else {
+      _errorMessage = response.errorMessage;
+    }
 
-//     final NetworkResponse response = await Get.find<NetworkCaller>()
-//         .postRequest(Urls.sendCommentUrl, requestBody,
-//             accesToken: StorageUtil.getData(StorageUtil.userAccessToken));
-
-//     if (response.isSuccess) {
-//       _errorMessage = null;
-//       isSuccess = true;
-//     } else {
-//       _errorMessage = response.errorMessage;
-//     }
-
-//     _inProgress = false;
-//     update();
-//     return isSuccess;
-//   }
-// }
+    _inProgress = false;
+    update();
+    return isSuccess;
+  }
+}

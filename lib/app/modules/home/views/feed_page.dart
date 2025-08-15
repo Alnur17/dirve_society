@@ -1,10 +1,12 @@
 // ignore_for_file: avoid_print
 import 'package:dirve_society/app/modules/home/controllers/all_feed_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/all_car_rating_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/all_story_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/dis_react_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/react_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/save_post_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/un_saved_post_controller.dart';
+import 'package:dirve_society/app/modules/home/views/comment_screen.dart';
 import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
@@ -35,6 +37,8 @@ class _FeedPageState extends State<FeedPage> {
   final AllCarRatingController allCarRatingController =
       Get.put(AllCarRatingController());
 
+  final AllStoryController allStoryController = Get.put(AllStoryController());
+
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -44,6 +48,7 @@ class _FeedPageState extends State<FeedPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       allFeedController.getAllFeed();
       allCarRatingController.getAllCarRating();
+      allStoryController.getAllStory();
     });
   }
 
@@ -154,22 +159,87 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 80.0,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 10,
-            itemBuilder: (context, index) => Padding(
-              padding: EdgeInsets.only(
-                left: index == 0 ? 20 : 0,
-                right: index == 10 - 1 ? 20 : 8,
-              ),
-              child: StoryWidget(
-                image: AppImages.carImage,
-              ),
+        GetBuilder<AllStoryController>(builder: (controller) {
+          if (controller.inProgress) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return Container(
+            color: Colors.transparent,
+            height: 90,
+            width: double.infinity,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(StorageUtil.getData(
+                                  StorageUtil.profilePhotoUrl))),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: CircleAvatar(
+                              radius: 10,
+                              backgroundColor: Colors.black,
+                              child: Icon(
+                                Icons.add,
+                                size: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        'My Story',
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.storData?.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.only(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StoryWidget(
+                            image: controller.storData![index].user?.stories[0]
+                                    .content ??
+                                '',
+                          ),
+                          Text(
+                            controller.storData![index].user?.stories[0].text ??
+                                '',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ),
+          );
+        }),
         sh12,
         Expanded(
           child: Obx(() {
@@ -224,13 +294,13 @@ class _FeedPageState extends State<FeedPage> {
                               : reactPost(feed.contentMeta?.id ?? '');
                         },
                         onCommentTap: () {
-                          // Get.to(CommentScreen(
-                          //   postId: feed.id ?? '',
-                          //   postType: 'feed',
-                          //   onCommentPosted: (newCommentCount) {
-                          //     allFeedController.updatePostComment(feed.id ?? '', newCommentCount);
-                          //   },
-                          // ));
+                          Get.to(CommentScreen(
+                            postId: feed.id ?? '',
+                            postType: 'feed',
+                            // onCommentPosted: (newCommentCount) {
+                            //   allFeedController.updatePostComment(feed.id ?? '', newCommentCount);
+                            // },
+                          ));
                         },
                         onBookmarkTap: () {
                           print('Bookmark tapped for post ID: ${feed.id}');
