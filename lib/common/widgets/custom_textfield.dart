@@ -63,11 +63,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ? TextInputType.text
             : TextInputType.multiline, // No multiline for password
         obscureText: widget.isPassword ? _obscureText : false,
-        style: TextStyle(color: widget.textColor ?? AppColors.white),
+        style: TextStyle(color: widget.textColor ?? AppColors.black),
         decoration: InputDecoration(
           hintText: widget.hintText ?? '',
           hintStyle:
-              widget.hintTextStyle ?? h5.copyWith(color: AppColors.white),
+              widget.hintTextStyle ?? h5.copyWith(color: AppColors.black),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           prefixIcon: widget.preIcon,

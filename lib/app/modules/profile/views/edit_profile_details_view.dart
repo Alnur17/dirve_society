@@ -26,7 +26,7 @@ class EditProfileDetailsView extends StatefulWidget {
 }
 
 class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController(); 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
   final TextEditingController addressController = TextEditingController();

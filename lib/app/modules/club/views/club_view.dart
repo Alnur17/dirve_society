@@ -225,13 +225,12 @@ class ClubView extends GetView<ClubController> {
                             padding: EdgeInsets.only(bottom: 30),
                             itemCount: 10,
                             itemBuilder: (context, index) => PostCard(
+                              isLiked: true,
+                              isSaved: false,
+                              profileImage: AppImages.carImage,
                               clubName: 'MC20 Owners CLUB',
                               userName: 'John Doe',
-                              postImages: [
-                                AppImages.carImage,
-                                AppImages.carImageThree,
-                                AppImages.carImageTwo,
-                              ],
+                              contentPath: '',
                               description:
                                   'Nam posuere elit a facilisis hendrerit. Phasellus cursus nisi vel tempor gravida. Vivamus sollicitudin a nisi eu aliquam aliqu...',
                               hashtags: '#Blessed #MC20',

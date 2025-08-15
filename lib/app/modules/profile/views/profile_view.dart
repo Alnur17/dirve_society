@@ -93,7 +93,7 @@ class _ProfileViewState extends State<ProfileView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Nissan R35 GTR',
+                      StorageUtil.getData(StorageUtil.profileName) ?? '',
                       style: h1.copyWith(
                         fontSize: 20,
                         color: AppColors.darkRed,
@@ -109,7 +109,7 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                         sw5,
                         Text(
-                          '4.7',
+                          StorageUtil.getData(StorageUtil.profileAvgRating).toString(),
                           style: h3.copyWith(
                             color: AppColors.darkRed,
                             fontWeight: FontWeight.w700,
@@ -159,7 +159,7 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
                 sh5,
                 ReadMoreText(
-                  '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
+                  StorageUtil.getData(StorageUtil.profileBio) ?? '',
                   trimLines: 2,
                   trimMode: TrimMode.Line,
                   trimCollapsedText: 'Show More',

@@ -7,6 +7,7 @@ class Urls {
   static const String otpVerifyUrl = '$_baseUrl/otp/verify-otp';
   static const String loginUrl = '$_baseUrl/auth/login';
   static const String forgotPasswordUrl = '$_baseUrl/auth/forget-password';
+  static const String changePasswordUrl = '$_baseUrl/auth/change-password';
   static const String profileUrl = '$_baseUrl/profiles/my-profile';
   static const String editProfileUrl = '$_baseUrl/profiles/update-my-profile';
   static const String allfeedUrl = '$_baseUrl/feeds';
@@ -15,15 +16,25 @@ class Urls {
   static const String myGarageUrl = '$_baseUrl/cars/my-car';
   static const String myClubUrl = '$_baseUrl/clubs/my-club';
   static const String myFavouriteUrl = '$_baseUrl/favorite/my-favorite';
+  static const String createClubUrl = '$_baseUrl/clubs';
   static const String allPendingConnection =
       '$_baseUrl/connect-requests/my-connection';
   static const String allmarketPlaceUrl = '$_baseUrl/cars';
   static const String contentUrl = '$_baseUrl/contents';
+  static const String addCarUrl = '$_baseUrl/cars';
+  static const String reviewUrl = '$_baseUrl/reviews';
+  static const String favouriteUrl = '$_baseUrl/favorite';
 
   static String getMarketPlaceUrlById(
     String id,
   ) {
     return '$_baseUrl/cars/$id';
+  }
+
+  static String getReviewById(
+    String id,
+  ) {
+    return '$_baseUrl/reviews/reference/$id';
   }
 
   static String updateUserByUrl(
@@ -159,7 +170,7 @@ class Urls {
   static String unSavePostById(
     String id,
   ) {
-    return '$_baseUrl/watch-later/content/$id';
+    return '$_baseUrl/favorite/$id';
   }
 
   static String userUnblockById(

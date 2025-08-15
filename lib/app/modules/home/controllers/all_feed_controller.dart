@@ -1,4 +1,4 @@
-
+// ignore_for_file: avoid_print
 import 'package:dirve_society/app/modules/home/model/all_feed_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
@@ -7,7 +7,7 @@ import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
 class AllFeedController extends GetxController {
-  final NetworkCaller networkCaller = Get.put(NetworkCaller());
+  final NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
   bool _inProgress = false;
   bool get inProgress => _inProgress;
@@ -62,8 +62,6 @@ class AllFeedController extends GetxController {
       if (allFeedModel.meta?.totalPage != null) {
         lastPage = allFeedModel.meta!.totalPage;
       }
-
-      _errorMessage = null;
     } else {
       _errorMessage = response.errorMessage;
     }
@@ -74,8 +72,10 @@ class AllFeedController extends GetxController {
   }
 
   void updatePostLike(String postId, bool isLiked, int likeCount) {
-    int index = postList.indexWhere((post) => post.id == postId);
+    print('Updating post like for postId: $postId, isLiked: $isLiked, likeCount: $likeCount');
+    int index = postList.indexWhere((post) => post.contentMeta?.id == postId);
     if (index != -1) {
+      print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
         hideBy: post.hideBy,
@@ -99,13 +99,18 @@ class AllFeedController extends GetxController {
         isFavorite: post.isFavorite,
         isHide: post.isHide,
       );
-      postList.refresh();
+      postList.refresh(); // UI আপডেটের জন্য
+      print('Post updated and list refreshed');
+    } else {
+      print('Post not found for postId: $postId');
     }
   }
 
   void updatePostSave(String postId, bool isSaved) {
+    print('Updating post save for postId: $postId, isSaved: $isSaved');
     int index = postList.indexWhere((post) => post.id == postId);
     if (index != -1) {
+      print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
         hideBy: post.hideBy,
@@ -125,6 +130,9 @@ class AllFeedController extends GetxController {
         isHide: post.isHide,
       );
       postList.refresh();
+      print('Post updated and list refreshed');
+    } else {
+      print('Post not found for postId: $postId');
     }
   }
 
@@ -133,8 +141,10 @@ class AllFeedController extends GetxController {
   }
 
   void updatePostHide(String postId, bool isHidden) {
+    print('Updating post hide for postId: $postId, isHidden: $isHidden');
     int index = postList.indexWhere((post) => post.id == postId);
     if (index != -1) {
+      print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
         hideBy: post.hideBy,
@@ -154,46 +164,44 @@ class AllFeedController extends GetxController {
         isHide: isHidden,
       );
       postList.refresh();
+      print('Post updated and list refreshed');
+    } else {
+      print('Post not found for postId: $postId');
     }
   }
 
-  void updateFollowStatus(String userId, bool isFollowingNow) {
-    print('Update follow status for userId: $userId');
-    if (postList.isEmpty) {
-      print('postList is empty');
-      return;
-    }
-
-    bool updated = false;
-    for (int index = 0; index < postList.length; index++) {
+  void updatePostComment(String postId, int commentCount) {
+    print('Updating post comment for postId: $postId, commentCount: $commentCount');
+    int index = postList.indexWhere((post) => post.id == postId);
+    if (index != -1) {
+      print('Post found at index: $index');
       final post = postList[index];
-      if (post.author?.id == userId) {
-        postList[index] = AllFeedItemModel(
-          hideBy: post.hideBy,
-          id: post.id,
-          author: post.author,
-          club: post.club,
-          content: post.content,
-          description: post.description,
-          tags: post.tags,
-          contentMeta: post.contentMeta,
-          isDeleted: post.isDeleted,
-          createdAt: post.createdAt,
-          updatedAt: post.updatedAt,
-          isLiked: post.isLiked,
-          isVisible: post.isVisible,
-          isFavorite: post.isFavorite,
-          isHide: post.isHide,
-        );
-        updated = true;
-      }
-    }
-
-    if (updated) {
-      print('Post(s) updated successfully for userId: $userId');
+      postList[index] = AllFeedItemModel(
+        hideBy: post.hideBy,
+        id: post.id,
+        author: post.author,
+        club: post.club,
+        content: post.content,
+        description: post.description,
+        tags: post.tags,
+        contentMeta: ContentMeta(
+          id: post.contentMeta?.id,
+          like: post.contentMeta?.like,
+          likeBy: post.contentMeta?.likeBy ?? [],
+          comment: commentCount,
+        ),
+        isDeleted: post.isDeleted,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        isLiked: post.isLiked,
+        isVisible: post.isVisible,
+        isFavorite: post.isFavorite,
+        isHide: post.isHide,
+      );
       postList.refresh();
+      print('Post updated and list refreshed');
     } else {
-      print('No posts found for userId: $userId');
+      print('Post not found for postId: $postId');
     }
   }
 }

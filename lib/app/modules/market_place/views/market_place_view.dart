@@ -84,7 +84,7 @@ class _MarketPlaceViewState extends State<MarketPlaceView> {
                   padding: EdgeInsets.only(bottom: 20),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 16,
+                      crossAxisSpacing: 16, 
                       mainAxisSpacing: 16,
                       mainAxisExtent: 250),
                   itemCount: controller.allMarketPlaceList?.length,

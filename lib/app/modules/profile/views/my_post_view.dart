@@ -99,7 +99,8 @@ class _MyPostViewState extends State<MyPostView> {
                         ),
                         sw5,
                         Text(
-                          '4.7',
+                          StorageUtil.getData(StorageUtil.profileAvgRating)
+                              .toString(),
                           style: h3.copyWith(
                             color: AppColors.darkRed,
                             fontWeight: FontWeight.w700,
@@ -107,13 +108,6 @@ class _MyPostViewState extends State<MyPostView> {
                         ),
                       ],
                     ),
-                    //sh5,
-                    // Text(
-                    //   '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
-                    //   style: h6,
-                    //   maxLines: 3,
-                    //   overflow: TextOverflow.ellipsis,
-                    // )
                   ],
                 ),
               ),
@@ -140,7 +134,7 @@ class _MyPostViewState extends State<MyPostView> {
                       ),
                       child: Center(
                         child: Text(
-                          '190 Points',
+                          '${'9.5'} Points',
                           style: h6,
                         ),
                       ),
@@ -198,10 +192,13 @@ class _MyPostViewState extends State<MyPostView> {
                   ),
                   itemBuilder: (context, index) => ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      myFeedController.allFeedList?[index].content[0] ?? '',
-                      scale: 4,
-                      fit: BoxFit.cover,
+                    child: InkWell(
+                      onTap: () {},
+                      child: Image.network(
+                        myFeedController.allFeedList?[index].content[0] ?? '',
+                        scale: 4,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

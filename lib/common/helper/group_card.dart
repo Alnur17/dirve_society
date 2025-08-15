@@ -6,6 +6,7 @@ import '../app_text_style/styles.dart';
 import '../widgets/custom_button.dart';
 
 class GroupCard extends StatelessWidget {
+  final String imageUrl;
   final String title;
   final String memberCount;
   final bool isPublic;
@@ -21,7 +22,9 @@ class GroupCard extends StatelessWidget {
     required this.isPublic,
     required this.isJoined,
     this.onJoinPressed, // Optional
-    this.showButton = true, this.ontap, // Default to true
+    this.showButton = true,
+    this.ontap,
+    required this.imageUrl, // Default to true
   });
 
   @override
@@ -50,7 +53,7 @@ class GroupCard extends StatelessWidget {
             CircleAvatar(
               radius: 40,
               backgroundColor: Colors.grey[300],
-              backgroundImage: AssetImage(AppImages.carImageFive),
+              backgroundImage: NetworkImage(imageUrl),
             ),
             SizedBox(height: 10),
             // Title
@@ -98,7 +101,8 @@ class GroupCard extends StatelessWidget {
               CustomButton(
                 height: 32,
                 text: isJoined ? 'Joined' : 'Join',
-                onPressed: onJoinPressed ?? () {}, // Fallback to empty callback if null
+                onPressed: onJoinPressed ??
+                    () {}, // Fallback to empty callback if null
                 backgroundColor: isJoined ? AppColors.grey : AppColors.darkRed,
               ),
             ],

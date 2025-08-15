@@ -1,21 +1,27 @@
+// post_card.dart
+// ignore_for_file: unused_local_variable
+
+import 'package:dirve_society/common/helper/media_cobtainer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../app_color/app_colors.dart';
-import '../app_images/app_images.dart';
-import '../app_text_style/styles.dart';
-import '../size_box/custom_sizebox.dart';
+import 'package:dirve_society/common/app_color/app_colors.dart';
+import 'package:dirve_society/common/app_images/app_images.dart';
+import 'package:dirve_society/common/app_text_style/styles.dart';
+import 'package:dirve_society/common/size_box/custom_sizebox.dart';
 
 class PostCard extends StatelessWidget {
+  final String profileImage;
   final String clubName;
   final String userName;
-  final List<String> postImages;
+  final String contentPath;
   final String description;
   final String hashtags;
   final String date;
   final int likes;
   final int comments;
+  final bool isLiked;
+  final bool isSaved;
   final VoidCallback onProfileTap;
   final VoidCallback onMenuTap;
   final VoidCallback onLikeTap;
@@ -24,23 +30,27 @@ class PostCard extends StatelessWidget {
 
   const PostCard({
     super.key,
+    required this.profileImage,
     required this.clubName,
     required this.userName,
-    required this.postImages,
+    required this.contentPath,
     required this.description,
     required this.hashtags,
     required this.date,
     required this.likes,
     required this.comments,
+    required this.isLiked,
+    required this.isSaved,
+    required this.onProfileTap,
     required this.onMenuTap,
     required this.onLikeTap,
     required this.onCommentTap,
     required this.onBookmarkTap,
-    required this.onProfileTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    print('PostCard build: likes=$likes, isLiked=$isLiked, isSaved=$isSaved');
     final PageController pageController = PageController();
     return GestureDetector(
       onTap: onProfileTap,
@@ -62,7 +72,7 @@ class PostCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 20.0,
-                    backgroundImage: AssetImage(AppImages.carImage),
+                    backgroundImage: NetworkImage(profileImage),
                   ),
                   sw8,
                   Column(
@@ -98,65 +108,35 @@ class PostCard extends StatelessWidget {
                 ],
               ),
             ),
-            Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                SizedBox(
-                  height: 300.0,
-                  width: double.infinity,
-                  child: PageView.builder(
-                    controller: pageController,
-                    itemCount: postImages.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(postImages[index]),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: AppColors.white.withOpacity(0.3),
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: SmoothPageIndicator(
-                    controller: pageController,
-                    count: postImages.length,
-                    effect: WormEffect(
-                      dotHeight: 8.0,
-                      dotWidth: 8.0,
-                      activeDotColor: AppColors.white,
-                      dotColor: AppColors.grey,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Media Content
+            contentPath.isNotEmpty
+                ? MediaContainer(
+                    mediaPath: contentPath,
+                    height: 300,
+                    width: MediaQuery.of(context).size.width,
+                    borderColor: Colors.white,
+                    borderRadius: 12,
+                  )
+                : Container(),
             // Post Actions
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4.0),
               child: Row(
                 children: [
                   GestureDetector(
                     onTap: onLikeTap,
                     child: Container(
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: AppColors.silver),
+                        borderRadius: BorderRadius.circular(30),
+                        color: AppColors.silver,
+                      ),
                       child: Row(
                         children: [
-                          Image.asset(
-                            AppImages.wheelIcon,
-                            scale: 4,
+                          Icon(
+                            isLiked ? Icons.favorite : Icons.favorite_border,
+                            color: isLiked ? Colors.red : Colors.grey,
+                            size: 20,
                           ),
                           sw5,
                           Text(
@@ -171,10 +151,11 @@ class PostCard extends StatelessWidget {
                   GestureDetector(
                     onTap: onCommentTap,
                     child: Container(
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: AppColors.silver),
+                        borderRadius: BorderRadius.circular(30),
+                        color: AppColors.silver,
+                      ),
                       child: Row(
                         children: [
                           Image.asset(
@@ -190,19 +171,21 @@ class PostCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   GestureDetector(
                     onTap: onBookmarkTap,
                     child: Container(
-                        padding: EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: AppColors.silver,
-                        ),
-                        child: Image.asset(
-                          AppImages.favorite,
-                          scale: 4,
-                        )),
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: AppColors.silver,
+                      ),
+                      child: Icon(
+                        isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        color: isSaved ? Colors.blue : Colors.grey,
+                        size: 20,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -220,7 +203,7 @@ class PostCard extends StatelessWidget {
                         userName,
                         style: h6.copyWith(fontWeight: FontWeight.w600),
                       ),
-                      sw8,
+                      // sw8,
                       // Expanded(
                       //   child: Text(
                       //     hashtags,
@@ -264,7 +247,7 @@ class PostCard extends StatelessWidget {
                 style: h6,
               ),
             ),
-            Divider(),
+            const Divider(),
           ],
         ),
       ),

@@ -12,7 +12,7 @@ import '../controllers/filter_controller.dart';
 
 class FilterView extends GetView<FilterController> {
   @override
-  final FilterController controller = Get.put(FilterController());
+  final FilterController controller = Get.put(FilterController()); 
 
   FilterView({super.key});
 

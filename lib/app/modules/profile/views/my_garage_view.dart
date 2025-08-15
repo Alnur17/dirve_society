@@ -3,6 +3,7 @@ import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_garage_controller.dart';
 import 'package:dirve_society/app/modules/profile/views/add_car_view.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
+import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -87,7 +88,7 @@ class _MyGarageViewState extends State<MyGarageView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Nissan R35 GTR',
+                      StorageUtil.getData(StorageUtil.profileName) ?? '',
                       style: h1.copyWith(
                         fontSize: 20,
                         color: AppColors.darkRed,
@@ -103,7 +104,8 @@ class _MyGarageViewState extends State<MyGarageView> {
                         ),
                         sw5,
                         Text(
-                          '4.7',
+                          StorageUtil.getData(StorageUtil.profileAvgRating)
+                              .toString(),
                           style: h3.copyWith(
                             color: AppColors.darkRed,
                             fontWeight: FontWeight.w700,
@@ -111,13 +113,6 @@ class _MyGarageViewState extends State<MyGarageView> {
                         ),
                       ],
                     ),
-                    //sh5,
-                    // Text(
-                    //   '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
-                    //   style: h6,
-                    //   maxLines: 3,
-                    //   overflow: TextOverflow.ellipsis,
-                    // )
                   ],
                 ),
               ),
@@ -153,7 +148,7 @@ class _MyGarageViewState extends State<MyGarageView> {
                 ),
                 sh5,
                 ReadMoreText(
-                  '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
+                  StorageUtil.getData(StorageUtil.profileBio) ?? '',
                   trimLines: 2,
                   trimMode: TrimMode.Line,
                   trimCollapsedText: 'Show More',
@@ -224,7 +219,7 @@ class _MyGarageViewState extends State<MyGarageView> {
                               controller.myGarageList?[index].images[0] ?? '',
                           onTap: () {
                             Get.to(() => ListingDetailsView(
-                                  id: '',
+                                  id: controller.myGarageList?[index].id ?? '',
                                 ));
                           },
                         ),

@@ -212,9 +212,11 @@ class _MyClubsViewState extends State<MyClubsView> {
                   mainAxisExtent: 210,
                 ),
                 itemBuilder: (context, index) => GroupCard(
+
                   ontap: () {
                     Get.to(() => ClubView());
                   },
+                  imageUrl: controller.myClubList?[index].profilePhoto ?? '',
                   title: controller.myClubList?[index].name ?? 'Nissan R35 GTR',
                   memberCount:
                       '${controller.myClubList?[index].member ?? 0} Members',

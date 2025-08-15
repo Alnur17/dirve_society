@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../../../../common/app_text_style/styles.dart';
 import '../app_color/app_colors.dart';
+
 class UploadWidget extends StatelessWidget {
   final VoidCallback onTap;
   final String imagePath;
+  final File? imageFile;
   final String label;
   final double height;
   final double width;
@@ -15,6 +18,7 @@ class UploadWidget extends StatelessWidget {
     super.key,
     required this.onTap,
     required this.imagePath,
+    this.imageFile,
     required this.label,
     this.height = 140,
     this.width = double.infinity,
@@ -39,24 +43,33 @@ class UploadWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 8),
-            Container(
-              height: iconSize,
-              width: iconSize,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              child: Image.asset(
-                imagePath,
-                scale: 4,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(height: 10),
+            imageFile != null
+                ? Expanded(
+                    child: Image.file(
+                      imageFile!,
+                      fit: BoxFit.cover,
+                      height: height,
+                      width: width,
+                    ),
+                  )
+                : Container(
+                    height: iconSize,
+                    width: iconSize,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: Image.asset(
+                      imagePath,
+                      scale: 4,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+            const SizedBox(height: 10),
             Text(
               label,
               style: labelStyle ?? h5.copyWith(color: Colors.grey),
             ),
+            const SizedBox(height: 8),
           ],
         ),
       ),

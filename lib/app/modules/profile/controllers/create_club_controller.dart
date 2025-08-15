@@ -9,7 +9,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
 
-class EditProfileController extends GetxController {
+class CreateClubController extends GetxController {
   bool _inProgress = false;
   bool get inProgress => _inProgress;
 
@@ -17,14 +17,12 @@ class EditProfileController extends GetxController {
   String? get errorMessage => _errorMessage;
 
   /// 🔁 Update Profile Function
-  Future<bool> updateProfile(
-      String name, String bio, String address, File? image,
+  Future<bool> createClub(
+      String name, String privacy, String description, File? image,
       {File? cover}) async {
     bool isSuccess = false;
     _inProgress = true;
     update();
-
-    print('Name: $name, Bio: $bio, Address: $address, Image: $image');
 
     try {
       String? token = StorageUtil.getData(StorageUtil.userAccessToken);
@@ -35,8 +33,8 @@ class EditProfileController extends GetxController {
         return false;
       }
 
-      var uri = Uri.parse(Urls.editProfileUrl);
-      var request = http.MultipartRequest('PUT', uri);
+      var uri = Uri.parse(Urls.createClubUrl);
+      var request = http.MultipartRequest('POST', uri);
 
       // ✅ Only Authorization header
       request.headers['Authorization'] = token;
@@ -44,8 +42,8 @@ class EditProfileController extends GetxController {
       // ✅ Set 'data' field with JSON-encoded string
       Map<String, dynamic> jsonFields = {
         "name": name,
-        "bio": bio,
-        "address": address
+        "type": privacy,
+        "description": description
       };
 
       request.fields['data'] = jsonEncode(jsonFields);
@@ -59,7 +57,7 @@ class EditProfileController extends GetxController {
 
         request.files.add(
           await http.MultipartFile.fromPath(
-            'image', // 🔑 Backend should expect this key
+            'profile', // 🔑 Backend should expect this key
             imagePath,
             contentType: MediaType.parse(mimeType),
           ),

@@ -4,7 +4,8 @@ import '../app_text_style/styles.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed; // Existing synchronous callback
+  final Future<void> Function()? onPressedAsync; // New async callback
   final Color? backgroundColor;
   final Color? borderColor;
   final Color? textColor;
@@ -14,12 +15,13 @@ class CustomButton extends StatelessWidget {
   final String? imageAssetPath;
   final double? borderRadius;
   final Color? iconColor;
-  final bool isLoading; // New parameter for loading state
+  final bool isLoading;
 
   const CustomButton({
     super.key,
     required this.text,
-    required this.onPressed,
+    this.onPressed, // Keep for synchronous callbacks
+    this.onPressedAsync, // Add for asynchronous callbacks
     this.backgroundColor,
     this.textStyle,
     this.textColor,
@@ -29,13 +31,24 @@ class CustomButton extends StatelessWidget {
     this.imageAssetPath,
     this.borderRadius = 40,
     this.iconColor,
-    this.isLoading = false, // Default to false
-  });
+    this.isLoading = false,
+  }) : assert(
+          onPressed == null || onPressedAsync == null,
+          'Cannot provide both onPressed and onPressedAsync',
+        ); // Ensure only one callback is provided
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: isLoading ? null : onPressed, // Disable tap when loading
+      onTap: isLoading || (onPressed == null && onPressedAsync == null)
+          ? null
+          : () {
+              if (onPressed != null) {
+                onPressed!(); // Call synchronous callback
+              } else if (onPressedAsync != null) {
+                onPressedAsync!(); // Call asynchronous callback
+              }
+            },
       child: Container(
         height: height,
         width: width,
@@ -73,10 +86,11 @@ class CustomButton extends StatelessWidget {
               ],
               Text(
                 text,
-                style: textStyle ?? h3.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: textColor ?? AppColors.white,
-                ),
+                style: textStyle ??
+                    h3.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: textColor ?? AppColors.white,
+                    ),
               ),
             ],
           ),

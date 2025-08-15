@@ -47,21 +47,21 @@ class MarketDetailsData {
     final String? id;
     final String? brand;
     final String? model;
-    final int? mileage;
+    final dynamic mileage;
     final String? fuelType;
     final String? transmission;
     final String? description;
     final String? banner;
     final List<String> images;
-    final int? price;
+    final dynamic price;
     final Author? author;
     final String? contentMeta;
-    final int? avgRating;
-    final int? ratingCount;
+    final dynamic avgRating;
+    final dynamic ratingCount;
     final bool? isDeleted;
     final DateTime? createdAt;
     final DateTime? updatedAt;
-    final int? v;
+    final dynamic v;
 
     factory MarketDetailsData.fromJson(Map<String, dynamic> json){ 
         return MarketDetailsData(
@@ -102,8 +102,8 @@ class Author {
     final String? name;
     final String? email;
     final String? photoUrl;
-    final int? avgRating;
-    final int? ratingCount;
+    final dynamic avgRating;
+    final dynamic ratingCount;
 
     factory Author.fromJson(Map<String, dynamic> json){ 
         return Author(

@@ -1,16 +1,20 @@
 import 'package:dirve_society/app/data/dummy_data.dart';
+import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
+import 'package:dirve_society/app/modules/market_place/controllers/all_review_controller.dart';
 import 'package:dirve_society/app/modules/market_place/controllers/market_details_controller.dart';
+import 'package:dirve_society/app/modules/market_place/views/create_review_screen.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:dirve_society/common/helper/info_container.dart';
-import 'package:dirve_society/common/widgets/custom_row_header.dart';
+import 'package:dirve_society/common/helper/review_card.dart';
+import 'package:dirve_society/common/size_box/custom_sizebox.dart';
+import 'package:dirve_society/common/widgets/custom_button.dart';
+import 'package:dirve_society/common/widgets/custom_circular_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
-import '../../../../common/helper/market_place_widget.dart';
-import '../../../../common/helper/review_card.dart';
-import '../../../../common/size_box/custom_sizebox.dart';
-import '../../../../common/widgets/custom_circular_container.dart';
+
+// Dynamic Star Rating Widget
 
 class ListingDetailsView extends StatefulWidget {
   final String id;
@@ -23,10 +27,13 @@ class ListingDetailsView extends StatefulWidget {
 class _ListingDetailsViewState extends State<ListingDetailsView> {
   final MarketplaceDetailsController marketplaceDetailsController =
       Get.put(MarketplaceDetailsController());
+  final AllReviewController allReviewController =
+      Get.put(AllReviewController());
 
   @override
   void initState() {
     marketplaceDetailsController.getMarketPlaceData(widget.id);
+    allReviewController.getReview(widget.id);
     super.initState();
   }
 
@@ -70,40 +77,64 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    AppImages.carImageFour,
-                    scale: 4,
+                  child: Image.network(
+                    controller.marketPlaceDetailsModel?.images.isNotEmpty ??
+                            false
+                        ? controller.marketPlaceDetailsModel!.images[0]
+                        : AppImages.carImageFour,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Image.asset(
+                      AppImages.carImageFour,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
               SizedBox(
                 height: 90,
                 child: ListView.builder(
-                  itemCount: 5,
+                  itemCount:
+                      (controller.marketPlaceDetailsModel?.images.length ?? 0) >
+                              1
+                          ? controller.marketPlaceDetailsModel!.images.length -
+                              1
+                          : 0,
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.only(
-                      left: index == 0 ? 20 : 8,
-                      right: index == 5 - 1 ? 20 : 0,
-                    ),
-                    child: Container(
-                      width: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: AppColors.silver,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        left: index == 0 ? 20 : 8,
+                        right: index ==
+                                (controller.marketPlaceDetailsModel!.images
+                                        .length -
+                                    1 -
+                                    1)
+                            ? 20
+                            : 0,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          AppImages.carImageFour,
-                          scale: 4,
-                          fit: BoxFit.cover,
+                      child: Container(
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: AppColors.silver,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            controller
+                                .marketPlaceDetailsModel!.images[index + 1],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.asset(
+                              AppImages.carImageFour,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
               sh20,
@@ -150,7 +181,8 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                         InfoContainer(
                             imagePath: AppImages.fuel,
                             label: 'Fuel',
-                            value: '${controller.marketPlaceDetailsModel?.fuelType}'),
+                            value:
+                                '${controller.marketPlaceDetailsModel?.fuelType}'),
                       ],
                     ),
                     sh20,
@@ -175,29 +207,41 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: Image.asset(
-                                AppImages.carImageFive,
-                                scale: 4,
+                              child: Image.network(
+                                controller.marketPlaceDetailsModel?.author
+                                        ?.photoUrl ??
+                                    '',
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                           sw8,
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Richard Abhiana',
+                                controller.marketPlaceDetailsModel!.author
+                                        ?.name ??
+                                    '',
                                 style: h3.copyWith(fontSize: 14),
                               ),
                               sh8,
                               Row(
                                 children: [
-                                  Image.asset(
-                                    AppImages.stars,
-                                    scale: 4,
+                                  DynamicStarRating(
+                                    rating: controller.marketPlaceDetailsModel
+                                            ?.author?.avgRating
+                                            ?.toDouble() ??
+                                        0.0,
+                                    starSize: 20,
+                                    filledColor: AppColors.darkRed,
+                                    emptyColor: AppColors.grey,
                                   ),
                                   sw8,
-                                  Text('4.7 (25)', style: h7),
+                                  Text(
+                                    '${controller.marketPlaceDetailsModel!.author?.avgRating ?? ''} (${controller.marketPlaceDetailsModel!.author?.ratingCount ?? ''})',
+                                    style: h7,
+                                  ),
                                 ],
                               ),
                             ],
@@ -229,95 +273,130 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                         sh5,
                         Row(
                           children: [
-                            Image.asset(
-                              AppImages.stars,
-                              scale: 4,
+                            DynamicStarRating(
+                              rating:
+                                  4.7, // Replace with dynamic average if available
+                              starSize: 20,
+                              filledColor: AppColors.darkRed,
+                              emptyColor: AppColors.grey,
                             ),
                             sw8,
-                            Text('4.7 (25)', style: h7),
+                            Text(
+                                '${controller.marketPlaceDetailsModel!.avgRating ?? ''} (${controller.marketPlaceDetailsModel!.ratingCount ?? ''})',
+                                style: h7), // Update with dynamic data
                           ],
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          'Show All',
-                          style: h6.copyWith(color: AppColors.darkRed),
-                        ),
-                        sw8,
-                        Image.asset(
-                          AppImages.arrowRight,
-                          scale: 4,
-                          color: AppColors.darkRed,
-                        )
-                      ],
-                    )
+                    // InkWell(
+                    //   onTap: () {
+                    //     Get.to(() => CreateReviewScreen(
+                    //           listingId:
+                    //               controller.marketPlaceDetailsModel!.id!,
+                    //         ));
+                    //   },
+                    //   child: Row(
+                    //     children: [
+                    //       Text(
+                    //         'Create review',
+                    //         style: h6.copyWith(color: AppColors.darkRed),
+                    //       ),
+                    //       sw8,
+                    //       Image.asset(
+                    //         AppImages.arrowRight,
+                    //         scale: 4,
+                    //         color: AppColors.darkRed,
+                    //       )
+                    //     ],
+                    //   ),
+                    // )
                   ],
                 ),
               ),
               sh12,
-              SizedBox(
-                height: 170, // Fixed height for the horizontal list
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal, // Horizontal scrolling
-                  itemCount: DummyData.reviews.length,
-                  itemBuilder: (context, index) {
-                    final review = DummyData.reviews[index];
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        left: index == 0 ? 20 : 8,
-                        right: index == DummyData.reviews.length - 1 ? 20 : 0,
-                      ),
-                      child: ReviewCard(
-                        rating: review['rating'],
-                        reviewText: review['reviewText'],
-                        reviewerName: review['reviewerName'],
-                        date: review['date'],
-                        imagePath: AppImages.carImageFive,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              sh20,
+              GetBuilder<AllReviewController>(builder: (controller) {
+                if (allReviewController.inProgress) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return SizedBox(
+                  height: 170,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.allReviewList?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final review = controller.allReviewList?[index];
+                      final dateFormatter = DateFormatter(
+                          controller.allReviewList?[index].createdAt ??
+                              DateTime.now());
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          left: index == 0 ? 20 : 8,
+                          right: index == DummyData.reviews.length - 1 ? 20 : 0,
+                        ),
+                        child: ReviewCard(
+                          rating: review?.rating,
+                          reviewText: review?.review ?? '',
+                          reviewerName: review!.user?.name ?? '',
+                          date: dateFormatter.getFullDateFormat(),
+                          imagePath: review.user?.photoUrl ?? '',
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomRowHeader(
-                  title: 'More From This Seller',
-                  onTap: () {},
-                ),
-              ),
-              SizedBox(
-                height: 300,
-                child: ListView.builder(
-                  //padding: EdgeInsets.only(bottom: 20),
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: DummyData.cars.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        top: 12,
-                        left: index == 0 ? 20 : 8,
-                        right: index == DummyData.cars.length - 1 ? 20 : 0,
-                        bottom: 20,
-                      ),
-                      child: MarketPlaceWidget(
-                        name: DummyData.cars[index]['name']!,
-                        price: DummyData.cars[index]['price']!,
-                        date: DummyData.cars[index]['date']!,
-                        imageUrl: DummyData.cars[index]['image']!,
-                        onTap: () {
-                          Get.to(() => ListingDetailsView(
-                                id: '',
-                              ));
-                        },
-                      ),
-                    );
+                padding: const EdgeInsets.all(16.0),
+                child: CustomButton(
+                  textStyle: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal),
+                  backgroundColor: Colors.grey,
+                  text: 'Rate this seller on marketplace',
+                  onPressed: () {
+                    Get.to(() => CreateReviewScreen(
+                          listingId: controller.marketPlaceDetailsModel!.id!,
+                        ));
                   },
                 ),
               ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20),
+              //   child: CustomRowHeader(
+              //     title: 'More From This Seller',
+              //     onTap: () {},
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 300,
+              //   child: ListView.builder(
+              //     scrollDirection: Axis.horizontal,
+              //     shrinkWrap: true,
+              //     itemCount: DummyData.cars.length,
+              //     itemBuilder: (context, index) {
+              //       return Padding(
+              //         padding: EdgeInsets.only(
+              //           top: 12,
+              //           left: index == 0 ? 20 : 8,
+              //           right: index == DummyData.cars.length - 1 ? 20 : 0,
+              //           bottom: 20,
+              //         ),
+              //         child: MarketPlaceWidget(
+              //           name: DummyData.cars[index]['name']!,
+              //           price: DummyData.cars[index]['price']!,
+              //           date: DummyData.cars[index]['date']!,
+              //           imageUrl: DummyData.cars[index]['image']!,
+              //           onTap: () {
+              //             Get.to(() => ListingDetailsView(
+              //                   id: '',
+              //                 ));
+              //           },
+              //         ),
+              //       );
+              //     },
+              //   ),
+              // ),
             ],
           );
         }),

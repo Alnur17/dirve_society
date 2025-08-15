@@ -125,7 +125,7 @@ class _ConnectViewState extends State<ConnectView> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Center(
                                       child: SizedBox(
-                                        width: 200, // Ensure UserCard respects this width
+                                        width: 200, // Ensure UserCard respects this width 
                                         child: UserCard(
                                           title: allPendingController
                                                   .allPendingConnectionList![index].modelType ??
@@ -173,6 +173,7 @@ class _ConnectViewState extends State<ConnectView> {
                       itemCount: 6,
                       itemBuilder: (context, index) {
                         return GroupCard(
+                          imageUrl: 'https://picsum.photos/200/300',
                           title: 'SUPER CAR',
                           memberCount: '10.1K Members',
                           isPublic: true,
