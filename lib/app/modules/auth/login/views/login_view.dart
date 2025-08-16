@@ -78,6 +78,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     sh8,
                     CustomTextField(
+                      textColor: Colors.white,
                       hintText: 'Your email',
                       controller: emailController,
                       onChange: (value) {
@@ -93,6 +94,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     sh8,
                     CustomTextField(
+                      textColor: Colors.white,
                       hintText: '**********',
                       isPassword: true,
                       controller: passwordController,

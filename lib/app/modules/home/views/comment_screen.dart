@@ -49,15 +49,19 @@ class _CommentScreenState extends State<CommentScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(onPressed: () {
-                  Get.back();
-                }, icon: Icon(Icons.arrow_back_ios)),
+                IconButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: Icon(Icons.arrow_back_ios)),
                 Center(
                     child: Text(
                   'All Comment',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                 )),
-                Container(width: 60,)
+                Container(
+                  width: 60,
+                )
               ],
             ),
             SizedBox(
@@ -216,9 +220,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                       contentId: widget.postId,
                                       modelType: widget.postType == 'feed'
                                           ? 'Feed'
-                                          : widget.postType == 'reels'
-                                              ? 'Reels'
-                                              : 'Wishlist',
+                                          : 'Forum',
                                       comment: value,
                                       isReply: true,
                                       userId: StorageUtil.getData(
@@ -260,7 +262,7 @@ class _CommentScreenState extends State<CommentScreen> {
                             'https://fastly.picsum.photos/id/471/200/300.jpg?hmac=N_ZXTRU2OGQ7b_1b8Pz2X8e6Qyd84Q7xAqJ90bju2WU'),
                       ),
                       SizedBox(
-                        width: 250,
+                        width: 230,
                         child: TextFormField(
                           controller: commentCtrl,
                           style: TextStyle(color: Colors.black),
@@ -279,9 +281,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                 contentId: widget.postId,
                                 modelType: widget.postType == 'feed'
                                     ? 'Feed'
-                                    : widget.postType == 'reels'
-                                        ? 'Reels'
-                                        : 'Wishlist',
+                                    : 'Forum',
                                 comment: commentCtrl.text,
                                 isReply: false,
                                 userId:

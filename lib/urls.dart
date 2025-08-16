@@ -1,7 +1,7 @@
 class Urls {
   // static const String _baseUrl = 'http://10.10.10.16:5006/api/v1';
   static const String _baseUrl = 'http://172.252.13.83:5006/api/v1';
-  static const String socketUrl = 'http://172.252.13.74:4010/';
+  static const String socketUrl = 'http://172.252.13.83:4006/';
   // static const String socketUrl = 'http://192.168.10.144:4001/';
   static const String signUpUrl = '$_baseUrl/profiles/register';
   static const String otpVerifyUrl = '$_baseUrl/otp/verify-otp';
@@ -25,11 +25,30 @@ class Urls {
   static const String reviewUrl = '$_baseUrl/reviews';
   static const String favouriteUrl = '$_baseUrl/favorite';
   static const String allStoryUrl = '$_baseUrl/stories';
+  static const String clubDetailsUrl = '$_baseUrl/stories';
 
   static String getMarketPlaceUrlById(
     String id,
   ) {
     return '$_baseUrl/cars/$id';
+  }
+
+   static String allClubFielsById(
+    String id,
+  ) {
+    return '$_baseUrl/feeds/club/$id';
+  }
+
+   static String allClubForumsById(
+    String id,
+  ) {
+    return '$_baseUrl/forums/club/$id';
+  }
+
+  static String clubDetailsUrlById(
+    String id,
+  ) {
+    return '$_baseUrl/clubs/$id';
   }
 
   static String getReviewById(

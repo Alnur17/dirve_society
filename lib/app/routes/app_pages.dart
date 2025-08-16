@@ -61,21 +61,17 @@ class AppPages {
       page: () => const DashboardView(),
       binding: DashboardBinding(),
     ),
-    GetPage(
-      name: _Paths.CHAT,
-      page: () => const ChatView(),
-      binding: ChatBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.CHAT,
+    //   page: () => const ChatView(),
+    //   binding: ChatBinding(),
+    // ),
     GetPage(
       name: _Paths.MARKET_PLACE,
       page: () => MarketPlaceView(),
       binding: MarketPlaceBinding(),
     ),
-    GetPage(
-      name: _Paths.CLUB,
-      page: () => const ClubView(),
-      binding: ClubBinding(),
-    ),
+
     GetPage(
       name: _Paths.PROFILE,
       page: () => const ProfileView(),

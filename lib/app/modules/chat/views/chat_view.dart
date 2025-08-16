@@ -1,15 +1,17 @@
 import 'dart:developer';
-
+import 'package:dirve_society/app/modules/chat/controllers/all_friend_controller.dart';
+import 'package:dirve_society/app/modules/chat/views/message_view.dart';
+import 'package:dirve_society/get_storage.dart';
+import 'package:dirve_society/services/socket/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:intl/intl.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../../../common/widgets/custom_circular_container.dart';
 import '../../../../common/widgets/custom_textfield.dart';
-import 'message_view.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView({super.key});
@@ -19,7 +21,101 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  bool showChats = true;
+  final SocketService socketService = Get.put(SocketService());
+  final FriendController friendController = Get.put(FriendController());
+  final TextEditingController searchCtrl = TextEditingController();
+  String search = '';
+
+  @override
+  void initState() {
+    super.initState();
+    socketService.init();
+    friendController.getAllFriends();
+
+    searchCtrl.addListener(() {
+      setState(() {
+        search = searchCtrl.text;
+      });
+    });
+
+    socketService.sokect.on(
+      'chat-list::${StorageUtil.getData(StorageUtil.profileId)}',
+      (data) {
+        log('Socket chatlist data received ...............');
+        log('Raw data: $data');
+        _handleIncomingFriends(data);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    searchCtrl.dispose();
+    super.dispose();
+  }
+
+  void _handleIncomingFriends(dynamic data) {
+    if (data == null) return;
+
+    if (data is List) {
+      socketService.socketFriendtList.clear();
+      for (var friend in data) {
+        if (friend is Map<String, dynamic> && friend['chat'] != null) {
+          final chat = friend['chat'];
+          final message = friend['message'];
+          final participants = chat['participants'] as List? ?? [];
+          final participant = participants.isNotEmpty ? participants[0] : null;
+
+          socketService.socketFriendtList.add({
+            "id": chat['_id']?.toString() ?? '',
+            "receiverId": participant?['_id']?.toString() ?? '',
+            "name": participant?['name'] ?? 'No Name',
+            "email": participant?['email'] ?? '',
+            "profileImage": participant?['photoUrl'] ?? '',
+            "createdAt": chat['createdAt'] ?? DateTime.now().toIso8601String(),
+            "lastMessage": message != null ? message['text'] ?? 'No Message' : 'No Message',
+            "lastMessageTime": message != null
+                ? message['createdAt'] ?? DateTime.now().toIso8601String()
+                : DateTime.now().toIso8601String(),
+            "isSeen": message != null ? message['seen'] ?? false : false,
+            "unreadMessageCount": friend['unreadMessageCount'] ?? 0,
+          });
+        }
+      }
+      socketService.socketFriendtList.refresh();
+    } else if (data is Map<String, dynamic>) {
+      final chat = data['chat'];
+      final message = data['message'];
+      final participants = chat?['participants'] as List? ?? [];
+      final participant = participants.isNotEmpty ? participants[0] : null;
+
+      final newFriend = {
+        "id": chat?['_id']?.toString() ?? '',
+        "receiverId": participant?['_id']?.toString() ?? '',
+        "name": participant?['name'] ?? 'No Name',
+        "email": participant?['email'] ?? '',
+        "profileImage": participant?['photoUrl'] ?? '',
+        "createdAt": chat?['createdAt'] ?? DateTime.now().toIso8601String(),
+        "lastMessage": message != null ? message['text'] ?? 'No Message' : 'No Message',
+        "lastMessageTime": message != null
+            ? message['createdAt'] ?? DateTime.now().toIso8601String()
+            : DateTime.now().toIso8601String(),
+        "isSeen": message != null ? message['seen'] ?? false : false,
+        "unreadMessageCount": data['unreadMessageCount'] ?? 0,
+      };
+
+      final existingIndex = socketService.socketFriendtList.indexWhere(
+        (f) => f['id'] == newFriend['id'],
+      );
+
+      if (existingIndex != -1) {
+        socketService.socketFriendtList[existingIndex] = newFriend;
+      } else {
+        socketService.socketFriendtList.add(newFriend);
+      }
+      socketService.socketFriendtList.refresh();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +133,13 @@ class _ChatViewState extends State<ChatView> {
             padding: 4,
           ),
         ),
-        title: Text('Chat'),
+        title: Text(
+          'Chat List',
+          style: h4.copyWith(
+            fontWeight: FontWeight.bold,
+            color: AppColors.white,
+          ),
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -47,6 +149,7 @@ class _ChatViewState extends State<ChatView> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: CustomTextField(
+              controller: searchCtrl,
               preIcon: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.asset(
@@ -56,10 +159,12 @@ class _ChatViewState extends State<ChatView> {
               ),
               hintText: 'Search here..',
               borderRadius: 30,
+              
             ),
           ),
+          sh16,
           Expanded(
-            child: ChatList(),
+            child: ChatList(search: search),
           ),
         ],
       ),
@@ -68,139 +173,131 @@ class _ChatViewState extends State<ChatView> {
 }
 
 class ChatList extends StatelessWidget {
-  const ChatList({super.key});
+  final String search;
+
+  const ChatList({super.key, required this.search});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Get.to(() => MessageView());
-            log('message index is $index');
-          },
-          child: Container(
-            margin: EdgeInsets.only(
-              left: 20,
-              bottom: 8,
-              right: 20,
-              top: index == 0 ? 16 : 0,
-            ),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                color: AppColors.bottomNavbar,
-                border: Border.all(color: AppColors.silver)),
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 25,
-                backgroundImage: AssetImage(AppImages.carImageThree),
-              ),
-              title: Text(
-                'Nissan R35 GTR',
+    final SocketService socketService = Get.find<SocketService>();
+    final FriendController friendController = Get.find<FriendController>();
+
+    return Obx(() {
+      final friendList = socketService.socketFriendtList;
+
+      if (friendController.inProgress.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      final filteredFriends = friendList.where((friend) {
+        final name = friend['name']?.toLowerCase() ?? '';
+        return search.isEmpty || name.contains(search.toLowerCase());
+      }).toList();
+
+      if (filteredFriends.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'No results for "${search.isEmpty ? 'Friends' : search}"',
                 style: h4.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black100,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.white,
                 ),
               ),
-              subtitle: Text(
-                'Good morning! Thank you for reaching out. I see your application in our system. We’re currently reviewing candidates, and you should hear back from us by the end of the week.',
+              sh16,
+              Text(
+                'We couldn’t find any matching chats. Please refine your search or check back later.',
                 style: h6.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.grey,
+                  color: Colors.white,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
-              trailing: Container(
-                padding: EdgeInsets.all(8),
-                decoration: ShapeDecoration(
-                  shape: CircleBorder(),
-                  color: AppColors.darkRed,
-                ),
-                child: Text(
-                  '1',
-                  style: h6.copyWith(color: AppColors.white),
-                ),
-              ),
-            ),
+            ],
           ),
         );
-      },
-    );
+      }
+
+      return ListView.builder(
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 16),
+        itemCount: filteredFriends.length,
+        itemBuilder: (context, index) {
+          final friend = filteredFriends[index];
+          final String chatId = friend['id'] ?? '';
+          final String receiverId = friend['receiverId'] ?? '';
+          final String receiverName = friend['name'] ?? 'No Name';
+          final String receiverImage = friend['profileImage'] ?? '';
+          final String lastMessage = friend['lastMessage'] ?? 'No Message';
+          final int unreadMessageCount = friend['unreadMessageCount'] ?? 0;
+
+          String formattedTime = '';
+          try {
+            final timestamp = DateTime.parse(friend['lastMessageTime'] ?? DateTime.now().toIso8601String());
+            formattedTime = DateFormat('MMM d, HH:mm').format(timestamp);
+          } catch (e) {
+            formattedTime = DateFormat('MMM d, HH:mm').format(DateTime.now());
+          }
+
+          return GestureDetector(
+            onTap: () {
+              Get.to(() => MessageView(
+                    chatId: chatId,
+                    receiverId: receiverId,
+                    receiverName: receiverName,
+                    receiverImage: receiverImage,
+                  ));
+              log('message index is $index');
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 8, top: index == 0 ? 0 : 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                color: AppColors.bottomNavbar,
+                border: Border.all(color: AppColors.silver),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                leading: CircleAvatar(
+                  radius: 25,
+                  backgroundImage: receiverImage.isNotEmpty
+                      ? NetworkImage(receiverImage)
+                      : const AssetImage('assets/images/default_user.png') as ImageProvider,
+                ),
+                title: Text(
+                  receiverName,
+                  style: h4.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black100,
+                  ),
+                ),
+                subtitle: Text(
+                  lastMessage,
+                  style: h6.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.grey,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                // trailing: unreadMessageCount > 0
+                //     ? Container(
+                //         padding: const EdgeInsets.all(8),
+                //         decoration: ShapeDecoration(
+                //           shape: const CircleBorder(),
+                //           color: AppColors.darkRed,
+                //         ),
+                //         child: Text(
+                //           '$unreadMessageCount',
+                //           style: h6.copyWith(color: AppColors.white),
+                //         ),
+                //       )
+                //     : null,
+              ),
+            ),
+          );
+        },
+      );
+    });
   }
 }
-
-// class OrderList extends StatelessWidget {
-//   const OrderList({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListView.builder(
-//       itemCount: 4,
-//       itemBuilder: (context, index) {
-//         return Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 16),
-//           child: Column(
-//             children: [
-//               sh16,
-//               Row(
-//                 children: [
-//                   Image.asset(
-//                     AppImages.orderTwo,
-//                     scale: 4,
-//                   ),
-//                   sw10,
-//                   Text(
-//                     'Your order is just a click away!',
-//                     style:
-//                     h2.copyWith(fontSize: 12, fontWeight: FontWeight.bold),
-//                   ),
-//                   Spacer(),
-//                   Text(
-//                     '25/12/2025',
-//                     style: h2.copyWith(fontSize: 12),
-//                   ),
-//                 ],
-//               ),
-//               sh10,
-//               Container(
-//                 padding: EdgeInsets.only(right: 8),
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(8),
-//                   color: AppColors.bottomNavbar,
-//                 ),
-//                 child: Row(
-//                   children: [
-//                     SizedBox(
-//                       height: 70,
-//                       width: 70,
-//                       child: ClipRRect(
-//                         borderRadius: BorderRadius.circular(8),
-//                         child: Image.asset(
-//                           AppImages.productImage,
-//                           scale: 4,
-//                           fit: BoxFit.cover,
-//                         ),
-//                       ),
-//                     ),
-//                     sw12,
-//                     Expanded(
-//                       child: Text(
-//                         'Complete your payment within the next 30 minutes to avoid cancellation of your order',
-//                         style: h2.copyWith(
-//                             color: AppColors.grey,
-//                             fontSize: 12,
-//                             fontWeight: FontWeight.bold),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }

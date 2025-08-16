@@ -206,15 +206,16 @@ class _MyClubsViewState extends State<MyClubsView> {
                 //primary: false,
                 itemCount: controller.myClubList?.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                  crossAxisCount: 2, 
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                   mainAxisExtent: 210,
                 ),
                 itemBuilder: (context, index) => GroupCard(
-
                   ontap: () {
-                    Get.to(() => ClubView());
+                    Get.to(() => ClubView(
+                          id: controller.myClubList?[index].id ?? '',
+                        ));
                   },
                   imageUrl: controller.myClubList?[index].profilePhoto ?? '',
                   title: controller.myClubList?[index].name ?? 'Nissan R35 GTR',

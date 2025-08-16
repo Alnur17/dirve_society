@@ -1,9 +1,9 @@
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
-
-import '../app_color/app_colors.dart';
-import '../size_box/custom_sizebox.dart';
+import 'package:dirve_society/common/app_color/app_colors.dart';
+import 'package:dirve_society/common/size_box/custom_sizebox.dart';
+import 'package:dirve_society/common/app_images/app_images.dart';
 
 class ForumCard extends StatelessWidget {
   final String imagePath;
@@ -12,13 +12,17 @@ class ForumCard extends StatelessWidget {
   final String date;
   final String title;
   final String description;
-  final String likeImage;
+  final IconData likeData;
   final int likes;
   final int dislikes;
-  final String dislikesImage;
+  final IconData dislikeData;
   final int comments;
   final String commentsImage;
   final VoidCallback? onTap;
+  final VoidCallback? onLikeTap;
+  final VoidCallback? onDislikeTap;
+  final VoidCallback? onCommentTap;
+  final VoidCallback? onBookmarkTap;
 
   const ForumCard({
     super.key,
@@ -32,9 +36,13 @@ class ForumCard extends StatelessWidget {
     this.dislikes = 0,
     this.comments = 0,
     this.onTap,
-    required this.likeImage,
-    required this.dislikesImage,
+    required this.likeData,
+    required this.dislikeData,
     required this.commentsImage,
+    this.onLikeTap,
+    this.onDislikeTap,
+    this.onCommentTap,
+    this.onBookmarkTap,
   });
 
   @override
@@ -68,7 +76,9 @@ class ForumCard extends StatelessWidget {
                     CircleAvatar(
                       radius: 20,
                       backgroundColor: Colors.grey,
-                      backgroundImage: AssetImage(imagePath),
+                      backgroundImage: imagePath.startsWith('http')
+                          ? NetworkImage(imagePath)
+                          : AssetImage(imagePath) as ImageProvider,
                     ),
                     const SizedBox(width: 8),
                     Column(
@@ -92,7 +102,7 @@ class ForumCard extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(),
+            const Divider(),
             Text(
               title,
               style: h3.copyWith(fontSize: 18),
@@ -118,74 +128,102 @@ class ForumCard extends StatelessWidget {
             // Interaction icons
             Row(
               children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: AppColors.silver,
-                  ),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        likeImage,
-                        scale: 4,
-                      ),
-                      sw5,
-                      Text(
-                        '$likes',
-                        style: h6.copyWith(
-                          fontWeight: FontWeight.w600,
+                GestureDetector(
+                  onTap: onLikeTap,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: AppColors.silver,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          likeData,
+                          color: likeData == Icons.thumb_up ? Colors.red : null,
+                          size: 20,
                         ),
-                      ),
-                    ],
+                        sw5,
+                        Text(
+                          '$likes',
+                          style: h6.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 sw12,
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: AppColors.silver,
-                  ),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        dislikesImage,
-                        scale: 4,
-                      ),
-                      sw5,
-                      Text(
-                        '$dislikes',
-                        style: h6.copyWith(
-                          fontWeight: FontWeight.w600,
+                GestureDetector(
+                  onTap: onDislikeTap,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: AppColors.silver,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          dislikeData,
+                          color: dislikeData == Icons.thumb_down ? Colors.red : null,
+                          size: 20,
                         ),
-                      ),
-                    ],
+                        sw5,
+                        Text(
+                          '$dislikes',
+                          style: h6.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 sw12,
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: AppColors.silver,
-                  ),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        commentsImage,
-                        scale: 4,
-                      ),
-                      sw5,
-                      Text(
-                        '$comments',
-                        style: h6.copyWith(
-                          fontWeight: FontWeight.w600,
+                GestureDetector(
+                  onTap: onCommentTap,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: AppColors.silver,
+                    ),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          commentsImage,
+                          scale: 4,
                         ),
-                      ),
-                    ],
+                        sw5,
+                        Text(
+                          '$comments',
+                          style: h6.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+                if (onBookmarkTap != null) ...[
+                  sw12,
+                  GestureDetector(
+                    onTap: onBookmarkTap,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: AppColors.silver,
+                      ),
+                      child: Image.asset(
+                        AppImages.bookmark,
+                        scale: 4,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ],
