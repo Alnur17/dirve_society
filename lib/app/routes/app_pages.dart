@@ -77,10 +77,10 @@ class AppPages {
       page: () => const ProfileView(),
       binding: ProfileBinding(),
     ),
-    GetPage(
-      name: _Paths.MEETS,
-      page: () => const MeetsView(),
-      binding: MeetsBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.MEETS,
+    //   page: () => const MeetsView(),
+    //   binding: MeetsBinding(),
+    // ),
   ];
 }

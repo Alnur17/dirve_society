@@ -7,7 +7,7 @@ class MyClubModel {
         required this.data,
     });
 
-    final bool? success;
+    final bool? success; 
     final int? statusCode;
     final String? message;
     final Meta? meta;

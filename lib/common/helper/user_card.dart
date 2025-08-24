@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../app_color/app_colors.dart';
-import '../app_images/app_images.dart';
 import '../app_text_style/styles.dart';
 import '../size_box/custom_sizebox.dart';
 import '../widgets/custom_button.dart';
 
 class UserCard extends StatelessWidget {
   final String title;
-  final double rating;
+  final String rating;
   final String description;
   final bool isAdded;
-  final VoidCallback onButtonPressed;
+  final VoidCallback acceptButton;
+  final VoidCallback rejectedButton;
+  final VoidCallback addFriendButton;
   final VoidCallback onUserDetails;
+  final bool? isOneButton;
+  final String? image;
 
   const UserCard({
     super.key,
@@ -20,8 +23,12 @@ class UserCard extends StatelessWidget {
     required this.rating,
     required this.description,
     required this.isAdded,
-    required this.onButtonPressed,
+    required this.acceptButton,
     required this.onUserDetails,
+    this.isOneButton,
+    required this.rejectedButton,
+    required this.addFriendButton,
+    this.image,
   });
 
   @override
@@ -51,12 +58,12 @@ class UserCard extends StatelessWidget {
             CircleAvatar(
               radius: 40,
               backgroundColor: Colors.grey[300],
-              backgroundImage: const AssetImage(AppImages.carImage),
+              backgroundImage: NetworkImage(image ?? ''),
             ),
             const SizedBox(height: 10),
             Text(
               title,
-              style: h1.copyWith(fontSize: 20),
+              style: h1.copyWith(fontSize: 16),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -81,19 +88,30 @@ class UserCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             sh12,
-            CustomButton(
-              height: 28,
-              text: isAdded ? 'Remove' : '+ Add',
-              onPressed: onButtonPressed,
-              backgroundColor: isAdded ? AppColors.grey : AppColors.darkRed,
+            isOneButton == true
+                ? Container()
+                : CustomButton(
+                    height: 28,
+                    text: 'Accecpt',
+                    onPressed: acceptButton,
+                    backgroundColor: AppColors.darkRed,
+                  ),
+            SizedBox(
+              height: 4,
             ),
-             SizedBox(height: 4,),
-             CustomButton(
-              height: 28,
-              text: isAdded ? 'Remove' : 'Rejected',
-              onPressed: onButtonPressed,
-              backgroundColor: isAdded ? AppColors.grey : AppColors.darkRed,
-            ),
+            isOneButton == true
+                ? CustomButton(
+                    height: 28,
+                    text: 'Add Friend',
+                    onPressed: addFriendButton,
+                    backgroundColor: AppColors.darkRed,
+                  )
+                : CustomButton(
+                    height: 28,
+                    text: 'Rejected',
+                    onPressed: rejectedButton,
+                    backgroundColor: AppColors.darkRed,
+                  ),
           ],
         ),
       ),

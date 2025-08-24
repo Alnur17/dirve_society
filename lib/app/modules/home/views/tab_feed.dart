@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:dirve_society/app/modules/home/controllers/home_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/home_controller.dart';
 import 'package:dirve_society/app/modules/home/views/car_rating_page.dart';
 import 'package:dirve_society/app/modules/home/views/feed_page.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';

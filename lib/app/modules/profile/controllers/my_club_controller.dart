@@ -18,7 +18,7 @@ class MyClubController extends GetxController {
   List<MyClubItemModel>? get myClubList => _myClubModel?.data;
 
   final int _limit = 5;
-  int page = 0;
+  int page = 0; 
 
   Future<bool> getMyClub() async {
     if (_inProgress) {

@@ -40,9 +40,8 @@ class _CreateReviewScreenState extends State<CreateReviewScreen> {
       );
 
       if (isSuccess) {
-        showSnackBarMessage(context, 'Review submitted successfully');
-        _reviewController.clear();
         Get.back();
+        // _reviewController.clear();
       } else {
         showSnackBarMessage(
           context,

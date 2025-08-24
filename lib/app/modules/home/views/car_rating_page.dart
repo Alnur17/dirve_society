@@ -1,11 +1,15 @@
 // ignore_for_file: avoid_print
 
 import 'package:dirve_society/app/modules/home/controllers/all_car_rating_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/react_controller.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
+import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class CarRatingPage extends StatefulWidget {
@@ -16,6 +20,11 @@ class CarRatingPage extends StatefulWidget {
 }
 
 class _CarRatingPageState extends State<CarRatingPage> {
+  final ReactPostController reactPostController =
+      Get.put(ReactPostController());
+  final AllCarRatingController allCarRatingController =
+      Get.put(AllCarRatingController());
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AllCarRatingController>(builder: (controller) {
@@ -24,7 +33,8 @@ class _CarRatingPageState extends State<CarRatingPage> {
           child: CircularProgressIndicator(),
         );
       }
-      if (controller.carRatingList == null || controller.carRatingList!.isEmpty) {
+      if (controller.carRatingList == null ||
+          controller.carRatingList!.isEmpty) {
         return const Center(
           child: Text(
             'No car ratings available',
@@ -46,13 +56,13 @@ class _CarRatingPageState extends State<CarRatingPage> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.network(
-                    car.banner ?? AppImages.carImage, // Use network image if available
+                    car.banner ?? AppImages.carImage,
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.asset(
-                        AppImages.carImage, // Fallback image
+                        AppImages.carImage,
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: double.infinity,
@@ -90,11 +100,6 @@ class _CarRatingPageState extends State<CarRatingPage> {
                           ),
                         ),
                       ),
-                      sw12,
-                      Image.asset(
-                        AppImages.chatRed,
-                        scale: 4,
-                      ),
                     ],
                   ),
                 ),
@@ -103,12 +108,46 @@ class _CarRatingPageState extends State<CarRatingPage> {
           );
         },
         onSwipe: (previousIndex, currentIndex, direction) {
-          print('Swiped card $previousIndex to $direction');
-          return true;
+          // Ensure currentIndex is not null
+          if (currentIndex != null) {
+            final car = controller.carRatingList![currentIndex];
+            if (direction == CardSwiperDirection.left) {
+              // Check if id is not null before calling reactPost
+              if (car.id != null) {
+                print('Swiped card $previousIndex to the LEFT, ID: ${car.id}');
+              } else {
+                print('Swiped card $previousIndex to the LEFT, but ID is null');
+                if (mounted) {}
+              }
+            } else if (direction == CardSwiperDirection.right) {
+              reactPost(car.contentMeta!.id ?? '');
+              print('Swiped card $previousIndex to the RIGHT, ID: ${car.id}');
+              // Add your right swipe operation here
+            }
+          } else {
+            print('Swipe ignored: currentIndex is null');
+          }
+          return true; // Allow the swipe
         },
-        allowedSwipeDirection: const AllowedSwipeDirection.symmetric(horizontal: true),
+        allowedSwipeDirection:
+            const AllowedSwipeDirection.symmetric(horizontal: true),
         padding: const EdgeInsets.only(bottom: 35, left: 20, right: 20, top: 8),
       );
     });
+  }
+
+  Future<void> reactPost(String postId) async {
+    print('Attempting to like post with ID: $postId');
+    final bool isSuccess = await reactPostController.reactPost(postId);
+    if (isSuccess) {
+      if (mounted) {
+        showSnackBarMessage(context, 'Like successfully completed');
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context,
+            reactPostController.errorMessage ?? 'Failed to like', true);
+      }
+    }
   }
 }

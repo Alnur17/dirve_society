@@ -32,7 +32,7 @@ class SplashController extends GetxController {
         print('user token is $token');
         debugPrint(token);
         if(token != null){       
-          Get.offAll(() => LoginView());
+          Get.offAll(() => DashboardView());
         }else{
          Get.offAll(() => LoginView());
         }

@@ -7,7 +7,7 @@ import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
 class AllFeedController extends GetxController {
-  final NetworkCaller networkCaller = Get.find<NetworkCaller>();
+  final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
   bool get inProgress => _inProgress;

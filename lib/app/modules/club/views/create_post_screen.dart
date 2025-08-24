@@ -1,12 +1,16 @@
 import 'dart:io';
 
-import 'package:dirve_society/app/modules/profile/controllers/create_club_controller.dart';
+import 'package:dirve_society/app/modules/club/controllers/all_club_field_controller.dart';
+import 'package:dirve_society/app/modules/club/controllers/create_club_controller.dart';
+import 'package:dirve_society/app/modules/club/controllers/create_post_controller.dart';
+import 'package:dirve_society/app/modules/club/views/club_view.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_club_controller.dart';
+import 'package:dirve_society/app/modules/profile/controllers/my_feed_controller.dart';
+import 'package:dirve_society/app/modules/profile/views/my_post_view.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/common/widgets/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
@@ -16,20 +20,28 @@ import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_circular_container.dart';
 import '../../../../common/widgets/custom_textfield.dart';
 
-class CreateClubView extends StatefulWidget {
-  const CreateClubView({super.key});
+// ignore: must_be_immutable
+class CreatePostView extends StatefulWidget {
+  String? clubId;
+  String? authorId;
+  CreatePostView({super.key, this.clubId, this.authorId});
 
   @override
-  State<CreateClubView> createState() => _CreateClubViewState();
+  State<CreatePostView> createState() => _CreatePostViewState();
 }
 
-class _CreateClubViewState extends State<CreateClubView> {
+class _CreatePostViewState extends State<CreatePostView> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final MyFeedController myFeedController = Get.put(MyFeedController());
   String privacy = 'public'; // Changed from final to non-final
   final CreateClubController createClubController =
       Get.put(CreateClubController());
   final MyClubController myClubController = Get.put(MyClubController());
+  final CreatePostController createPostController =
+      Get.put(CreatePostController());
+  final AllClubFeedController allClubFeedController =
+      Get.put(AllClubFeedController());
 
   final formKey = GlobalKey<FormState>();
   File? profileImage;
@@ -44,7 +56,7 @@ class _CreateClubViewState extends State<CreateClubView> {
         backgroundColor: AppColors.mainColor,
         scrolledUnderElevation: 0,
         title: Text(
-          'Create Club',
+          'Create Post',
           style: appBarStyle,
         ),
         centerTitle: true,
@@ -69,49 +81,13 @@ class _CreateClubViewState extends State<CreateClubView> {
               children: [
                 sh30,
                 Text(
-                  'Club Name',
+                  'Tags',
                   style: h5,
                 ),
                 sh8,
                 CustomTextField(
                   controller: nameController,
-                  hintText: 'Enter your club name',
-                ),
-                sh16,
-                Text(
-                  'Privacy',
-                  style: h5,
-                ),
-                sh8,
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                  ),
-                  value: privacy,
-                  items: ['public', 'private']
-                      .map((String value) => DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          ))
-                      .toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      privacy = newValue!; // Update privacy variable
-                    });
-                  },
+                  hintText: 'Enter tag',
                 ),
                 sh16,
                 Text(
@@ -142,25 +118,6 @@ class _CreateClubViewState extends State<CreateClubView> {
                   imageFile: profileImage,
                   label: 'Upload',
                 ),
-                sh16,
-                Text(
-                  'Cover Photo',
-                  style: h5,
-                ),
-                sh8,
-                UploadWidget(
-                  onTap: () {
-                    _imagePickerHelper.showAlertDialog(context,
-                        (File pickedImage) {
-                      setState(() {
-                        coverImage = pickedImage;
-                      });
-                    });
-                  },
-                  imagePath: AppImages.upload,
-                  imageFile: coverImage,
-                  label: 'Upload',
-                ),
                 sh100,
               ],
             ),
@@ -177,33 +134,35 @@ class _CreateClubViewState extends State<CreateClubView> {
         child: CustomButton(
           text: 'Create',
           onPressed: () {
-            createClub();
+            createPost();
           },
         ),
       ),
     );
   }
 
-  Future<void> createClub() async {
+  Future<void> createPost() async {
     if (formKey.currentState!.validate()) {
-      final bool isSuccess = await createClubController.createClub(
+      final bool isSuccess = await createPostController.createPost(
         nameController.text,
         privacy,
         descriptionController.text,
         profileImage,
-        cover: coverImage,
+        clubId: widget.clubId,
       );
 
       if (isSuccess) {
         if (mounted) {
-          showSnackBarMessage(context, 'Club created successfully');
-          myClubController.getMyClub();
-          nameController.clear();
-          privacy = 'public'; // Reset privacy variable
-          descriptionController.clear();
-          profileImage = null;
-          coverImage = null;
-          Get.back();
+          if (widget.clubId != null) {
+            await allClubFeedController.getAllClubFeed(widget.clubId!);
+            await Get.to(() => ClubView(
+                  id: widget.clubId ?? '',
+                  authorId: widget.authorId ?? '',
+                ));
+          } else {
+            await myClubController.getMyClub();
+            await Get.to(() => MyPostView());
+          }
         }
       } else {
         if (mounted) {

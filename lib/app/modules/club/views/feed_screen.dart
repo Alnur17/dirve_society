@@ -1,8 +1,8 @@
 import 'package:dirve_society/app/modules/club/controllers/all_club_field_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/dis_react_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/react_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/save_post_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/un_saved_post_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/dis_react_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/react_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/save_post_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/un_saved_post_controller.dart';
 import 'package:dirve_society/app/modules/home/views/comment_screen.dart';
 import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
@@ -14,11 +14,13 @@ import 'package:get/get.dart';
 
 class FeedScreen extends StatefulWidget {
   final String clubId;
-  const FeedScreen({super.key, required this.clubId});
+  final String authorId;
+
+  const FeedScreen({super.key, required this.clubId, required this.authorId});
 
   @override
   State<FeedScreen> createState() => _FeedScreenState();
-}
+} 
 
 class _FeedScreenState extends State<FeedScreen> {
   final AllClubFeedController allClubFeedController =

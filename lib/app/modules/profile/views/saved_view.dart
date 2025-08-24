@@ -1,3 +1,4 @@
+import 'package:dirve_society/app/modules/home/views/post_details_screen.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_favourite_controller.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:flutter/material.dart';
@@ -48,16 +49,6 @@ class _SavedViewState extends State<SavedView> {
           style: appBarStyle,
         ),
         centerTitle: true,
-        actions: [
-          CustomCircularContainer(
-            imagePath: AppImages.addCircle,
-            onTap: () {
-              Get.back();
-            },
-            //padding: 4,
-          ),
-          sw8,
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,10 +84,21 @@ class _SavedViewState extends State<SavedView> {
                   ),
                   itemBuilder: (context, index) => ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      controller.myFavouriteList![index].content?.content[0] ?? '',
-                      scale: 4,
-                      fit: BoxFit.cover,
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(() => PostDetailsScreen(
+                              postId: controller
+                                      .myFavouriteList![index].content?.id ??
+                                  '',
+                            ));
+                      },
+                      child: Image.network(
+                        controller
+                                .myFavouriteList![index].content?.content[0] ??
+                            '',
+                        scale: 4,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

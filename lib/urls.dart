@@ -17,6 +17,9 @@ class Urls {
   static const String myClubUrl = '$_baseUrl/clubs/my-club';
   static const String myFavouriteUrl = '$_baseUrl/favorite/my-favorite';
   static const String createClubUrl = '$_baseUrl/clubs';
+  static const String createPostUrl = '$_baseUrl/feeds';
+  static const String createMeetUrl = '$_baseUrl/meets';
+  static const String addStoryUrl = '$_baseUrl/stories';
   static const String allPendingConnection =
       '$_baseUrl/connect-requests/my-connection';
   static const String allmarketPlaceUrl = '$_baseUrl/cars';
@@ -26,6 +29,12 @@ class Urls {
   static const String favouriteUrl = '$_baseUrl/favorite';
   static const String allStoryUrl = '$_baseUrl/stories';
   static const String clubDetailsUrl = '$_baseUrl/stories';
+  static const String peopleMayKnowUrl = '$_baseUrl/profiles/discover-profile';
+  static const String discoverClubUrl = '$_baseUrl/clubs/discover';
+  static const String addConnectionRequestUrl = '$_baseUrl/connect-requests';
+  static const String allMeetUrl = '$_baseUrl/meets';
+  static const String createForumUrl = '$_baseUrl/forums';
+  static const String myjoiningClub = '$_baseUrl/connect-requests/club-connection';
 
   static String getMarketPlaceUrlById(
     String id,
@@ -33,13 +42,61 @@ class Urls {
     return '$_baseUrl/cars/$id';
   }
 
-   static String allClubFielsById(
+  static String feedsById(
+    String id,
+  ) {
+    return '$_baseUrl/feeds/$id';
+  }
+
+  static String storyById(
+    String id,
+  ) {
+    return '$_baseUrl/stories/user/$id';
+  }
+
+  static String allClubFielsById(
     String id,
   ) {
     return '$_baseUrl/feeds/club/$id';
   }
 
-   static String allClubForumsById(
+  static String changeConnectionRequestById(
+    String id,
+  ) {
+    return '$_baseUrl/connect-requests/user-connection/$id';
+  }
+
+  static String editClubById(
+    String id,
+  ) {
+    return '$_baseUrl/clubs/$id';
+  }
+
+  static String deleteClubById(
+    String id,
+  ) {
+    return '$_baseUrl/clubs/$id';
+  }
+
+  static String leaveClubById(
+    String id,
+  ) {
+    return '$_baseUrl/clubs/leave-club/$id';
+  }
+
+  static String changeAdminById(
+    String id,
+  ) {
+    return '$_baseUrl/clubs/transfer-ownership/$id';
+  }
+
+  static String allClubMembersByClubId(
+    String id,
+  ) {
+    return '$_baseUrl/connect-requests/club-members/$id';
+  }
+
+  static String allClubForumsById(
     String id,
   ) {
     return '$_baseUrl/forums/club/$id';
@@ -190,7 +247,7 @@ class Urls {
   static String unSavePostById(
     String id,
   ) {
-    return '$_baseUrl/favorite/$id';
+    return '$_baseUrl/favorite/content/$id';
   }
 
   static String userUnblockById(

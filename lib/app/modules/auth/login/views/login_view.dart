@@ -21,10 +21,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final TextEditingController emailController =
-      TextEditingController(text: "emonhasan7650@gmail.com");
-  final TextEditingController passwordController =
-      TextEditingController(text: "user123");
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final LoginController loginController = Get.put(LoginController());
   final ProfileController profileController = Get.put(ProfileController());
 

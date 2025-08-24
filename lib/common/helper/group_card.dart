@@ -11,9 +11,12 @@ class GroupCard extends StatelessWidget {
   final String memberCount;
   final bool isPublic;
   final bool isJoined;
-  final VoidCallback? onJoinPressed; // Made nullable
+  final VoidCallback acceptButton;
+  final VoidCallback rejectedButton;
+  final VoidCallback joinClubBtuton;
   final VoidCallback? ontap; // Made nullable
   final bool showButton; // New parameter to control button visibility
+  final bool isOneButton;
 
   const GroupCard({
     super.key,
@@ -21,10 +24,13 @@ class GroupCard extends StatelessWidget {
     required this.memberCount,
     required this.isPublic,
     required this.isJoined,
-    this.onJoinPressed, // Optional
     this.showButton = true,
     this.ontap,
-    required this.imageUrl, // Default to true
+    required this.imageUrl,
+    required this.isOneButton,
+    required this.acceptButton,
+    required this.rejectedButton,
+    required this.joinClubBtuton, // Default to true
   });
 
   @override
@@ -51,7 +57,7 @@ class GroupCard extends StatelessWidget {
           children: [
             // Group image placeholder
             CircleAvatar(
-              radius: 40,
+              radius: 30,
               backgroundColor: Colors.grey[300],
               backgroundImage: NetworkImage(imageUrl),
             ),
@@ -100,11 +106,20 @@ class GroupCard extends StatelessWidget {
               // Switchable Join Button
               CustomButton(
                 height: 32,
-                text: isJoined ? 'Joined' : 'Join',
-                onPressed: onJoinPressed ??
-                    () {}, // Fallback to empty callback if null
+                text: isOneButton ? 'Join' : 'Accept',
+                onPressed: isOneButton ? joinClubBtuton : acceptButton,
                 backgroundColor: isJoined ? AppColors.grey : AppColors.darkRed,
               ),
+              SizedBox(height: 4),
+              isOneButton
+                  ? Container()
+                  : CustomButton(
+                      height: 32,
+                      text: 'Rejected',
+                      onPressed: rejectedButton,
+                      backgroundColor:
+                          isJoined ? AppColors.grey : AppColors.darkRed,
+                    ),
             ],
           ],
         ),

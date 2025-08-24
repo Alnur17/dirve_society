@@ -246,11 +246,11 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                               ),
                             ],
                           ),
-                          Spacer(),
-                          Image.asset(
-                            AppImages.chatRed,
-                            scale: 4,
-                          ),
+                          // Spacer(),
+                          // Image.asset(
+                          //   AppImages.chatRed,
+                          //   scale: 4,
+                          // ),
                         ],
                       ),
                     ),
@@ -361,42 +361,6 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                   },
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 20),
-              //   child: CustomRowHeader(
-              //     title: 'More From This Seller',
-              //     onTap: () {},
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 300,
-              //   child: ListView.builder(
-              //     scrollDirection: Axis.horizontal,
-              //     shrinkWrap: true,
-              //     itemCount: DummyData.cars.length,
-              //     itemBuilder: (context, index) {
-              //       return Padding(
-              //         padding: EdgeInsets.only(
-              //           top: 12,
-              //           left: index == 0 ? 20 : 8,
-              //           right: index == DummyData.cars.length - 1 ? 20 : 0,
-              //           bottom: 20,
-              //         ),
-              //         child: MarketPlaceWidget(
-              //           name: DummyData.cars[index]['name']!,
-              //           price: DummyData.cars[index]['price']!,
-              //           date: DummyData.cars[index]['date']!,
-              //           imageUrl: DummyData.cars[index]['image']!,
-              //           onTap: () {
-              //             Get.to(() => ListingDetailsView(
-              //                   id: '',
-              //                 ));
-              //           },
-              //         ),
-              //       );
-              //     },
-              //   ),
-              // ),
             ],
           );
         }),

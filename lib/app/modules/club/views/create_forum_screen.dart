@@ -1,0 +1,138 @@
+import 'package:dirve_society/app/modules/club/controllers/all_club_forum_controller.dart';
+import 'package:dirve_society/app/modules/club/controllers/create_forum_controller.dart';
+import 'package:dirve_society/app/modules/club/views/club_view.dart';
+import 'package:dirve_society/app/modules/profile/controllers/my_club_controller.dart';
+import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../common/app_color/app_colors.dart';
+import '../../../../common/app_images/app_images.dart';
+import '../../../../common/app_text_style/styles.dart';
+import '../../../../common/size_box/custom_sizebox.dart';
+import '../../../../common/widgets/custom_button.dart';
+import '../../../../common/widgets/custom_circular_container.dart';
+import '../../../../common/widgets/custom_textfield.dart';
+
+// ignore: must_be_immutable
+class CreateForumView extends StatefulWidget {
+  String? clubId;
+  String? authorId;
+
+  CreateForumView({super.key, this.clubId, this.authorId});
+
+  @override
+  State<CreateForumView> createState() => _CreateForumViewState();
+}
+
+class _CreateForumViewState extends State<CreateForumView> {
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final MyClubController myClubController = Get.put(MyClubController());
+  final CreateForumController createForumController =
+      Get.put(CreateForumController());
+  final AllClubForunController allClubForumController =
+      Get.put(AllClubForunController());
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.mainColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.mainColor,
+        scrolledUnderElevation: 0,
+        title: Text(
+          'Create forum',
+          style: appBarStyle,
+        ),
+        centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: CustomCircularContainer(
+            imagePath: AppImages.back,
+            onTap: () {
+              Get.back();
+            },
+            padding: 4,
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                sh30,
+                Text(
+                  'Title',
+                  style: h5,
+                ),
+                sh8,
+                CustomTextField(
+                  controller: titleController,
+                  hintText: 'Enter title',
+                ),
+                sh16,
+                Text(
+                  'Description',
+                  style: h5,
+                ),
+                sh8,
+                CustomTextField(
+                  maxline: 5,
+                  controller: descriptionController,
+                  hintText: 'Describe about your club',
+                ),
+                sh100,
+              ],
+            ),
+          ),
+        ),
+      ),
+      bottomSheet: Container(
+        color: AppColors.mainColor,
+        padding: const EdgeInsets.only(
+          left: 20,
+          right: 20,
+          bottom: 20,
+        ),
+        child: CustomButton(
+          text: 'Create',
+          onPressed: () {
+            createForum();
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> createForum() async {
+    if (formKey.currentState!.validate()) {
+      final bool isSuccess = await createForumController.createForun(
+          titleController.text,
+          descriptionController.text,
+          widget.clubId ?? '');
+
+      if (isSuccess) {
+        if (mounted) {
+          await allClubForumController.getAllClubForum(widget.clubId ?? '');
+          await Get.to(() => ClubView(
+                authorId: widget.authorId ?? '',
+                id: widget.clubId ?? '',
+              ));
+        }
+      } else {
+        if (mounted) {
+          showSnackBarMessage(
+            context,
+            createForumController.errorMessage ?? 'Failed to create club',
+            true,
+          );
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:dirve_society/app/modules/home/controllers/comment_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/send_comment_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/comment_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/send_comment_controller.dart';
 import 'package:dirve_society/app/modules/profile/controllers/profile_controller.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/get_storage.dart';

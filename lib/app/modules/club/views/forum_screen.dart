@@ -1,8 +1,8 @@
 import 'package:dirve_society/app/modules/club/controllers/all_club_forum_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/dis_react_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/react_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/save_post_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/un_saved_post_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/dis_react_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/react_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/save_post_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/un_saved_post_controller.dart';
 import 'package:dirve_society/app/modules/home/views/comment_screen.dart';
 import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
@@ -15,7 +15,8 @@ import 'package:dirve_society/common/app_images/app_images.dart';
 
 class ForumScreen extends StatefulWidget {
   final String clubId;
-  const ForumScreen({super.key, required this.clubId});
+  final String authorId;
+  const ForumScreen({super.key, required this.clubId, required this.authorId});
 
   @override
   State<ForumScreen> createState() => _ForumScreenState();
@@ -24,7 +25,8 @@ class ForumScreen extends StatefulWidget {
 class _ForumScreenState extends State<ForumScreen> {
   final AllClubForunController allClubForumController =
       Get.put(AllClubForunController());
-  final ReactPostController reactPostController = Get.put(ReactPostController());
+  final ReactPostController reactPostController =
+      Get.put(ReactPostController());
   final DisReactPostController disReactPostController =
       Get.put(DisReactPostController());
   final SavePostController savePostController = Get.put(SavePostController());
@@ -58,7 +60,8 @@ class _ForumScreenState extends State<ForumScreen> {
   Future<void> reactPost(String postId, bool isDisliked, bool isLiked) async {
     if (isDisliked) {
       if (mounted) {
-        showSnackBarMessage(context, 'Cannot like a post that is already disliked', true);
+        showSnackBarMessage(
+            context, 'Cannot like a post that is already disliked', true);
       }
       return;
     }
@@ -84,8 +87,10 @@ class _ForumScreenState extends State<ForumScreen> {
         }
       } else {
         if (mounted) {
-          showSnackBarMessage(context,
-              disReactPostController.errorMessage ?? 'Failed to remove like', true);
+          showSnackBarMessage(
+              context,
+              disReactPostController.errorMessage ?? 'Failed to remove like',
+              true);
         }
       }
     } else {
@@ -115,10 +120,12 @@ class _ForumScreenState extends State<ForumScreen> {
     }
   }
 
-  Future<void> disReactPost(String postId, bool isLiked, bool isDisliked) async {
+  Future<void> disReactPost(
+      String postId, bool isLiked, bool isDisliked) async {
     if (isLiked) {
       if (mounted) {
-        showSnackBarMessage(context, 'Cannot dislike a post that is already liked', true);
+        showSnackBarMessage(
+            context, 'Cannot dislike a post that is already liked', true);
       }
       return;
     }
@@ -131,8 +138,9 @@ class _ForumScreenState extends State<ForumScreen> {
             .indexWhere((post) => post.contentMeta?.id == postId);
         print('Index found: $index');
         if (index != -1) {
-          int currentDislikes =
-              allClubForumController.postList[index].contentMeta?.disLikeBy?.length ?? 0;
+          int currentDislikes = allClubForumController
+                  .postList[index].contentMeta?.disLikeBy?.length ??
+              0;
           print('Current dislikes: $currentDislikes');
           allClubForumController.updatePostDislike(
               postId, false, currentDislikes > 0 ? currentDislikes - 1 : 0);
@@ -144,8 +152,10 @@ class _ForumScreenState extends State<ForumScreen> {
         }
       } else {
         if (mounted) {
-          showSnackBarMessage(context,
-              disReactPostController.errorMessage ?? 'Failed to remove dislike', true);
+          showSnackBarMessage(
+              context,
+              disReactPostController.errorMessage ?? 'Failed to remove dislike',
+              true);
         }
       }
     } else {
@@ -156,10 +166,12 @@ class _ForumScreenState extends State<ForumScreen> {
             .indexWhere((post) => post.contentMeta?.id == postId);
         print('Index found: $index');
         if (index != -1) {
-          int currentDislikes =
-              allClubForumController.postList[index].contentMeta?.disLikeBy?.length ?? 0;
+          int currentDislikes = allClubForumController
+                  .postList[index].contentMeta?.disLikeBy?.length ??
+              0;
           print('Current dislikes: $currentDislikes');
-          allClubForumController.updatePostDislike(postId, true, currentDislikes + 1);
+          allClubForumController.updatePostDislike(
+              postId, true, currentDislikes + 1);
           if (mounted) {
             showSnackBarMessage(context, 'Dislike successfully completed');
           }
@@ -241,7 +253,8 @@ class _ForumScreenState extends State<ForumScreen> {
                   DateFormatter(forumPost.createdAt ?? DateTime.now());
               return forumPost.isHide == false
                   ? ForumCard(
-                      imagePath: forumPost.author?.photoUrl ?? AppImages.carImage,
+                      imagePath:
+                          forumPost.author?.photoUrl ?? AppImages.carImage,
                       clubName: forumPost.title ?? '',
                       author: forumPost.author?.name ?? 'Unknown',
                       date: dateFormatter.getRelativeTimeFormat(),
@@ -264,7 +277,8 @@ class _ForumScreenState extends State<ForumScreen> {
                         ));
                       },
                       onLikeTap: () {
-                        print('Like tapped for post ID: ${forumPost.contentMeta?.id}');
+                        print(
+                            'Like tapped for post ID: ${forumPost.contentMeta?.id}');
                         reactPost(
                           forumPost.contentMeta?.id ?? '',
                           forumPost.isDislike ?? false,
@@ -272,7 +286,8 @@ class _ForumScreenState extends State<ForumScreen> {
                         );
                       },
                       onDislikeTap: () {
-                        print('Dislike tapped for post ID: ${forumPost.contentMeta?.id}');
+                        print(
+                            'Dislike tapped for post ID: ${forumPost.contentMeta?.id}');
                         disReactPost(
                           forumPost.contentMeta?.id ?? '',
                           forumPost.isLiked ?? false,
@@ -290,7 +305,8 @@ class _ForumScreenState extends State<ForumScreen> {
                         forumPost.isFavorite == true
                             ? unSavePost(forumPost.id ?? '')
                             : savePost(
-                                StorageUtil.getData(StorageUtil.profileId) ?? '',
+                                StorageUtil.getData(StorageUtil.profileId) ??
+                                    '',
                                 forumPost.id ?? '',
                               );
                       },

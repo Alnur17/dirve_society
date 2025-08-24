@@ -15,6 +15,7 @@ class CustomTextField extends StatefulWidget {
   final Color? borderColor;
   final bool isPassword;
   final Color? textColor;
+  final int? maxline;
 
   const CustomTextField({
     super.key,
@@ -30,6 +31,7 @@ class CustomTextField extends StatefulWidget {
     this.borderColor,
     this.isPassword = false,
     this.textColor,
+    this.maxline = 1,
   });
 
   @override
@@ -58,7 +60,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         textInputAction: TextInputAction.done,
         onChanged: widget.onChange,
         controller: widget.controller,
-        maxLines: widget.isPassword ? 1 : null, // Single line for password
+        maxLines: widget.maxline,
         keyboardType: widget.isPassword
             ? TextInputType.text
             : TextInputType.multiline, // No multiline for password

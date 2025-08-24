@@ -1,3 +1,4 @@
+import 'package:dirve_society/app/modules/auth/login/views/login_view.dart';
 import 'package:dirve_society/app/modules/profile/controllers/content_controller.dart';
 import 'package:dirve_society/app/modules/profile/views/changed_password_view.dart';
 import 'package:dirve_society/app/modules/profile/views/edit_profile_details_view.dart';
@@ -7,6 +8,7 @@ import 'package:dirve_society/app/modules/profile/views/my_post_view.dart';
 import 'package:dirve_society/app/modules/profile/views/privacy_and_security_view.dart';
 import 'package:dirve_society/app/modules/profile/views/saved_view.dart';
 import 'package:dirve_society/app/modules/profile/views/terms_and_conditions_view.dart';
+import 'package:dirve_society/common/widgets/custom_dialoge.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -109,7 +111,8 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                         sw5,
                         Text(
-                          StorageUtil.getData(StorageUtil.profileAvgRating).toString(),
+                          StorageUtil.getData(StorageUtil.profileAvgRating)
+                              .toString(),
                           style: h3.copyWith(
                             color: AppColors.darkRed,
                             fontWeight: FontWeight.w700,
@@ -255,7 +258,11 @@ class _ProfileViewState extends State<ProfileView> {
                       sh12,
                       CustomListTile(
                         onTap: () {
-                          Get.to(() => TermsAndConditionsView(data: controller.contectList?[0].termsAndConditions ?? '',));
+                          Get.to(() => TermsAndConditionsView(
+                                data: controller
+                                        .contectList?[0].termsAndConditions ??
+                                    '',
+                              ));
                         },
                         leadingImage: AppImages.termsAndConditions,
                         title: 'Terms & Conditions',
@@ -264,7 +271,9 @@ class _ProfileViewState extends State<ProfileView> {
                       sh12,
                       CustomListTile(
                         onTap: () {
-                          Get.to(() => AboutUsView(data: controller.contectList?[0].aboutUs ?? '',));
+                          Get.to(() => AboutUsView(
+                                data: controller.contectList?[0].aboutUs ?? '',
+                              ));
                         },
                         leadingImage: AppImages.aboutUs,
                         title: 'About Us',
@@ -274,7 +283,9 @@ class _ProfileViewState extends State<ProfileView> {
                       Center(
                         child: CustomButton(
                           text: 'Log Out',
-                          onPressed: () {},
+                          onPressed: () {
+                            _showLeaveAccountDialog(context);
+                          },
                           imageAssetPath: AppImages.logout,
                           width: 150,
                           textColor: AppColors.red,
@@ -290,6 +301,28 @@ class _ProfileViewState extends State<ProfileView> {
           }),
         ],
       ),
+    );
+  }
+
+  void _showLeaveAccountDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomDialog(
+          yesText: 'Yes',
+          noText: 'No',
+          noOntap: () {
+            Navigator.pop(context);
+          },
+          yesOntap: () {
+            StorageUtil.deleteData(StorageUtil.userAccessToken);
+            Get.offAll(() => LoginView());
+          },
+          iconData: Icons.logout,
+          subtitle: '',
+          title: 'Do you want to log out this profile?',
+        );
+      },
     );
   }
 }

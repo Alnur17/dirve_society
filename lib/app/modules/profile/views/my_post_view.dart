@@ -1,3 +1,5 @@
+import 'package:dirve_society/app/modules/club/views/create_post_screen.dart';
+import 'package:dirve_society/app/modules/home/views/post_details_screen.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_feed_controller.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,9 @@ class _MyPostViewState extends State<MyPostView> {
 
   @override
   void initState() {
-    myFeedController.getMyFeed();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      myFeedController.getMyFeed();
+    });
     super.initState();
   }
 
@@ -193,7 +197,12 @@ class _MyPostViewState extends State<MyPostView> {
                   itemBuilder: (context, index) => ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => PostDetailsScreen(
+                              postId:
+                                  myFeedController.allFeedList?[index].id ?? '',
+                            ));
+                      },
                       child: Image.network(
                         myFeedController.allFeedList?[index].content[0] ?? '',
                         scale: 4,
@@ -210,7 +219,9 @@ class _MyPostViewState extends State<MyPostView> {
       floatingActionButton: ClipRRect(
         borderRadius: BorderRadius.circular(40),
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(() => CreatePostView());
+          },
           backgroundColor: AppColors.darkRed,
           child: Icon(
             Icons.add,

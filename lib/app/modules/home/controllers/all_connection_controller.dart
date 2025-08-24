@@ -38,9 +38,7 @@ class AllPendingConnectionController extends GetxController {
     _inProgress = true;
     update();
 
-    Map<String, dynamic> queryParams = {
-      'limit': 99999,
-    };
+    Map<String, dynamic> queryParams = {'limit': 99999, 'status': 'pending'};
     final NetworkResponse response = await networkCaller.getRequest(
       Urls.allPendingConnection,
       queryParams: queryParams,

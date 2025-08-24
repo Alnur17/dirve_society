@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
-import 'package:dirve_society/common/app_images/app_images.dart';
+
 
 class ForumCard extends StatelessWidget {
   final String imagePath;
@@ -131,7 +131,8 @@ class ForumCard extends StatelessWidget {
                 GestureDetector(
                   onTap: onLikeTap,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       color: AppColors.silver,
@@ -158,7 +159,8 @@ class ForumCard extends StatelessWidget {
                 GestureDetector(
                   onTap: onDislikeTap,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       color: AppColors.silver,
@@ -167,7 +169,9 @@ class ForumCard extends StatelessWidget {
                       children: [
                         Icon(
                           dislikeData,
-                          color: dislikeData == Icons.thumb_down ? Colors.red : null,
+                          color: dislikeData == Icons.thumb_down
+                              ? Colors.red
+                              : null,
                           size: 20,
                         ),
                         sw5,
@@ -185,7 +189,8 @@ class ForumCard extends StatelessWidget {
                 GestureDetector(
                   onTap: onCommentTap,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       color: AppColors.silver,
@@ -207,23 +212,6 @@ class ForumCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (onBookmarkTap != null) ...[
-                  sw12,
-                  GestureDetector(
-                    onTap: onBookmarkTap,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: AppColors.silver,
-                      ),
-                      child: Image.asset(
-                        AppImages.bookmark,
-                        scale: 4,
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
           ],

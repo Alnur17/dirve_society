@@ -1,13 +1,15 @@
 // ignore_for_file: avoid_print
-import 'package:dirve_society/app/modules/home/controllers/all_feed_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/all_feed_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/all_car_rating_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/all_story_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/dis_react_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/react_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/save_post_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/un_saved_post_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/dis_react_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/react_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/save_post_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/un_saved_post_controller.dart';
 import 'package:dirve_society/app/modules/home/views/comment_screen.dart';
+import 'package:dirve_society/app/modules/home/views/create_story_screen.dart';
 import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
+import 'package:dirve_society/app/modules/home/views/story_screen.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/helper/post_card.dart';
@@ -41,7 +43,7 @@ class _FeedPageState extends State<FeedPage> {
 
   final ScrollController scrollController = ScrollController();
 
-  @override 
+  @override
   void initState() {
     super.initState();
     scrollController.addListener(_loadMoreData);
@@ -187,13 +189,18 @@ class _FeedPageState extends State<FeedPage> {
                           Positioned(
                             right: 0,
                             bottom: 0,
-                            child: CircleAvatar(
-                              radius: 10,
-                              backgroundColor: Colors.black,
-                              child: Icon(
-                                Icons.add,
-                                size: 12,
-                                color: Colors.white,
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => const AddStoryScreen());
+                              },
+                              child: CircleAvatar(
+                                radius: 10,
+                                backgroundColor: Colors.black,
+                                child: Icon(
+                                  Icons.add,
+                                  size: 12,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           )
@@ -219,13 +226,19 @@ class _FeedPageState extends State<FeedPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           StoryWidget(
-                            image: controller.storData![index].user?.stories[0]
-                                    .content ??
+                            ontap: () {
+                              Get.to(() => StoryScreen(
+                                    userId: controller
+                                            .storData![index].user?.userId ??
+                                        '',
+                                  ));
+                            },
+                            image: controller.storData![index].user?.stories
+                                    .last.content ??
                                 '',
                           ),
                           Text(
-                            controller.storData![index].user?.stories[0].text ??
-                                '',
+                            controller.storData![index].user?.name ?? '',
                             style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.black,
@@ -265,7 +278,7 @@ class _FeedPageState extends State<FeedPage> {
               itemBuilder: (context, index) {
                 final feed = allFeedController.postList[index];
                 final dateFormatter =
-                    DateFormatter(feed.createdAt ?? DateTime.now());
+                    DateFormatter(feed.createdAt ?? DateTime.now()); 
                 return feed.isHide == false
                     ? PostCard(
                         profileImage: feed.author?.photoUrl ?? '',

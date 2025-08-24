@@ -12,7 +12,7 @@ class AllStoryController extends GetxController {
 
   bool _inProgress = false;
   bool get inProgress => _inProgress;
-
+ 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
