@@ -348,6 +348,7 @@ class _MessageViewState extends State<MessageView> {
             sw12,
             Expanded(
               child: CustomTextField(
+                 onChange: (String value) {  },
                 controller: messageController,
                 hintText: 'Message',
                 borderRadius: 30,

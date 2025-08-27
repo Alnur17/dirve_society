@@ -98,6 +98,7 @@ class _CreateReviewScreenState extends State<CreateReviewScreen> {
                 child: CustomTextField(
                   controller: _reviewController,
                   hintText: 'Type your review here',
+                  onChange: (String value) {},
                 ),
               ),
               sh16,

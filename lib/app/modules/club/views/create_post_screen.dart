@@ -86,6 +86,7 @@ class _CreatePostViewState extends State<CreatePostView> {
                 ),
                 sh8,
                 CustomTextField(
+                  onChange: (String value) {},
                   controller: nameController,
                   hintText: 'Enter tag',
                 ),
@@ -96,6 +97,7 @@ class _CreatePostViewState extends State<CreatePostView> {
                 ),
                 sh8,
                 CustomTextField(
+                  onChange: (String value) {},
                   controller: descriptionController,
                   hintText: 'Describe about your club',
                 ),
@@ -156,6 +158,7 @@ class _CreatePostViewState extends State<CreatePostView> {
           if (widget.clubId != null) {
             await allClubFeedController.getAllClubFeed(widget.clubId!);
             await Get.to(() => ClubView(
+                  isAuthor: true,
                   id: widget.clubId ?? '',
                   authorId: widget.authorId ?? '',
                 ));

@@ -84,6 +84,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     AppImages.message,
                     scale: 4,
                   ),
+                  onChange: (String value) {},
                 ),
               ),
               sh30,

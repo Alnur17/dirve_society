@@ -56,6 +56,7 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
             children: [
               sh30,
               CustomTextField(
+                 onChange: (String value) {  },
                 controller: oldPassworfController,
                 hintText: 'Current Password',
                 sufIcon: Image.asset(
@@ -65,6 +66,7 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
               ),
               sh16,
               CustomTextField(
+                 onChange: (String value) {  },
                 controller: newPasswordController,
                 hintText: 'New Password',
                 sufIcon: Image.asset(
@@ -74,6 +76,7 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
               ),
               sh16,
               CustomTextField(
+                 onChange: (String value) {  },
                 controller: newPasswordController,
                 hintText: 'Confirm New Password',
                 sufIcon: Image.asset(

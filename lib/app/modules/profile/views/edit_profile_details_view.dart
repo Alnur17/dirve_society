@@ -173,6 +173,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                       ),
                       sh5,
                       CustomTextField(
+                         onChange: (String value) {  },
                         textColor: Colors.black,
                         controller: nameController,
                         hintTextStyle: TextStyle(color: AppColors.black),
@@ -184,6 +185,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                       ),
                       sh5,
                       CustomTextField(
+                         onChange: (String value) {  },
                         textColor: Colors.black,
                         controller: emailController,
                         hintTextStyle: TextStyle(color: AppColors.black),
@@ -195,6 +197,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                       ),
                       sh5,
                       CustomTextField(
+                         onChange: (String value) {  },
                         textColor: Colors.black,
                         controller: bioController,
                         hintTextStyle: TextStyle(color: AppColors.black),
@@ -206,6 +209,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                       ),
                       sh5,
                       CustomTextField(
+                         onChange: (String value) {  },
                         textColor: Colors.black,
                         controller: addressController,
                         hintTextStyle: TextStyle(color: AppColors.black),

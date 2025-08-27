@@ -24,14 +24,14 @@ class PriceRow extends StatelessWidget {
           style: GoogleFonts.poppins(
               fontSize: nameSize,
               fontWeight: FontWeight.w500,
-              color: Colors.white),
+              color: Colors.black),
         ),
         Align(
           alignment: Alignment.topRight,
           child: Text(
             price,
             style:
-                GoogleFonts.roboto(fontSize: priceSize, color: Colors.white),
+                GoogleFonts.roboto(fontSize: priceSize, color: Colors.black),
           ),
         ),
       ],

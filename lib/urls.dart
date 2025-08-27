@@ -34,7 +34,13 @@ class Urls {
   static const String addConnectionRequestUrl = '$_baseUrl/connect-requests';
   static const String allMeetUrl = '$_baseUrl/meets';
   static const String createForumUrl = '$_baseUrl/forums';
-  static const String myjoiningClub = '$_baseUrl/connect-requests/club-connection';
+  static const String myjoiningClub =
+      '$_baseUrl/connect-requests/club-connection';
+  static const String addInvitePeopleUrl =
+      '$_baseUrl/connect-requests/club-invitation';
+  static const String packageUrl = '$_baseUrl/packages';
+  static const String subscriptionUrl = '$_baseUrl/subscriptions';
+  static const String paymentCheckoutUrl = '$_baseUrl/payments/checkout';
 
   static String getMarketPlaceUrlById(
     String id,
@@ -106,6 +112,12 @@ class Urls {
     String id,
   ) {
     return '$_baseUrl/clubs/$id';
+  }
+
+  static String allInvitePeopleById(
+    String id,
+  ) {
+    return '$_baseUrl/clubs/invite/$id';
   }
 
   static String getReviewById(

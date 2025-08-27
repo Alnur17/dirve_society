@@ -85,6 +85,7 @@ class SignUpView extends GetView {
                     ),
                     sh8,
                     CustomTextField(
+                       onChange: (String value) {  },
                       controller: nameController,
                       hintText: 'Enter your full name',
                     ),
@@ -97,6 +98,7 @@ class SignUpView extends GetView {
                     ),
                     sh8,
                     CustomTextField(
+                       onChange: (String value) {  },
                       controller: addressController,
                       hintText: 'Your address',
                     ),
@@ -109,6 +111,7 @@ class SignUpView extends GetView {
                     ),
                     sh8,
                     CustomTextField(
+                       onChange: (String value) {  },
                       controller: emailController,
                       hintText: 'Your email',
                     ),
@@ -121,6 +124,7 @@ class SignUpView extends GetView {
                     ),
                     sh8,
                     CustomTextField(
+                       onChange: (String value) {  },
                       controller: passwordController,
                       sufIcon: Image.asset(
                         AppImages.eyeClose,

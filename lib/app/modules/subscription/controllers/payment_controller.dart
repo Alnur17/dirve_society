@@ -5,7 +5,6 @@ import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-
 class PaymentController extends GetxController {
   bool _inProgress = false;
   bool get inProgress => _inProgress;
@@ -19,8 +18,7 @@ class PaymentController extends GetxController {
   PaymentModel? paymentModel;
   PaymentModel? get paymentData => paymentModel;
 
-  Future<bool> getPayment(
-      String userId, String refereneId) async {
+  Future<bool> getPayment( String userId, String refereneId) async {
     bool isSuccess = false;
 
     _inProgress = true;
@@ -28,13 +26,13 @@ class PaymentController extends GetxController {
     update();
 
     Map<String, dynamic> requestBody = {
-      "modelType": 'Order',
-      "account": userId,
-      "reference": refereneId
+      "user": userId,
+      "subscription": refereneId
     };
 
     final NetworkResponse response = await Get.find<NetworkCaller>()
-        .postRequest('Urls.paymentCheckoutUrl', requestBody,accesToken: StorageUtil.getData(StorageUtil.userAccessToken));
+        .postRequest(Urls.paymentCheckoutUrl, requestBody,
+            accesToken: StorageUtil.getData(StorageUtil.userAccessToken));
 
     if (response.isSuccess) {
       paymentModel = PaymentModel.fromJson(response.responseData);

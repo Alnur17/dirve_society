@@ -72,6 +72,7 @@ class _CreateForumViewState extends State<CreateForumView> {
                 ),
                 sh8,
                 CustomTextField(
+                   onChange: (String value) {  },
                   controller: titleController,
                   hintText: 'Enter title',
                 ),
@@ -82,7 +83,8 @@ class _CreateForumViewState extends State<CreateForumView> {
                 ),
                 sh8,
                 CustomTextField(
-                  maxline: 5,
+                   onChange: (String value) {  },
+             
                   controller: descriptionController,
                   hintText: 'Describe about your club',
                 ),
@@ -120,6 +122,7 @@ class _CreateForumViewState extends State<CreateForumView> {
         if (mounted) {
           await allClubForumController.getAllClubForum(widget.clubId ?? '');
           await Get.to(() => ClubView(
+                isAuthor: true,
                 authorId: widget.authorId ?? '',
                 id: widget.clubId ?? '',
               ));

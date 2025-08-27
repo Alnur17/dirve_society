@@ -92,6 +92,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     sh8,
                     CustomTextField(
+                       onChange: (String value) {  },
                       textColor: Colors.white,
                       hintText: '**********',
                       isPassword: true,

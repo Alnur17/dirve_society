@@ -31,6 +31,10 @@ class _AddCarViewState extends State<AddCarView> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController transmissionController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController conditionController = TextEditingController();
+  final TextEditingController colorController = TextEditingController();
+  final TextEditingController yearController = TextEditingController();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final AddCarController addCarController = Get.put(AddCarController());
 
@@ -76,6 +80,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
+                   onChange: (String value) {  },
                   hintText: 'Enter your car brand name',
                   controller: brandController,
                 ),
@@ -86,6 +91,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
+                   onChange: (String value) {  },
                   hintText: 'Enter your car model name',
                   controller: modelController,
                 ),
@@ -96,6 +102,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
+                   onChange: (String value) {  },
                   hintText: 'Enter mileage (e.g., 4)',
                   controller: mileageController,
                 ),
@@ -182,8 +189,69 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
+                   onChange: (String value) {  },
                   hintText: '\$4000',
                   controller: priceController,
+                ),
+                sh16,
+                Text(
+                  'Year',
+                  style: h5,
+                ),
+                sh8,
+                CustomTextField(
+                   onChange: (String value) {  },
+                  hintText: 'year',
+                  controller: yearController,
+                ),
+                sh16,
+                Text(
+                  'Condition',
+                  style: h5,
+                ),
+                sh8,
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                  ),
+                  value: conditionController.text.isEmpty
+                      ? 'New'
+                      : conditionController.text,
+                  items: ['New', 'Used']
+                      .map((String value) => DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          ))
+                      .toList(),
+                  onChanged: (newValue) {
+                    if (newValue != null) {
+                      conditionController.text = newValue;
+                    }
+                  },
+                ),
+                sh16,
+                Text(
+                  'Color',
+                  style: h5,
+                ),
+                sh8,
+                CustomTextField(
+                   onChange: (String value) {  },
+                  hintText: 'Color',
+                  controller: colorController,
                 ),
                 sh16,
                 Text(
@@ -192,6 +260,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
+                   onChange: (String value) {  },
                   height: 120,
                   hintText:
                       'Describe your car so people know what it\'s about.',
@@ -304,6 +373,9 @@ class _AddCarViewState extends State<AddCarView> {
         transmissionController.text,
         descriptionController.text,
         int.parse(priceController.text),
+        conditionController.text,
+        colorController.text,
+        yearController.text,
         carImages, // Pass the list of images (Front, Side, Sole)
         cover: bannerImage, // Pass the main banner image
       );

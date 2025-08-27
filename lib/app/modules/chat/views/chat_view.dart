@@ -149,6 +149,7 @@ class _ChatViewState extends State<ChatView> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: CustomTextField(
+               onChange: (String value) {  },
               controller: searchCtrl,
               preIcon: Padding(
                 padding: const EdgeInsets.all(8.0),

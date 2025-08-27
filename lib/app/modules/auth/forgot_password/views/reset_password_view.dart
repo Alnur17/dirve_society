@@ -67,6 +67,7 @@ class ResetPasswordView extends GetView {
               ),
               sh12,
               CustomTextField(
+                 onChange: (String value) {  },
                 hintText: '**********',
                 sufIcon: Image.asset(
                   AppImages.eyeClose,
@@ -80,6 +81,8 @@ class ResetPasswordView extends GetView {
               ),
               sh12,
               CustomTextField(
+                 onChange: (String value) {  },
+              
                 sufIcon: Image.asset(
                   AppImages.eyeClose,
                   scale: 4,

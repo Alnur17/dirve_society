@@ -5,10 +5,8 @@ import 'package:dirve_society/app/modules/club/views/create_club_view.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:readmore/readmore.dart';
-
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
@@ -32,6 +30,7 @@ class _MyClubsViewState extends State<MyClubsView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       myClubController.getMyClub();
+      myJoiningClubController.getJoiningClub('approved');
     });
   }
 
@@ -64,14 +63,15 @@ class _MyClubsViewState extends State<MyClubsView> {
                       Get.back();
                     },
                     child: Container(
-                        decoration: ShapeDecoration(
-                          shape: CircleBorder(),
-                          color: AppColors.black.withOpacity(0.3),
-                        ),
-                        child: Image.asset(
-                          AppImages.back,
-                          scale: 4,
-                        )),
+                      decoration: ShapeDecoration(
+                        shape: CircleBorder(),
+                        color: AppColors.black.withOpacity(0.3),
+                      ),
+                      child: Image.asset(
+                        AppImages.back,
+                        scale: 4,
+                      ),
+                    ),
                   ),
                 ),
                 Positioned(
@@ -117,13 +117,6 @@ class _MyClubsViewState extends State<MyClubsView> {
                           ),
                         ],
                       ),
-                      //sh5,
-                      // Text(
-                      //   '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
-                      //   style: h6,
-                      //   maxLines: 3,
-                      //   overflow: TextOverflow.ellipsis,
-                      // )
                     ],
                   ),
                 ),
@@ -209,44 +202,43 @@ class _MyClubsViewState extends State<MyClubsView> {
                 }
                 if (controller.myClubList == null ||
                     controller.myClubList!.isEmpty) {
-                  return SizedBox(
-                      height: 200,
-                      child: const Center(child: Text('No Clubs Found')));
+                  return const SizedBox(
+                    height: 200,
+                    child: Center(child: Text('No Clubs Found')),
+                  );
                 }
-                return Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    //primary: false,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.myClubList?.length,
-                    itemBuilder: (context, index) => SizedBox(
-                      width: 160,
-                      height: 200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GroupCard(
-                          isOneButton: true,
-                          acceptButton: () {},
-                          joinClubBtuton: () {},
-                          rejectedButton: () {},
-                          ontap: () {
-                            Get.to(() => ClubView(
-                                  authorId:
-                                      controller.myClubList![index].owner?.id ??
-                                          '',
-                                  id: controller.myClubList?[index].id ?? '',
-                                ));
-                          },
-                          imageUrl:
-                              controller.myClubList?[index].profilePhoto ?? '',
-                          title: controller.myClubList?[index].name ??
-                              'Nissan R35 GTR',
-                          memberCount:
-                              '${controller.myClubList?[index].member ?? 0} Members',
-                          isPublic: true,
-                          isJoined: false,
-                          showButton: false,
-                        ),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.myClubList?.length,
+                  itemBuilder: (context, index) => SizedBox(
+                    width: 160,
+                    height: 200,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GroupCard(
+                        isOneButton: true,
+                        acceptButton: () {},
+                        joinClubBtuton: () {},
+                        rejectedButton: () {},
+                        ontap: () {
+                          Get.to(() => ClubView(
+                                isAuthor: true,
+                                authorId:
+                                    controller.myClubList![index].owner?.id ??
+                                        '',
+                                id: controller.myClubList?[index].id ?? '',
+                              ));
+                        },
+                        imageUrl:
+                            controller.myClubList?[index].profilePhoto ?? '',
+                        title: controller.myClubList?[index].name ??
+                            'Nissan R35 GTR',
+                        memberCount:
+                            '${controller.myClubList?[index].member ?? 0} Members',
+                        isPublic: true,
+                        isJoined: false,
+                        showButton: false,
                       ),
                     ),
                   ),
@@ -260,20 +252,21 @@ class _MyClubsViewState extends State<MyClubsView> {
                 style: h1.copyWith(fontSize: 20),
               ),
             ),
-            GetBuilder<MyJoiningClubController>(builder: (controller) {
-              if (controller.inProgress) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (controller.myJoiningClubList == null ||
-                  controller.myJoiningClubList!.isEmpty) {
-                return SizedBox(
+            SizedBox(
+              height: 200,
+              child: GetBuilder<MyJoiningClubController>(builder: (controller) {
+                if (controller.inProgress) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (controller.myJoiningClubList == null ||
+                    controller.myJoiningClubList!.isEmpty) {
+                  return const SizedBox(
                     height: 200,
-                    child: const Center(child: Text('No Clubs Found')));
-              }
-              return Expanded(
-                child: ListView.builder(
+                    child: Center(child: Text('No Clubs Found')),
+                  );
+                }
+                return ListView.builder(
                   shrinkWrap: true,
-                  //primary: false,
                   scrollDirection: Axis.horizontal,
                   itemCount: controller.myJoiningClubList?.length,
                   itemBuilder: (context, index) => SizedBox(
@@ -288,10 +281,12 @@ class _MyClubsViewState extends State<MyClubsView> {
                         rejectedButton: () {},
                         ontap: () {
                           Get.to(() => ClubView(
+                                isAuthor: false,
                                 authorId: controller.myJoiningClubList![index]
                                         .reference?.owner ??
                                     '',
-                                id: controller.myJoiningClubList?[index].id ??
+                                id: controller.myJoiningClubList![index]
+                                        .reference?.id ??
                                     '',
                               ));
                         },
@@ -309,9 +304,9 @@ class _MyClubsViewState extends State<MyClubsView> {
                       ),
                     ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
+            ),
           ],
         ),
       ),

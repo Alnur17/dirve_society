@@ -10,6 +10,7 @@ import 'package:dirve_society/app/modules/club/views/invite_screen.dart';
 import 'package:dirve_society/app/modules/club/views/member_screen.dart';
 import 'package:dirve_society/app/modules/meets/views/create_meets_screen.dart';
 import 'package:dirve_society/app/modules/profile/views/my_clubs_view.dart';
+import 'package:dirve_society/app/modules/subscription/views/subscription_screen.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
@@ -21,9 +22,14 @@ import 'package:get/get.dart';
 import '../../../../common/app_text_style/styles.dart';
 
 class ClubView extends StatefulWidget {
+  final bool isAuthor;
   final String authorId;
   final String id;
-  const ClubView({super.key, required this.id, required this.authorId});
+  const ClubView(
+      {super.key,
+      required this.id,
+      required this.authorId,
+      required this.isAuthor});
 
   @override
   State<ClubView> createState() => _ClubViewState();
@@ -43,6 +49,8 @@ class _ClubViewState extends State<ClubView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('Club ID: ${widget.id}');
+      print('Author ID: ${widget.authorId}');
       clubDetailsController.getClubDetails(widget.id);
     });
 
@@ -110,6 +118,10 @@ class _ClubViewState extends State<ClubView> {
                                   clubId: widget.id,
                                 ));
                             print("Option 3 clicked");
+                            _closeMenu();
+                          }),
+                          _menuItem("Subscribtion", () {
+                            Get.to(() => SubscriptionScreen());
                             _closeMenu();
                           }),
                           _menuItem("Delete Club", color: Colors.red, () {
@@ -286,64 +298,71 @@ class _ClubViewState extends State<ClubView> {
                                 'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA'),
                           ),
                           sw12,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                controller.clubDetails!.name ?? '',
-                                style: h1.copyWith(
-                                    fontSize: 20, color: AppColors.darkRed),
-                              ),
-                              sh5,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Image.asset(
-                                    AppImages.groupLight,
-                                    scale: 4,
-                                  ),
-                                  sw5,
-                                  Text(
-                                    '${controller.clubDetails!.member.toString()} Members',
-                                    style: h6,
-                                  ),
-                                ],
-                              ),
-                              sh5,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Image.asset(
-                                    AppImages.public,
-                                    scale: 4,
-                                  ),
-                                  sw5,
-                                  Text(controller.clubDetails!.type ?? '',
-                                      style: h6),
-                                ],
-                              ),
-                            ],
+                          SizedBox(
+                            width: 140,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  controller.clubDetails!.name ?? '',
+                                  style: h1.copyWith(
+                                      fontSize: 20, color: AppColors.darkRed),
+                                ),
+                                sh5,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      AppImages.groupLight,
+                                      scale: 4,
+                                    ),
+                                    sw5,
+                                    Text(
+                                      '${controller.clubDetails!.member.toString()} Members',
+                                      style: h6,
+                                    ),
+                                  ],
+                                ),
+                                sh5,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      AppImages.public,
+                                      scale: 4,
+                                    ),
+                                    sw5,
+                                    Text(controller.clubDetails!.type ?? '',
+                                        style: h6),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                           Spacer(),
-                          Image.asset(
-                            AppImages.invite,
-                            scale: 4,
-                          ),
-                          sw8,
                           GestureDetector(
                             onTap: () {
                               Get.to(() => InviteScreen(
                                     authorId: widget.authorId,
-                                    id: '',
+                                    id: widget.id,
                                   ));
                             },
-                            child: Text(
-                              'Invite',
-                              style: h5.copyWith(
-                                color: AppColors.darkRed,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  AppImages.invite,
+                                  scale: 4,
+                                ),
+                                sw8,
+                                Text(
+                                  'Invite',
+                                  style: h5.copyWith(
+                                    color: AppColors.darkRed,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
                           )
                         ],
@@ -442,28 +461,30 @@ class _ClubViewState extends State<ClubView> {
           );
         }),
       ),
-      floatingActionButton: ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child: FloatingActionButton(
-          onPressed: () {
-            selectedIndex == 0
-                ? Get.to(CreatePostView(
-                    authorId: widget.authorId,
-                    clubId: widget.id,
-                  ))
-                : Get.to(CreateForumView(
-                    authorId: widget.authorId,
-                    clubId: widget.id,
-                  ));
-          },
-          backgroundColor: AppColors.darkRed,
-          child: Icon(
-            Icons.add,
-            size: 32,
-            color: AppColors.white,
-          ),
-        ),
-      ),
+      floatingActionButton: widget.isAuthor
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(40),
+              child: FloatingActionButton(
+                onPressed: () {
+                  selectedIndex == 0
+                      ? Get.to(CreatePostView(
+                          authorId: widget.authorId,
+                          clubId: widget.id,
+                        ))
+                      : Get.to(CreateForumView(
+                          authorId: widget.authorId,
+                          clubId: widget.id,
+                        ));
+                },
+                backgroundColor: AppColors.darkRed,
+                child: Icon(
+                  Icons.add,
+                  size: 32,
+                  color: AppColors.white,
+                ),
+              ),
+            )
+          : Container(),
     );
   }
 

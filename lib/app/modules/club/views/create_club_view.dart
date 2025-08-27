@@ -74,6 +74,7 @@ class _CreateClubViewState extends State<CreateClubView> {
                 ),
                 sh8,
                 CustomTextField(
+                   onChange: (String value) {  },
                   controller: nameController,
                   hintText: 'Enter your club name',
                 ),
@@ -120,6 +121,7 @@ class _CreateClubViewState extends State<CreateClubView> {
                 ),
                 sh8,
                 CustomTextField(
+                   onChange: (String value) {  },
                   controller: descriptionController,
                   hintText: 'Describe about your club',
                 ),

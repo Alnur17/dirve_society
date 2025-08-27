@@ -92,6 +92,7 @@ class _EditClubViewState extends State<EditClubView> {
                   Text('Club Name', style: h5),
                   sh8,
                   CustomTextField(
+                     onChange: (String value) {  },
                     controller: nameController,
                     hintText: 'Enter your club name',
                   ),
@@ -132,6 +133,7 @@ class _EditClubViewState extends State<EditClubView> {
                   Text('Description', style: h5),
                   sh8,
                   CustomTextField(
+                     onChange: (String value) {  },
                     controller: descriptionController,
                     hintText: 'Describe about your club',
                   ),
@@ -193,7 +195,7 @@ class _EditClubViewState extends State<EditClubView> {
 
   Future<void> editClub() async {
     if (formKey.currentState!.validate()) {
-      final bool isSuccess = await editClubController.editClub(
+      final bool isSuccess = await editClubController.editClub( 
         widget.clubId,
         nameController.text,
         privacy,

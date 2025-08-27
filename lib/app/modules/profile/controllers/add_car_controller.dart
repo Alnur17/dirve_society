@@ -25,6 +25,9 @@ class AddCarController extends GetxController {
       String transmission,
       String description,
       int price,
+      String condition,
+      String color,
+      String year,
       List<File?>? images, // Changed to List<File?>? to match AddCarView
       {File? cover}) async {
     bool isSuccess = false;
@@ -54,7 +57,10 @@ class AddCarController extends GetxController {
         "fuelType": fuelType,
         "transmission": transmission,
         "description": description,
-        "price": price
+        "price": price,
+        "condition": condition,
+        "color": color,
+        "year": year
       };
 
       request.fields['data'] = jsonEncode(jsonFields);

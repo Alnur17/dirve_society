@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:dirve_society/app/modules/profile/views/filter_car_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
@@ -11,13 +11,13 @@ import '../../../../common/widgets/custom_textfield.dart';
 import '../controllers/filter_controller.dart';
 
 class FilterView extends GetView<FilterController> {
-  @override
-  final FilterController controller = Get.put(FilterController()); 
-
   FilterView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Initialize controller
+    Get.put(FilterController());
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -52,6 +52,10 @@ class FilterView extends GetView<FilterController> {
                   child: CustomTextField(
                     hintText: 'Min',
                     borderColor: AppColors.darkRed,
+                    onChanged: (value) => controller.setMinPrice(value),
+                    onChange: (String value) {
+                      controller.setMinPrice(value);
+                    },
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -59,6 +63,10 @@ class FilterView extends GetView<FilterController> {
                   child: CustomTextField(
                     hintText: 'Max',
                     borderColor: AppColors.darkRed,
+                    onChanged: (value) => controller.setMaxPrice(value),
+                    onChange: (value) {
+                      controller.setMaxPrice(value);
+                    },
                   ),
                 ),
               ],
@@ -71,27 +79,25 @@ class FilterView extends GetView<FilterController> {
             ),
             sh8,
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: controller.brands.map((brand) {
                   return GestureDetector(
-                    onTap: () {
-                      controller.toggleBrandSelection(brand);
-                    },
+                    onTap: () => controller.selectBrand(brand),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: controller.selectedBrands.contains(brand)
+                        color: controller.selectedBrand.value == brand
                             ? AppColors.darkRed
                             : AppColors.silver,
                       ),
                       child: Text(
                         brand,
                         style: h6.copyWith(
-                          color: controller.selectedBrands.contains(brand)
+                          color: controller.selectedBrand.value == brand
                               ? AppColors.white
                               : AppColors.black,
                         ),
@@ -109,27 +115,25 @@ class FilterView extends GetView<FilterController> {
             ),
             sh8,
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: ['New', 'Used'].map((condition) {
+                children: controller.conditions.map((condition) {
                   return GestureDetector(
-                    onTap: () {
-                      controller.toggleConditionSelection(condition);
-                    },
+                    onTap: () => controller.selectCondition(condition),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: controller.selectedConditions.contains(condition)
+                        color: controller.selectedCondition.value == condition
                             ? AppColors.darkRed
                             : AppColors.silver,
                       ),
                       child: Text(
                         condition,
                         style: h6.copyWith(
-                          color: controller.selectedConditions.contains(condition)
+                          color: controller.selectedCondition.value == condition
                               ? AppColors.white
                               : AppColors.black,
                         ),
@@ -147,27 +151,25 @@ class FilterView extends GetView<FilterController> {
             ),
             sh8,
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: ['SUV', 'Sedan', 'Coupe', 'Hatchback', 'Van'].map((type) {
+                children: controller.vehicleTypes.map((type) {
                   return GestureDetector(
-                    onTap: () {
-                      controller.toggleVehicleTypeSelection(type);
-                    },
+                    onTap: () => controller.selectVehicleType(type),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: controller.selectedVehicleTypes.contains(type)
+                        color: controller.selectedVehicleType.value == type
                             ? AppColors.darkRed
                             : AppColors.silver,
                       ),
                       child: Text(
                         type,
                         style: h6.copyWith(
-                          color: controller.selectedVehicleTypes.contains(type)
+                          color: controller.selectedVehicleType.value == type
                               ? AppColors.white
                               : AppColors.black,
                         ),
@@ -185,27 +187,25 @@ class FilterView extends GetView<FilterController> {
             ),
             sh8,
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018].map((year) {
+                children: controller.years.map((year) {
                   return GestureDetector(
-                    onTap: () {
-                      controller.toggleYearSelection(year);
-                    },
+                    onTap: () => controller.selectYear(year),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: controller.selectedYears.contains(year)
+                        color: controller.selectedYear.value == year
                             ? AppColors.darkRed
                             : AppColors.silver,
                       ),
                       child: Text(
                         year.toString(),
                         style: h6.copyWith(
-                          color: controller.selectedYears.contains(year)
+                          color: controller.selectedYear.value == year
                               ? AppColors.white
                               : AppColors.black,
                         ),
@@ -223,27 +223,25 @@ class FilterView extends GetView<FilterController> {
             ),
             sh8,
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: ['Black', 'White', 'Red'].map((color) {
+                children: controller.colors.map((color) {
                   return GestureDetector(
-                    onTap: () {
-                      controller.toggleColorSelection(color);
-                    },
+                    onTap: () => controller.selectColor(color),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: controller.selectedColors.contains(color)
+                        color: controller.selectedColor.value == color
                             ? AppColors.darkRed
                             : AppColors.silver,
                       ),
                       child: Text(
                         color,
                         style: h6.copyWith(
-                          color: controller.selectedColors.contains(color)
+                          color: controller.selectedColor.value == color
                               ? AppColors.white
                               : AppColors.black,
                         ),
@@ -261,27 +259,25 @@ class FilterView extends GetView<FilterController> {
             ),
             sh8,
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: ['<10,000 miles', '20,000 miles', '30,000 miles', '40,000 miles>'].map((mileage) {
+                children: controller.mileages.map((mileage) {
                   return GestureDetector(
-                    onTap: () {
-                      controller.toggleMileageSelection(mileage);
-                    },
+                    onTap: () => controller.selectMileage(mileage),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: controller.selectedMileages.contains(mileage)
+                        color: controller.selectedMileage.value == mileage
                             ? AppColors.darkRed
                             : AppColors.silver,
                       ),
                       child: Text(
                         mileage,
                         style: h6.copyWith(
-                          color: controller.selectedMileages.contains(mileage)
+                          color: controller.selectedMileage.value == mileage
                               ? AppColors.white
                               : AppColors.black,
                         ),
@@ -299,27 +295,27 @@ class FilterView extends GetView<FilterController> {
             ),
             sh8,
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: ['Automatic', 'Manual'].map((transmission) {
+                children: controller.transmissions.map((transmission) {
                   return GestureDetector(
-                    onTap: () {
-                      controller.toggleTransmissionSelection(transmission);
-                    },
+                    onTap: () => controller.selectTransmission(transmission),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: controller.selectedTransmissions.contains(transmission)
+                        color: controller.selectedTransmission.value ==
+                                transmission
                             ? AppColors.darkRed
                             : AppColors.silver,
                       ),
                       child: Text(
                         transmission,
                         style: h6.copyWith(
-                          color: controller.selectedTransmissions.contains(transmission)
+                          color: controller.selectedTransmission.value ==
+                                  transmission
                               ? AppColors.white
                               : AppColors.black,
                         ),
@@ -329,56 +325,8 @@ class FilterView extends GetView<FilterController> {
                 }).toList(),
               ),
             ),
-            sh12,
-            // Customer Reviews
-            Text(
-              'Reviews',
-              style: h4.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Obx(
-                  () => Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: controller.ratings.map((rating) {
-                  return GestureDetector(
-                    onTap: () {
-                      controller.toggleRatingSelection(rating);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: controller.selectedRatings.contains(rating)
-                            ? AppColors.darkRed
-                            : AppColors.silver,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.star,
-                              color: controller.selectedRatings.contains(rating)
-                                  ? Colors.white
-                                  : Colors.orange,
-                              size: 16),
-                          const SizedBox(width: 4),
-                          Text(
-                            '$rating',
-                            style: h6.copyWith(
-                              color: controller.selectedRatings.contains(rating)
-                                  ? AppColors.white
-                                  : AppColors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            sh12,
+            sh16,
+            // Stores
           ],
         ),
       ),
@@ -387,7 +335,7 @@ class FilterView extends GetView<FilterController> {
           border: Border(top: BorderSide(color: AppColors.silver)),
           color: AppColors.bottomNavbar,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -407,10 +355,14 @@ class FilterView extends GetView<FilterController> {
               width: 180,
               text: 'Show results',
               onPressed: () {
-                Get.back(result: controller.getSelectedFilters());
+                final filters = controller.getSelectedFilters();
+                log('Selected Filters: $filters');
+                Get.to(() => MyFilterGarageView(data: filters));
               },
               textStyle: h4.copyWith(
-                  color: AppColors.white, fontWeight: FontWeight.bold),
+                color: AppColors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

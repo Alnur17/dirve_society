@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
-import 'package:geocoding/geocoding.dart' hide Location; // Added for reverse geocoding
+import 'package:geocoding/geocoding.dart'
+    hide Location; // Added for reverse geocoding
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
@@ -85,14 +86,15 @@ class _CreateMeetsViewState extends State<CreateMeetsView> {
                 CustomTextField(
                   controller: nameController,
                   hintText: 'Enter your club name',
+                  onChange: (String value) {},
                 ),
                 sh16,
                 Text('Meet Link', style: h5),
                 sh8,
                 CustomTextField(
-                  maxline: 5,
                   controller: descriptionController,
                   hintText: 'Meet Link',
+                  onChange: (String value) {},
                 ),
                 sh16,
                 Text('Entry Fee', style: h5),
@@ -100,6 +102,7 @@ class _CreateMeetsViewState extends State<CreateMeetsView> {
                 CustomTextField(
                   controller: entryFeeController,
                   hintText: 'Enter entry fee',
+                  onChange: (String value) {},
                 ),
                 sh16,
                 Text('Date', style: h5),
@@ -195,7 +198,8 @@ class _CreateMeetsViewState extends State<CreateMeetsView> {
 
                         setState(() {
                           selectedLocation = pickedLocation;
-                          locationController.text = locationName; // Set the place name
+                          locationController.text =
+                              locationName; // Set the place name
                         });
                       } catch (e) {
                         // Fallback to a generic message if geocoding fails
@@ -212,6 +216,7 @@ class _CreateMeetsViewState extends State<CreateMeetsView> {
                     child: CustomTextField(
                       controller: locationController,
                       hintText: 'Tap to select location',
+                      onChange: (String value) {},
                     ),
                   ),
                 ),

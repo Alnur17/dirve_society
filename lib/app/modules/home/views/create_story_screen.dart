@@ -75,6 +75,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                 ),
                 sh8,
                 CustomTextField(
+                   onChange: (String value) {  },
                   controller: captionController,
                   hintText: 'Write here',
                 ),
