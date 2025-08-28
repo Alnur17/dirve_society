@@ -1,7 +1,6 @@
 import 'package:dirve_society/app/modules/meets/controllers/all_meet_controller.dart';
 import 'package:dirve_society/app/modules/meets/controllers/custom_maker.dart';
 import 'package:dirve_society/app/modules/meets/model/all_meets_model.dart';
-import 'package:dirve_society/app/modules/meets/views/meets_view.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
@@ -12,6 +11,7 @@ import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class MeetModel {
   final String id;
@@ -102,7 +102,7 @@ class MeetsController extends GetxController {
     const int markerWidth = 80;
     const int markerHeight = 120;
 
-    ui.Image carImage = await loadImageFromAsset(meet.imageUrl);
+    ui.Image carImage = await loadImage(meet.imageUrl);
 
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
@@ -124,23 +124,42 @@ class MeetsController extends GetxController {
     return byteData!.buffer.asUint8List();
   }
 
-  Future<ui.Image> loadImageFromAsset(String assetPath) async {
+  Future<ui.Image> loadImage(String imageUrl) async {
     try {
-      final ByteData data = await rootBundle.load(assetPath);
-      final Completer<ui.Image> completer = Completer();
-      ui.decodeImageFromList(data.buffer.asUint8List(), (ui.Image img) {
-        completer.complete(img);
-      });
-      return completer.future;
+      if (imageUrl.startsWith('http')) {
+        // Handle network image
+        return await loadNetworkImage(imageUrl);
+      } else {
+        // Handle asset image
+        return await loadAssetImage(imageUrl);
+      }
     } catch (e) {
-      // Fallback to a default image if the provided image fails to load
-      final ByteData data =
-          await rootBundle.load('assets/images/car image 3.jpg');
+      // Fallback to default image if loading fails
+      print('Error loading image: $e');
+      return await loadAssetImage('assets/images/car image 3.jpg');
+    }
+  }
+
+  Future<ui.Image> loadAssetImage(String assetPath) async {
+    final ByteData data = await rootBundle.load(assetPath);
+    final Completer<ui.Image> completer = Completer();
+    ui.decodeImageFromList(data.buffer.asUint8List(), (ui.Image img) {
+      completer.complete(img);
+    });
+    return completer.future;
+  }
+
+  Future<ui.Image> loadNetworkImage(String url) async {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final Uint8List bytes = response.bodyBytes;
       final Completer<ui.Image> completer = Completer();
-      ui.decodeImageFromList(data.buffer.asUint8List(), (ui.Image img) {
+      ui.decodeImageFromList(bytes, (ui.Image img) {
         completer.complete(img);
       });
       return completer.future;
+    } else {
+      throw Exception('Failed to load network image');
     }
   }
 
@@ -202,11 +221,6 @@ class MeetsController extends GetxController {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // const SizedBox(height: 8),
-              // Text(
-              //   meet.description,
-              //   textAlign: TextAlign.center,
-              // ),
               const SizedBox(height: 12),
               Row(
                 children: [

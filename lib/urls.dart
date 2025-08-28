@@ -8,6 +8,7 @@ class Urls {
   static const String loginUrl = '$_baseUrl/auth/login';
   static const String forgotPasswordUrl = '$_baseUrl/auth/forget-password';
   static const String changePasswordUrl = '$_baseUrl/auth/change-password';
+  static const String restePasswordUrl = '$_baseUrl/auth/reset-password';
   static const String profileUrl = '$_baseUrl/profiles/my-profile';
   static const String editProfileUrl = '$_baseUrl/profiles/update-my-profile';
   static const String allfeedUrl = '$_baseUrl/feeds';

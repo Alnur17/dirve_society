@@ -153,7 +153,7 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                       child: Center(
                         child: Text(
-                          '190 Points',
+                          '${StorageUtil.getData(StorageUtil.profileScores)} Points',
                           style: h6,
                         ),
                       ),

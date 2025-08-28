@@ -45,17 +45,14 @@ class OtpVerifyController extends GetxController {
     if (response.isSuccess) {
       // delete otp token
       await StorageUtil.deleteData(StorageUtil.otpToken);
-
-      // print('Response roken');
-      // print(response.responseData['data']['accessToken']);
-      // StorageUtil.saveData(
-      //   StorageUtil.userAccessToken,
-      //   response.responseData['data']['accessToken'],
-      // );
       _errorMessage = null;
 
       print('Response roken');
       print(response.responseData);
+      StorageUtil.saveData(
+        'reset-otp-token',
+        response.responseData['data']['accessToken'],
+      );
 
       _inProgress.value = false;
       return true;

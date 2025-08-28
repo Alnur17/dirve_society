@@ -144,7 +144,7 @@ class _MyClubsViewState extends State<MyClubsView> {
                         ),
                         child: Center(
                           child: Text(
-                            '190 Points',
+                            '${StorageUtil.getData(StorageUtil.profileScores)} Points',
                             style: h5,
                           ),
                         ),

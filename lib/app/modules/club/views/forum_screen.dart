@@ -24,7 +24,7 @@ class ForumScreen extends StatefulWidget {
 
 class _ForumScreenState extends State<ForumScreen> {
   final AllClubForunController allClubForumController =
-      Get.put(AllClubForunController());
+      Get.put(AllClubForunController()); 
   final ReactPostController reactPostController =
       Get.put(ReactPostController());
   final DisReactPostController disReactPostController =

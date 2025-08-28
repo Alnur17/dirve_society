@@ -26,7 +26,7 @@ class EditProfileDetailsView extends StatefulWidget {
 }
 
 class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
-  final TextEditingController nameController = TextEditingController(); 
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
@@ -70,7 +70,10 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                   height: 240,
                   width: double.infinity,
                   child: bannerImage == null
-                      ? Image.network(StorageUtil.getData(StorageUtil.profileCoverPhoto)!, fit: BoxFit.cover,)
+                      ? Image.network(
+                          StorageUtil.getData(StorageUtil.profileCoverPhoto)!,
+                          fit: BoxFit.cover,
+                        )
                       : Image.file(bannerImage!, fit: BoxFit.cover),
                 ),
               ),
@@ -99,7 +102,8 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                   radius: 45,
                   backgroundColor: AppColors.white,
                   backgroundImage: image == null
-                      ? NetworkImage(StorageUtil.getData(StorageUtil.profilePhotoUrl)!)
+                      ? NetworkImage(
+                          StorageUtil.getData(StorageUtil.profilePhotoUrl)!)
                       : FileImage(image!),
                 ),
               ),
@@ -173,7 +177,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                       ),
                       sh5,
                       CustomTextField(
-                         onChange: (String value) {  },
+                        onChange: (String value) {},
                         textColor: Colors.black,
                         controller: nameController,
                         hintTextStyle: TextStyle(color: AppColors.black),
@@ -185,7 +189,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                       ),
                       sh5,
                       CustomTextField(
-                         onChange: (String value) {  },
+                        onChange: (String value) {},
                         textColor: Colors.black,
                         controller: emailController,
                         hintTextStyle: TextStyle(color: AppColors.black),
@@ -197,7 +201,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                       ),
                       sh5,
                       CustomTextField(
-                         onChange: (String value) {  },
+                        onChange: (String value) {},
                         textColor: Colors.black,
                         controller: bioController,
                         hintTextStyle: TextStyle(color: AppColors.black),
@@ -209,7 +213,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                       ),
                       sh5,
                       CustomTextField(
-                         onChange: (String value) {  },
+                        onChange: (String value) {},
                         textColor: Colors.black,
                         controller: addressController,
                         hintTextStyle: TextStyle(color: AppColors.black),
@@ -223,7 +227,17 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-            child: CustomButton(text: 'Save', onPressed: () {editProfile();}),
+            child: Obx(
+              // NEW CHANGE: Added Obx to observe inProgress
+              () => CustomButton(
+                text: 'Save',
+                isLoading: editProfileController
+                    .inProgress, // NEW CHANGE: Added isLoading prop
+                onPressedAsync: () async {
+                  await editProfile();
+                },
+              ),
+            ),
           )
         ],
       ),

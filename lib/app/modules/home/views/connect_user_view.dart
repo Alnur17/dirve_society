@@ -91,7 +91,7 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                             rating: controller.allPendingConnectionList![index]
                                     .reference?.ratingCount
                                     .toString() ??
-                                '',
+                                '0',
                             description: controller
                                     .allPendingConnectionList![index]
                                     .reference

@@ -21,7 +21,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   final SubscriptionController subscriptionController =
       Get.put(SubscriptionController());
   final PaymentService paymentService = PaymentService();
-
   final PaymentController paymentController = Get.put(PaymentController());
 
   @override
@@ -55,7 +54,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                      onPressed: () {}, icon: Icon(Icons.arrow_back, size: 24)),
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: Icon(Icons.arrow_back, size: 24)),
                   Text(
                     'Subscription',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
@@ -135,14 +137,18 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    CustomButton(
-                      //isLoading: loginController.isLoading.value,
-                      text: 'Buy Now',
-                      onPressed: () {
-                        getPackage(controller.allPackageList?[0].id ?? '');
-                        print(
-                            'Package ID: ${controller.allPackageList?[0].id}');
-                      },
+                    Obx(
+                      () => CustomButton(
+                        text: 'Buy Now',
+                        isLoading: subscriptionController.inProgress,
+                        onPressed: () {
+                          if (!subscriptionController.inProgress) {
+                            getPackage(controller.allPackageList?[0].id ?? '');
+                            print(
+                                'Package ID: ${controller.allPackageList?[0].id}');
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -164,14 +170,14 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             context,
             StorageUtil.getData(StorageUtil.profileId),
             subscriptionController.subcriptionId ?? '');
-        //   getPaymentLink(subscriptionController.subcriptionId ?? '');
         print('Subscription ID: ${subscriptionController.subcriptionId}');
       }
     } else {
       if (mounted) {
         showSnackBarMessage(
           context,
-          subscriptionController.errorMessage ?? 'Failed to create club',
+          subscriptionController.errorMessage ??
+              'Failed to create subscription',
           true,
         );
       }

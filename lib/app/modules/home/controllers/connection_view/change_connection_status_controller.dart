@@ -5,7 +5,7 @@ import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class ChangeConnectionStatusController extends GetxController {
+class  ChangeConnectionStatusController extends GetxController {
   bool _inProgress = false;
   bool get inProgress => _inProgress;
 

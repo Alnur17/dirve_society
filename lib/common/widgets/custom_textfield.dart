@@ -49,8 +49,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _obscureText = widget.isPassword;
   }
 
-  @override
-  Widget build(BuildContext context) {
+  @override   Widget build(BuildContext context) {
     return Container(
       height: widget.height,
       decoration: BoxDecoration(

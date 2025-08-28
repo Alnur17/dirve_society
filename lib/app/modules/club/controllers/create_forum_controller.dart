@@ -9,8 +9,8 @@ import 'package:get/get.dart';
 class CreateForumController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
-  bool _inProgress = false;
-  bool get inProgress => _inProgress;
+  var _inProgress = false.obs; // Changed to RxBool
+  bool get inProgress => _inProgress.value; // Updated getter to use .value
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
@@ -24,13 +24,13 @@ class CreateForumController extends GetxController {
 
   Future<bool> createForun(
       String title, String description, String clubId) async {
-    if (_inProgress) {
+    if (_inProgress.value) { // Updated to use .value
       return false;
     }
 
     bool isSuccess = false;
 
-    _inProgress = true;
+    _inProgress.value = true; // Updated to use .value
     update();
 
     Map<String, dynamic> jsonFields = {
@@ -49,13 +49,12 @@ class CreateForumController extends GetxController {
     if (response.isSuccess) {
       _errorMessage = null;
       isSuccess = true;
-
-      _errorMessage = null;
+      _errorMessage = null; // Note: This line overwrites the previous null assignment, which might be intentional but could be simplified
     } else {
       _errorMessage = response.errorMessage;
     }
 
-    _inProgress = false;
+    _inProgress.value = false; // Updated to use .value
     update();
     return isSuccess;
   }

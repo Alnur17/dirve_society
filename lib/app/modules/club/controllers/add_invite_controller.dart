@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
@@ -9,8 +7,8 @@ import 'package:get/get.dart';
 class AddInviteController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
-  bool _inProgress = false;
-  bool get inProgress => _inProgress;
+  var _inProgress = false.obs;
+  bool get inProgress => _inProgress.value;
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
@@ -23,13 +21,13 @@ class AddInviteController extends GetxController {
   }
 
   Future<bool> addInvite(String referenceId, List<String> userId) async {
-    if (_inProgress) {
+    if (_inProgress.value) {
       return false;
     }
 
     bool isSuccess = false;
 
-    _inProgress = true;
+    _inProgress.value = true;
     update();
 
     Map<String, dynamic> requestBody = {
@@ -46,13 +44,11 @@ class AddInviteController extends GetxController {
     if (response.isSuccess) {
       _errorMessage = null;
       isSuccess = true;
-
-      _errorMessage = null;
     } else {
       _errorMessage = response.errorMessage;
     }
 
-    _inProgress = false;
+    _inProgress.value = false;
     update();
     return isSuccess;
   }

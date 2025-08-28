@@ -52,207 +52,211 @@ class _CreateMeetsViewState extends State<CreateMeetsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.mainColor,
-      appBar: AppBar(
         backgroundColor: AppColors.mainColor,
-        scrolledUnderElevation: 0,
-        title: Text(
-          'Create Meet',
-          style: appBarStyle,
-        ),
-        centerTitle: true,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: CustomCircularContainer(
-            imagePath: AppImages.back,
-            onTap: () {
-              Get.back();
-            },
-            padding: 4,
+        appBar: AppBar(
+          backgroundColor: AppColors.mainColor,
+          scrolledUnderElevation: 0,
+          title: Text(
+            'Create Meet',
+            style: appBarStyle,
           ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                sh30,
-                Text('Club Name', style: h5),
-                sh8,
-                CustomTextField(
-                  controller: nameController,
-                  hintText: 'Enter your club name',
-                  onChange: (String value) {},
-                ),
-                sh16,
-                Text('Meet Link', style: h5),
-                sh8,
-                CustomTextField(
-                  controller: descriptionController,
-                  hintText: 'Meet Link',
-                  onChange: (String value) {},
-                ),
-                sh16,
-                Text('Entry Fee', style: h5),
-                sh8,
-                CustomTextField(
-                  controller: entryFeeController,
-                  hintText: 'Enter entry fee',
-                  onChange: (String value) {},
-                ),
-                sh16,
-                Text('Date', style: h5),
-                sh8,
-                GestureDetector(
-                  onTap: () async {
-                    final DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                    );
-                    if (picked != null && mounted) {
-                      setState(() {
-                        selectedDate = picked;
-                      });
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      selectedDate == null
-                          ? 'Select Date'
-                          : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
-                      style: TextStyle(
-                        color: selectedDate == null
-                            ? AppColors.grey
-                            : AppColors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-                sh16,
-                Text('Time', style: h5),
-                sh8,
-                GestureDetector(
-                  onTap: () async {
-                    final TimeOfDay? picked = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-                    if (picked != null && mounted) {
-                      setState(() {
-                        selectedTime = picked;
-                      });
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      selectedTime == null
-                          ? 'Select Time'
-                          : selectedTime!.format(context),
-                      style: TextStyle(
-                        color: selectedTime == null
-                            ? AppColors.grey
-                            : AppColors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-                sh16,
-                Text('Location', style: h5),
-                sh8,
-                GestureDetector(
-                  onTap: () async {
-                    final LatLng? pickedLocation =
-                        await _showLocationPicker(context);
-                    if (pickedLocation != null && mounted) {
-                      try {
-                        // Perform reverse geocoding to get the place name
-                        List<Placemark> placemarks =
-                            await placemarkFromCoordinates(
-                          pickedLocation.latitude,
-                          pickedLocation.longitude,
-                        );
-
-                        // Extract a readable address or place name
-                        Placemark placemark = placemarks.first;
-                        String locationName = _formatPlaceName(placemark);
-
-                        setState(() {
-                          selectedLocation = pickedLocation;
-                          locationController.text =
-                              locationName; // Set the place name
-                        });
-                      } catch (e) {
-                        // Fallback to a generic message if geocoding fails
-                        showSnackBarMessage(
-                            context, 'Failed to get location name', true);
-                        setState(() {
-                          selectedLocation = pickedLocation;
-                          locationController.text = 'Unknown Location';
-                        });
-                      }
-                    }
-                  },
-                  child: AbsorbPointer(
-                    child: CustomTextField(
-                      controller: locationController,
-                      hintText: 'Tap to select location',
-                      onChange: (String value) {},
-                    ),
-                  ),
-                ),
-                sh16,
-                Text('Cover Photo', style: h5),
-                sh8,
-                UploadWidget(
-                  onTap: () {
-                    _imagePickerHelper.showAlertDialog(context,
-                        (File pickedImage) {
-                      setState(() {
-                        coverImage = pickedImage;
-                      });
-                    });
-                  },
-                  imagePath: AppImages.upload,
-                  imageFile: coverImage,
-                  label: 'Upload',
-                ),
-                sh100,
-              ],
+          centerTitle: true,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: CustomCircularContainer(
+              imagePath: AppImages.back,
+              onTap: () {
+                Get.back();
+              },
+              padding: 4,
             ),
           ),
         ),
-      ),
-      bottomSheet: Container(
-        color: AppColors.mainColor,
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        child: CustomButton(
-          text: 'Create',
-          onPressed: () {
-            createMeet();
-          },
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  sh30,
+                  Text('Club Name', style: h5),
+                  sh8,
+                  CustomTextField(
+                    controller: nameController,
+                    hintText: 'Enter your club name',
+                    onChange: (String value) {},
+                  ),
+                  sh16,
+                  Text('Meet Link', style: h5),
+                  sh8,
+                  CustomTextField(
+                    controller: descriptionController,
+                    hintText: 'Meet Link',
+                    onChange: (String value) {},
+                  ),
+                  sh16,
+                  Text('Entry Fee', style: h5),
+                  sh8,
+                  CustomTextField(
+                    controller: entryFeeController,
+                    hintText: 'Enter entry fee',
+                    onChange: (String value) {},
+                  ),
+                  sh16,
+                  Text('Date', style: h5),
+                  sh8,
+                  GestureDetector(
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null && mounted) {
+                        setState(() {
+                          selectedDate = picked;
+                        });
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        selectedDate == null
+                            ? 'Select Date'
+                            : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
+                        style: TextStyle(
+                          color: selectedDate == null
+                              ? AppColors.grey
+                              : AppColors.black,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  sh16,
+                  Text('Time', style: h5),
+                  sh8,
+                  GestureDetector(
+                    onTap: () async {
+                      final TimeOfDay? picked = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+                      if (picked != null && mounted) {
+                        setState(() {
+                          selectedTime = picked;
+                        });
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        selectedTime == null
+                            ? 'Select Time'
+                            : selectedTime!.format(context),
+                        style: TextStyle(
+                          color: selectedTime == null
+                              ? AppColors.grey
+                              : AppColors.black,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  sh16,
+                  Text('Location', style: h5),
+                  sh8,
+                  GestureDetector(
+                    onTap: () async {
+                      final LatLng? pickedLocation =
+                          await _showLocationPicker(context);
+                      if (pickedLocation != null && mounted) {
+                        try {
+                          // Perform reverse geocoding to get the place name
+                          List<Placemark> placemarks =
+                              await placemarkFromCoordinates(
+                            pickedLocation.latitude,
+                            pickedLocation.longitude,
+                          );
+
+                          // Extract a readable address or place name
+                          Placemark placemark = placemarks.first;
+                          String locationName = _formatPlaceName(placemark);
+
+                          setState(() {
+                            selectedLocation = pickedLocation;
+                            locationController.text =
+                                locationName; // Set the place name
+                          });
+                        } catch (e) {
+                          // Fallback to a generic message if geocoding fails
+                          showSnackBarMessage(
+                              context, 'Failed to get location name', true);
+                          setState(() {
+                            selectedLocation = pickedLocation;
+                            locationController.text = 'Unknown Location';
+                          });
+                        }
+                      }
+                    },
+                    child: AbsorbPointer(
+                      child: CustomTextField(
+                        controller: locationController,
+                        hintText: 'Tap to select location',
+                        onChange: (String value) {},
+                      ),
+                    ),
+                  ),
+                  sh16,
+                  Text('Cover Photo', style: h5),
+                  sh8,
+                  UploadWidget(
+                    onTap: () {
+                      _imagePickerHelper.showAlertDialog(context,
+                          (File pickedImage) {
+                        setState(() {
+                          coverImage = pickedImage;
+                        });
+                      });
+                    },
+                    imagePath: AppImages.upload,
+                    imageFile: coverImage,
+                    label: 'Upload',
+                  ),
+                  sh100,
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
-    );
+        bottomSheet: Container(
+          color: AppColors.mainColor,
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+          child: Obx(
+            // NEW CHANGE: Added Obx to observe inProgress
+            () => CustomButton(
+              text: 'Create',
+              isLoading: createMeetController
+                  .inProgress, // NEW CHANGE: Added isLoading prop
+              onPressedAsync: () async {
+                await createMeet();
+              },
+            ),
+          ),
+        ));
   }
 
   Future<LatLng?> _showLocationPicker(BuildContext context) async {

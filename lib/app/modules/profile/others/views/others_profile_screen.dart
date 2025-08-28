@@ -1,0 +1,458 @@
+import 'package:dirve_society/app/modules/club/controllers/club_details_controller.dart';
+import 'package:dirve_society/app/modules/club/controllers/delete_club_controller.dart';
+import 'package:dirve_society/app/modules/club/controllers/leave_club_controller.dart';
+import 'package:dirve_society/app/modules/club/views/edit_club_screen.dart';
+import 'package:dirve_society/app/modules/club/views/feed_screen.dart';
+import 'package:dirve_society/app/modules/club/views/forum_screen.dart';
+import 'package:dirve_society/app/modules/club/views/invite_screen.dart';
+import 'package:dirve_society/app/modules/club/views/member_screen.dart';
+import 'package:dirve_society/app/modules/meets/views/create_meets_screen.dart';
+import 'package:dirve_society/app/modules/subscription/views/subscription_screen.dart';
+import 'package:dirve_society/common/app_color/app_colors.dart';
+import 'package:dirve_society/common/app_images/app_images.dart';
+import 'package:dirve_society/common/app_text_style/styles.dart';
+import 'package:dirve_society/common/size_box/custom_sizebox.dart';
+import 'package:dirve_society/get_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class ClubView extends StatefulWidget {
+  final bool isAuthor;
+  final String authorId;
+  final String id;
+  const ClubView(
+      {super.key,
+      required this.id,
+      required this.authorId,
+      required this.isAuthor});
+
+  @override
+  State<ClubView> createState() => _ClubViewState();
+}
+
+class _ClubViewState extends State<ClubView> {
+  final LeaveClubController leaveClubController =
+      Get.put(LeaveClubController());
+  final DeleteClubController deleteClubController =
+      Get.put(DeleteClubController());
+  final ClubDetailsController clubDetailsController =
+      Get.put(ClubDetailsController());
+  int selectedIndex = 0;
+  OverlayEntry? _overlayEntry;
+  bool _isMenuOpen = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('Club ID: ${widget.id}');
+      print('Author ID: ${widget.authorId}');
+      clubDetailsController.getClubDetails(widget.id);
+    });
+
+    super.initState();
+  }
+
+  // Function to show the dropdown menu to the left
+  void _showMenu(BuildContext context, Offset buttonPosition) {
+    const menuWidth = 150.0; // Width of the menu
+
+    // Calculate the left position to place the menu to the left of the button
+    double leftPosition = buttonPosition.dx - menuWidth - 10; // 10 for padding
+    // Ensure the menu doesn't go off-screen
+    if (leftPosition < 10) {
+      leftPosition = 10; // Keep some padding from the left edge
+    }
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          // GestureDetector to detect taps outside the menu
+          GestureDetector(
+            onTap: () {
+              _closeMenu();
+            },
+            child: Container(
+              color: Colors.transparent,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+          // Menu container
+          Positioned(
+            top: buttonPosition.dy, // Align vertically with the button
+            left: leftPosition, // Position to the left of the button
+            child: Material(
+              elevation: 4,
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                width: menuWidth,
+                padding: EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: widget.authorId ==
+                        StorageUtil.getData(StorageUtil.profileId)
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _menuItem("Edit Club Info", () {
+                            Get.to(() => EditClubView(clubId: widget.id));
+                            _closeMenu();
+                          }),
+                          _menuItem("Manage Members", () {
+                            Get.to(() => MemberScreen(
+                                  authorId: widget.authorId,
+                                  id: widget.id,
+                                ));
+                            _closeMenu();
+                          }),
+                          _menuItem("Create Meets", () {
+                            Get.to(() => CreateMeetsView(
+                                  clubId: widget.id,
+                                ));
+                            print("Option 3 clicked");
+                            _closeMenu();
+                          }),
+                          _menuItem("Subscribtion", () {
+                            Get.to(() => SubscriptionScreen());
+                            _closeMenu();
+                          }),
+                          _menuItem("Delete Club", color: Colors.red, () {
+                            _closeMenu();
+                          }),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _menuItem("View Members", () {
+                            Get.to(() => MemberScreen(
+                                  authorId: widget.authorId,
+                                  id: widget.id,
+                                ));
+                            _closeMenu();
+                          }),
+                          _menuItem("Leave Club", color: Colors.red, () {
+                            _closeMenu();
+                          }),
+                        ],
+                      ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+    setState(() {
+      _isMenuOpen = true;
+    });
+  }
+
+  // Function to close the dropdown menu
+  void _closeMenu() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    setState(() {
+      _isMenuOpen = false;
+    });
+  }
+
+  // Helper function to create menu items
+  Widget _menuItem(String title, VoidCallback onTap, {Color? color}) {
+    color ??= AppColors.black;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Text(
+          title,
+          style: h6.copyWith(color: color),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _closeMenu(); // Ensure the overlay is removed when the widget is disposed
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = Get.height;
+    final GlobalKey menuButtonKey = GlobalKey(); // Key to get button position
+
+    return Scaffold(
+      backgroundColor: AppColors.mainColor,
+      body: GestureDetector(
+        // Detect taps outside the menu to close it
+        onTap: () {
+          if (_isMenuOpen) {
+            _closeMenu();
+          }
+        },
+        child: GetBuilder<ClubDetailsController>(builder: (controller) {
+          if (controller.inProgress) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: double.infinity,
+                height: screenHeight * 0.3,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(controller.clubDetails!.coverPhoto ??
+                        'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Container(
+                color: AppColors.white.withOpacity(0.15),
+              ),
+              SafeArea(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Get.back();
+                            },
+                            child: Container(
+                              decoration: ShapeDecoration(
+                                shape: CircleBorder(),
+                                color: AppColors.black.withOpacity(0.3),
+                              ),
+                              child: Image.asset(
+                                AppImages.back,
+                                scale: 4,
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            key: menuButtonKey, // Assign key to menu button
+                            onTap: () {
+                              // Get the position of the menu button
+                              final RenderBox renderBox = menuButtonKey
+                                  .currentContext!
+                                  .findRenderObject() as RenderBox;
+                              final buttonPosition =
+                                  renderBox.localToGlobal(Offset.zero);
+
+                              if (_isMenuOpen) {
+                                _closeMenu();
+                              } else {
+                                _showMenu(context, buttonPosition);
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: ShapeDecoration(
+                                shape: CircleBorder(),
+                                color: AppColors.black.withOpacity(0.3),
+                              ),
+                              child: Image.asset(
+                                AppImages.menu,
+                                scale: 4,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.13),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundColor: AppColors.white,
+                            backgroundImage: NetworkImage(controller
+                                    .clubDetails!.profilePhoto ??
+                                'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA'),
+                          ),
+                          sw12,
+                          SizedBox(
+                            width: 140,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  controller.clubDetails!.name ?? '',
+                                  style: h1.copyWith(
+                                      fontSize: 20, color: AppColors.darkRed),
+                                ),
+                                sh5,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      AppImages.groupLight,
+                                      scale: 4,
+                                    ),
+                                    sw5,
+                                    Text(
+                                      '${controller.clubDetails!.member.toString()} Members',
+                                      style: h6,
+                                    ),
+                                  ],
+                                ),
+                                sh5,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      AppImages.public,
+                                      scale: 4,
+                                    ),
+                                    sw5,
+                                    Text(controller.clubDetails!.type ?? '',
+                                        style: h6),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => InviteScreen(
+                                    authorId: widget.authorId,
+                                    id: widget.id,
+                                  ));
+                            },
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  AppImages.invite,
+                                  scale: 4,
+                                ),
+                                sw8,
+                                Text(
+                                  'Invite',
+                                  style: h5.copyWith(
+                                    color: AppColors.darkRed,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    sh20,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 8.0),
+                      child: Container(
+                        padding: EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: AppColors.silver,
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedIndex = 0;
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      color: selectedIndex == 0
+                                          ? AppColors.darkRed
+                                          : AppColors.transparent),
+                                  child: Center(
+                                    child: Text(
+                                      'FEED',
+                                      style: TextStyle(
+                                          fontWeight: selectedIndex == 0
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: selectedIndex == 0
+                                              ? AppColors.white
+                                              : AppColors.black),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            sw8,
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedIndex = 1;
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      color: selectedIndex == 1
+                                          ? AppColors.darkRed
+                                          : AppColors.transparent),
+                                  child: Center(
+                                    child: Text(
+                                      'FORUM',
+                                      style: TextStyle(
+                                          fontWeight: selectedIndex == 1
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: selectedIndex == 1
+                                              ? AppColors.white
+                                              : AppColors.black),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: selectedIndex == 0
+                          ? FeedScreen(
+                              clubId: widget.id,
+                              authorId: widget.authorId,
+                            )
+                          : ForumScreen(
+                              clubId: widget.id,
+                              authorId: widget.authorId,
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+}

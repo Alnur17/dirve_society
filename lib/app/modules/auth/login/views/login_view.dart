@@ -76,6 +76,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     sh8,
                     CustomTextField(
+                      hintTextStyle: TextStyle(color: Colors.white),
                       textColor: Colors.white,
                       hintText: 'Your email',
                       controller: emailController,
@@ -92,7 +93,8 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     sh8,
                     CustomTextField(
-                       onChange: (String value) {  },
+                      hintTextStyle: TextStyle(color: Colors.white),
+                      onChange: (String value) {},
                       textColor: Colors.white,
                       hintText: '**********',
                       isPassword: true,
@@ -114,8 +116,7 @@ class _LoginViewState extends State<LoginView> {
                           child: Obx(
                             () => isRememberMeChecked.value
                                 ? Icon(Icons.check_box_outline_blank,
-                                    color: AppColors
-                                        .white) // Update to checked image if available
+                                    color: AppColors.white)
                                 : Icon(
                                     Icons.check_box,
                                     color: AppColors.white,
@@ -143,15 +144,17 @@ class _LoginViewState extends State<LoginView> {
                   ],
                 ),
                 sh24,
-                CustomButton(
-                  //isLoading: loginController.isLoading.value,
-                  text: 'Login',
-                  onPressed: () {
-                    logInFunction(
-                      emailController.text,
-                      passwordController.text,
-                    );
-                  },
+                Obx(
+                  () => CustomButton(
+                    isLoading: loginController.inProgress,
+                    text: 'Login',
+                    onPressedAsync: () async {
+                      await logInFunction(
+                        emailController.text,
+                        passwordController.text,
+                      );
+                    },
+                  ),
                 ),
                 sh20,
                 GestureDetector(
@@ -193,10 +196,8 @@ class _LoginViewState extends State<LoginView> {
 
     if (isSuccess) {
       showSnackBarMessage(context, 'Successfully done');
-
-      profileController.fetchProfileData();
-      //  Get.offAll(() =>  LoginView());
-      Get.to(DashboardView());
+      await profileController.fetchProfileData();
+      Get.to(() => const DashboardView());
     } else {
       showSnackBarMessage(
         context,

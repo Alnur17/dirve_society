@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 class LoginController extends GetxController {
   // final OtpVerifyController otpVerifyController = OtpVerifyController();
-  final NetworkCaller networkCaller = Get.put(NetworkCaller());
+  final NetworkCaller networkCaller = Get.put(NetworkCaller()); 
 
   final RxBool _inProgress = false.obs;
   bool get inProgress => _inProgress.value;

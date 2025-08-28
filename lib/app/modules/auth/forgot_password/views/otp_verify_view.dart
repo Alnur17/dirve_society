@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:dirve_society/app/modules/auth/forgot_password/controllers/otp_verify_controller.dart';
+import 'package:dirve_society/app/modules/auth/forgot_password/views/reset_password_view.dart';
 import 'package:dirve_society/app/modules/auth/login/views/login_view.dart';
 import 'package:dirve_society/common/widgets/custom_background.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
@@ -104,31 +105,36 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
                   appContext: context,
                 ),
                 sh20,
-                CustomButton(
-                  text: 'Confirm',
-                  onPressed: () {
-                    otpVerifyFunction(otpCtrl.text);
-                  },
+                Obx(
+                  () => CustomButton(
+                    text: 'Confirm',
+                    isLoading: _otpVerifyController.inProgress,
+                    onPressedAsync: () async {
+                      await otpVerifyFunction(otpCtrl.text);
+                    },
+                  ),
                 ),
                 sh30,
-                Text(
-                  'Resend code in 53s',
-                  style: h3.copyWith(color: AppColors.white),
-                ),
+                // Text(
+                //   'Resend code in 53s',
+                //   style: h3.copyWith(color: AppColors.white),
+                // ),
               ],
             ),
           ),
         ),
       ),
     );
-  } 
+  }
 
   Future<void> otpVerifyFunction(String otp) async {
     final bool isSuccess = await _otpVerifyController.otpVerify(otp);
 
     if (isSuccess) {
       showSnackBarMessage(context, 'Successfully done');
-      Get.to(LoginView());
+      Get.to(ResetPasswordView(
+        email: widget.email,
+      ));
     } else {
       showSnackBarMessage(
         context,

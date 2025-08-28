@@ -80,7 +80,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   hintText: 'Enter your car brand name',
                   controller: brandController,
                 ),
@@ -91,7 +91,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   hintText: 'Enter your car model name',
                   controller: modelController,
                 ),
@@ -102,7 +102,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   hintText: 'Enter mileage (e.g., 4)',
                   controller: mileageController,
                 ),
@@ -189,7 +189,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   hintText: '\$4000',
                   controller: priceController,
                 ),
@@ -200,7 +200,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   hintText: 'year',
                   controller: yearController,
                 ),
@@ -249,7 +249,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   hintText: 'Color',
                   controller: colorController,
                 ),
@@ -260,7 +260,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   height: 120,
                   hintText:
                       'Describe your car so people know what it\'s about.',
@@ -353,11 +353,16 @@ class _AddCarViewState extends State<AddCarView> {
           right: 20,
           bottom: 20,
         ),
-        child: CustomButton(
-          text: 'Create',
-          onPressed: () {
-            createCar();
-          },
+        child: Obx(
+          // NEW CHANGE: Added Obx to observe inProgress
+          () => CustomButton(
+            text: 'Create',
+            isLoading:
+                addCarController.inProgress, // NEW CHANGE: Added isLoading prop
+            onPressedAsync: () async {
+              await createCar();
+            },
+          ),
         ),
       ),
     );

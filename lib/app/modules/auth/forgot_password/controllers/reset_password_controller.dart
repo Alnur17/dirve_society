@@ -6,7 +6,7 @@ import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class ForgotPasswordController extends GetxController {
+class ResetPasswordController extends GetxController {
   // final OtpVerifyController otpVerifyController = OtpVerifyController();
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
@@ -16,38 +16,31 @@ class ForgotPasswordController extends GetxController {
   RxString? _errorMessage = ''.obs;
   String? get errorMessage => _errorMessage?.value;
 
-  // final Rx<CategoryModel?> _categoryModel = Rx<CategoryModel?>(null);
-  // List<CategoryData>? get categoryData => _categoryModel.value!.data?.data ?? [];
-
   @override
   void onInit() {
     super.onInit();
   }
 
   String? _otpToken;
-  String? get otpToken => _otpToken; 
+  String? get otpToken => _otpToken;
 
-  Future<bool> forgotPassword(String email) async {
+  Future<bool> resetPassword(
+      String email, String newPassword, String confirmPassword) async {
     _inProgress.value = true;
 
-    Map<String, dynamic> requestBody = {"email": email};
+    Map<String, dynamic> requestBody = {
+      "email": email,
+      "newPassword": newPassword,
+      "confirmPassword": confirmPassword
+    };
 
     final NetworkResponse response = await Get.find<NetworkCaller>()
-        .postRequest(Urls.forgotPasswordUrl, requestBody);
+        .postRequest(Urls.restePasswordUrl, requestBody,
+            accesToken: StorageUtil.getData('reset-otp-token'));
 
     if (response.isSuccess) {
       _errorMessage = null;
-
-      print('Response roken');
-      print(response.responseData['data']['verifyToken']);
-      StorageUtil.saveData(
-        StorageUtil.otpToken,
-        response.responseData['data']['verifyToken'],
-      );
-
-      print('Response roken');
-      print(response.responseData);
-
+      StorageUtil.deleteData('reset-otp-token');
       _inProgress.value = false;
       return true;
     } else {

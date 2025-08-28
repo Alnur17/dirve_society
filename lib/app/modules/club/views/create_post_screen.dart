@@ -133,11 +133,16 @@ class _CreatePostViewState extends State<CreatePostView> {
           right: 20,
           bottom: 20,
         ),
-        child: CustomButton(
-          text: 'Create',
-          onPressed: () {
-            createPost();
-          },
+        child: Obx(
+          // NEW CHANGE: Added Obx to observe inProgress
+          () => CustomButton(
+            text: 'Create',
+            isLoading: createPostController
+                .inProgress, // NEW CHANGE: Added isLoading prop
+            onPressedAsync: () async {
+              await createPost();
+            },
+          ),
         ),
       ),
     );
@@ -171,7 +176,8 @@ class _CreatePostViewState extends State<CreatePostView> {
         if (mounted) {
           showSnackBarMessage(
             context,
-            createClubController.errorMessage ?? 'Failed to create club',
+            createPostController.errorMessage ??
+                'Failed to create post', // NEW CHANGE: Updated to use createPostController.errorMessage
             true,
           );
         }

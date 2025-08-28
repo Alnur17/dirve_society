@@ -1,9 +1,11 @@
 import 'package:dirve_society/app/modules/club/controllers/add_invite_controller.dart';
 import 'package:dirve_society/app/modules/club/controllers/all_invite_people_controller.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
+import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
+import 'package:dirve_society/common/widgets/custom_textfield.dart';
 import 'package:dirve_society/common/widgets/search_filed.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +25,33 @@ class _InviteScreenState extends State<InviteScreen> {
       Get.put(AllInvitePeopleController());
   final AddInviteController addInviteController =
       Get.put(AddInviteController());
-
   List<String> inviteList = []; // Store selected member IDs
+  String search = '';
 
   @override
   void initState() {
     super.initState();
     allInvitePeopleController.getInvitePeople(widget.id);
+  }
+
+  Future<void> addInvite() async {
+    final bool isSuccess = await addInviteController.addInvite(
+      widget.id,
+      inviteList,
+    );
+
+    if (isSuccess) {
+      if (mounted) {
+        allInvitePeopleController.getInvitePeople(widget.id);
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+            context,
+            addInviteController.errorMessage ?? 'Failed to update profile',
+            true);
+      }
+    }
   }
 
   @override
@@ -64,14 +86,23 @@ class _InviteScreenState extends State<InviteScreen> {
                       addInvite();
                     }
                   },
-                  child: Center(
-                    child: Text(
-                      'Send Invite',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600),
-                    ),
+                  child: Obx(
+                    () => addInviteController.inProgress
+                        ? const Center(
+                            child: SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator()))
+                        : Center(
+                            child: Text(
+                              'Send Invite',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -86,110 +117,146 @@ class _InviteScreenState extends State<InviteScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
-              SearchFiled(
-                onChanged: (value) {
-                  // Implement search logic if needed
-                },
+              Container(
+                height: 48,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(color: AppColors.borderColor),
+                  color: Colors.white,
+                ),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: 'Search...',
+                    border: InputBorder.none,
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: AppColors.grey,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      search = value; // Update search query
+                    });
+                  },
+                ),
               ),
               sh16,
-              GetBuilder<AllInvitePeopleController>(builder: (controller) {
-                if (controller.inProgress) {
-                  return SizedBox(
-                      height: 600,
-                      child: const Center(child: CircularProgressIndicator()));
-                }
-                if (controller.allInvitePeople == null ||
-                    controller.allInvitePeople!.inviteList.isEmpty) {
-                  return SizedBox(
-                      height: 600,
-                      child: const Center(child: Text('No members found')));
-                }
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height - 200,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(0),
-                    itemCount: controller.allInvitePeople!.inviteList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final member =
-                          controller.allInvitePeople!.inviteList[index];
-                      return widget.authorId == member.id
-                          ? Container()
-                          : Card(
-                              color: AppColors.mainColor,
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: Row(
-                                  children: [
-                                    Checkbox(
-                                      value: inviteList.contains(member.id),
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          if (value == true) {
-                                            inviteList.add(member.id ?? '');
-                                          } else {
-                                            inviteList.remove(member.id);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                    Expanded(
-                                      child: ListTile(
-                                        leading: CircleAvatar(
-                                          backgroundImage: member.photoUrl !=
-                                                      null &&
-                                                  member.photoUrl!.isNotEmpty
-                                              ? NetworkImage(member.photoUrl!)
-                                              : const AssetImage(
-                                                  'assets/images/default_avatar.png'),
-                                        ),
-                                        title: Text(
-                                          member.name ?? 'Unknown',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
+              Expanded(
+                child: GetBuilder<AllInvitePeopleController>(
+                  builder: (controller) {
+                    if (controller.inProgress) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    // Filter members based on search query
+                    final filteredMembers =
+                        controller.allInvitePeople?.inviteList.where((member) {
+                              final name = member.name?.toLowerCase() ?? '';
+                              return search.isEmpty ||
+                                  name.contains(search.toLowerCase());
+                            }).toList() ??
+                            [];
+
+                    if (filteredMembers.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              AppImages.search, // Use correct image path
+                              height: 80,
+                              width: 95,
+                            ),
+                            Text(
+                              'No results for "${search.isEmpty ? 'User' : search}"',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: AppColors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                'We couldn’t find any matching results. Please refine your search or check back later.',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.black,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(0),
+                      itemCount: filteredMembers.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final member = filteredMembers[index];
+                        return widget.authorId == member.id
+                            ? Container()
+                            : Card(
+                                color: AppColors.mainColor,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                        value: inviteList.contains(member.id),
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            if (value == true) {
+                                              inviteList.add(member.id ?? '');
+                                            } else {
+                                              inviteList.remove(member.id);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      Expanded(
+                                        child: ListTile(
+                                          leading: CircleAvatar(
+                                            backgroundImage: member.photoUrl !=
+                                                        null &&
+                                                    member.photoUrl!.isNotEmpty
+                                                ? NetworkImage(member.photoUrl!)
+                                                : const AssetImage(
+                                                    'assets/images/default_avatar.png'),
+                                          ),
+                                          title: Text(
+                                            member.name ?? 'Unknown',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            isAdmin &&
+                                                    member.id == widget.authorId
+                                                ? 'Admin'
+                                                : 'Member',
+                                            style:
+                                                const TextStyle(fontSize: 12),
                                           ),
                                         ),
-                                        subtitle: Text(
-                                          isAdmin &&
-                                                  member.id == widget.authorId
-                                              ? 'Admin'
-                                              : 'Member',
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                    },
-                  ),
-                );
-              }),
+                              );
+                      },
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  Future<void> addInvite() async {
-    final bool isSuccess = await addInviteController.addInvite(
-      widget.id,
-      inviteList,
-    );
-
-    if (isSuccess) {
-      if (mounted) {
-        allInvitePeopleController.getInvitePeople(widget.id);
-      }
-    } else {
-      if (mounted) {
-        showSnackBarMessage(
-            context,
-            addInviteController.errorMessage ?? 'Failed to update profile',
-            true);
-      }
-    }
   }
 }
