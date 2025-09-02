@@ -1,10 +1,11 @@
+import 'package:dirve_society/app/modules/chat/model/chat_id_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class AddChatController extends GetxController {
+class GetChatIdController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
@@ -13,12 +14,16 @@ class AddChatController extends GetxController {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
+  ChatIdModel? _chatIdModel;
+  List<ChatIdItemModel>? get chatData => _chatIdModel?.data;
+
   String? _chatId;
   String? get chatId => _chatId;
 
+  final int _limit = 200;
+  int page = 0;
 
-
-  Future<bool> addChat(String userId) async {
+  Future<bool> getChat(String userId) async {
     if (_inProgress) {
       return false;
     }
@@ -28,15 +33,10 @@ class AddChatController extends GetxController {
     _inProgress = true;
     update();
 
-    Map<String, dynamic> requestBody = {
-      "participants": [
-        StorageUtil.getData(StorageUtil.profileId), // my profile id
-        userId // connected profile id
-      ]
-    };
-    final NetworkResponse response = await networkCaller.postRequest(
-      Urls.addChatUrl,
-      requestBody,
+    Map<String, dynamic> queryParams = {'limit': _limit, 'page': page};
+    final NetworkResponse response = await networkCaller.getRequest(
+      Urls.getChatIdUrlById(userId),
+      queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
 
@@ -44,7 +44,9 @@ class AddChatController extends GetxController {
       _errorMessage = null;
       isSuccess = true;
 
-      _chatId = response.responseData['data']['_id'];
+      _chatIdModel = ChatIdModel.fromJson(response.responseData);
+
+      _chatId = response.responseData['data'][0]['_id'];
 
       _errorMessage = null;
     } else {

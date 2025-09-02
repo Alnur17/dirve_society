@@ -7,7 +7,7 @@ import 'package:dirve_society/common/widgets/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../common/app_color/app_colors.dart'; 
+import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/helper/upload_widget.dart';
@@ -74,7 +74,7 @@ class _CreateClubViewState extends State<CreateClubView> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   controller: nameController,
                   hintText: 'Enter your club name',
                 ),
@@ -121,7 +121,7 @@ class _CreateClubViewState extends State<CreateClubView> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   controller: descriptionController,
                   hintText: 'Describe about your club',
                 ),
@@ -170,19 +170,19 @@ class _CreateClubViewState extends State<CreateClubView> {
         ),
       ),
       bottomSheet: Container(
-        color: AppColors.mainColor,
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 20,
-        ),
-        child: CustomButton(
-          text: 'Create',
-          onPressed: () {
-            createClub();
-          },
-        ),
-      ),
+          color: AppColors.mainColor,
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 20,
+          ),
+          child: Obx(() => CustomButton(
+                text: 'Create',
+                isLoading: createClubController.inProgress,
+                onPressedAsync: () async {
+                  createClub();
+                },
+              ))),
     );
   }
 

@@ -117,7 +117,6 @@ class _ClubViewState extends State<ClubView> {
                             Get.to(() => CreateMeetsView(
                                   clubId: widget.id,
                                 ));
-                            print("Option 3 clicked");
                             _closeMenu();
                           }),
                           _menuItem("Subscribtion", () {

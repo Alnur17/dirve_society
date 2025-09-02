@@ -23,15 +23,26 @@ class SignUpView extends StatefulWidget {
 
 class _SignUpViewState extends State<SignUpView> {
   final SignUpController signUpController = Get.put(SignUpController());
-  bool isCheck = false; // Moved to state class level
+  bool isCheck = false;
+  
+  // Move controllers to the state class level
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final addressController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Dispose controllers to prevent memory leaks
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final nameController = TextEditingController();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final addressController = TextEditingController();
-
     return Scaffold(
       backgroundColor: AppColors.transparent,
       extendBodyBehindAppBar: true,
@@ -154,8 +165,7 @@ class _SignUpViewState extends State<SignUpView> {
                           value: isCheck,
                           onChanged: (value) {
                             setState(() {
-                              isCheck =
-                                  value ?? false; // Update state with new value
+                              isCheck = value ?? false;
                             });
                           },
                         ),
@@ -242,7 +252,7 @@ class _SignUpViewState extends State<SignUpView> {
 
     if (isSuccess) {
       showSnackBarMessage(context, 'Successfully done');
-      Get.to(() => OtpVerifyView(email));
+      Get.to(() => OtpVerifyView(email, previousPage: 'sp'));
     } else {
       showSnackBarMessage(
         context,

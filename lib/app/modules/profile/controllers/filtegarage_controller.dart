@@ -5,7 +5,7 @@ import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 
-class MyGarageController extends GetxController {
+class FilterGarageController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
@@ -43,7 +43,7 @@ class MyGarageController extends GetxController {
     }..removeWhere((key, value) => value == null || value == '');
 
     final NetworkResponse response = await networkCaller.getRequest(
-      Urls.myGarageUrl,
+      Urls.carUrl,
       queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );

@@ -1,5 +1,9 @@
+// ignore_for_file: avoid_print
+
+import 'dart:async';
 import 'dart:developer';
 import 'package:dirve_society/app/modules/auth/forgot_password/controllers/otp_verify_controller.dart';
+import 'package:dirve_society/app/modules/auth/forgot_password/controllers/resend_otp_cpntroller.dart';
 import 'package:dirve_society/app/modules/auth/forgot_password/views/reset_password_view.dart';
 import 'package:dirve_society/app/modules/auth/login/views/login_view.dart';
 import 'package:dirve_society/common/widgets/custom_background.dart';
@@ -15,8 +19,9 @@ import '../../../../../common/size_box/custom_sizebox.dart';
 import '../../../../../common/widgets/custom_button.dart';
 
 class OtpVerifyView extends StatefulWidget {
+  final String previousPage;
   final String email;
-  const OtpVerifyView(this.email, {super.key});
+  const OtpVerifyView(this.email, {super.key, required this.previousPage});
 
   @override
   State<OtpVerifyView> createState() => _OtpVerifyViewState();
@@ -27,6 +32,62 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
       Get.put(OtpVerifyController());
   final TextEditingController otpCtrl = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ResendOtpController resendOtpController = ResendOtpController();
+
+  RxInt remainingTime = 60.obs; // Observable for countdown timer
+  late Timer timer; // Timer for countdown
+  RxBool enableResendCodeButton =
+      false.obs; // Observable for resend button state
+
+  @override
+  void initState() {
+    super.initState();
+    // Start the timer for countdown
+    remainingTime.value = 60;
+    enableResendCodeButton.value = false;
+    timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (t) {
+        remainingTime.value--;
+        if (remainingTime.value == 0) {
+          t.cancel();
+          enableResendCodeButton.value = true;
+        }
+      },
+    );
+  }
+
+  void resendOTP() async {
+    print('resendOTP called'); // For debugging
+    enableResendCodeButton.value = false;
+    remainingTime.value = 60;
+    timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (t) {
+        remainingTime.value--;
+        if (remainingTime.value == 0) {
+          t.cancel();
+          enableResendCodeButton.value = true;
+        }
+      },
+    );
+
+    // Assuming OtpVerifyController has a method to resend OTP
+    final bool isSuccess = await resendOtpController.resendOtp(widget.email);
+
+    if (isSuccess) {
+      if (mounted) {
+        showSnackBarMessage(context, 'OTP Successfully sent');
+        otpCtrl.clear(); // Clear OTP field after successful resend
+        setState(() {}); // Update UI to reflect cleared field
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context,
+            _otpVerifyController.errorMessage ?? 'Failed to resend OTP', true);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +97,7 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
         title: Text(
-          'Veify',
+          'Verify',
           style: appBarStyle.copyWith(color: AppColors.white),
         ),
         centerTitle: true,
@@ -61,13 +122,8 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
             child: Column(
               children: [
                 sh100,
-                // Text(
-                //   'Verify Your Identity',
-                //   style: h4.copyWith(color: AppColors.white),
-                // ),
-                // sh20,
                 Text(
-                  'Code has been send to ${widget.email}',
+                  'Code has been sent to ${widget.email}',
                   style: h5.copyWith(color: AppColors.white),
                   textAlign: TextAlign.center,
                 ),
@@ -83,7 +139,6 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
                     borderRadius: BorderRadius.circular(8),
                     fieldHeight: 45,
                     fieldWidth: 45,
-                    // Reduce the width slightly for the gap
                     activeColor: AppColors.white,
                     activeFillColor: AppColors.white,
                     inactiveColor: AppColors.borderColor,
@@ -97,7 +152,9 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
                   enablePinAutofill: true,
                   enableActiveFill: true,
                   onCompleted: (v) {},
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {}); // Update UI on OTP change
+                  },
                   beforeTextPaste: (text) {
                     log("Allowing to paste $text");
                     return true;
@@ -106,19 +163,52 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
                 ),
                 sh20,
                 Obx(
+                  () => Visibility(
+                    visible: !enableResendCodeButton.value,
+                    replacement: GestureDetector(
+                      onTap: () {
+                        resendOTP();
+                      },
+                      child: Text(
+                        'Resend code',
+                        style: h5.copyWith(
+                          color: AppColors.blue,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Resend code in ',
+                            style: h5.copyWith(color: AppColors.white),
+                          ),
+                          TextSpan(
+                            text: '${remainingTime.value}',
+                            style: h5.copyWith(color: AppColors.blue),
+                          ),
+                          TextSpan(
+                            text: 's',
+                            style: h5.copyWith(color: AppColors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                sh20,
+                Obx(
                   () => CustomButton(
                     text: 'Confirm',
                     isLoading: _otpVerifyController.inProgress,
-                    onPressedAsync: () async {
-                      await otpVerifyFunction(otpCtrl.text);
-                    },
+                    onPressedAsync: otpCtrl.text.length == 6
+                        ? () async {
+                            await otpVerifyFunction(otpCtrl.text);
+                          }
+                        : null, // Disable button if OTP is not 6 digits
                   ),
                 ),
-                sh30,
-                // Text(
-                //   'Resend code in 53s',
-                //   style: h3.copyWith(color: AppColors.white),
-                // ),
               ],
             ),
           ),
@@ -132,15 +222,22 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
 
     if (isSuccess) {
       showSnackBarMessage(context, 'Successfully done');
-      Get.to(ResetPasswordView(
-        email: widget.email,
-      ));
+      widget.previousPage == 'sp'
+          ? Get.to(() => const LoginView())
+          : Get.to(() => ResetPasswordView(email: widget.email));
     } else {
       showSnackBarMessage(
         context,
-        _otpVerifyController.errorMessage ?? 'failed',
+        _otpVerifyController.errorMessage ?? 'Verification failed',
         true,
       );
     }
+  }
+
+  @override
+  void dispose() {
+    timer.cancel(); // Prevent memory leaks
+    otpCtrl.dispose();
+    super.dispose();
   }
 }

@@ -4,7 +4,6 @@ import 'package:dirve_society/app/modules/profile/controllers/add_car_controller
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/common/widgets/image_picker.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 import '../../../../common/app_color/app_colors.dart';
@@ -190,7 +189,7 @@ class _AddCarViewState extends State<AddCarView> {
                 sh8,
                 CustomTextField(
                   onChange: (String value) {},
-                  hintText: '\$4000',
+                  hintText: 'Enter selling price',
                   controller: priceController,
                 ),
                 sh16,
@@ -268,23 +267,30 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh16,
                 Text(
-                  'Car Photo',
+                  'Car cover Photo',
                   style: h5,
                 ),
                 sh8,
                 UploadWidget(
                   onTap: () {
                     _imagePickerHelper.showAlertDialog(context,
-                        (File pickedImage) {
-                      setState(() {
-                        bannerImage = pickedImage;
-                      });
+                        (File? pickedImage) {
+                      if (pickedImage != null) {
+                        setState(() {
+                          bannerImage = pickedImage;
+                        });
+                      }
                     });
                   },
                   imagePath: AppImages.upload,
                   imageFile: bannerImage,
                   label: 'Upload',
                   iconSize: 48,
+                ),
+                sh8,
+                Text(
+                  'Car Photos',
+                  style: h5,
                 ),
                 sh8,
                 Row(
@@ -295,10 +301,12 @@ class _AddCarViewState extends State<AddCarView> {
                       width: 100,
                       onTap: () {
                         _imagePickerHelper.showAlertDialog(context,
-                            (File pickedImage) {
-                          setState(() {
-                            carImages[0] = pickedImage;
-                          });
+                            (File? pickedImage) {
+                          if (pickedImage != null) {
+                            setState(() {
+                              carImages[0] = pickedImage;
+                            });
+                          }
                         });
                       },
                       imagePath: AppImages.add,
@@ -311,10 +319,12 @@ class _AddCarViewState extends State<AddCarView> {
                       width: 100,
                       onTap: () {
                         _imagePickerHelper.showAlertDialog(context,
-                            (File pickedImage) {
-                          setState(() {
-                            carImages[1] = pickedImage;
-                          });
+                            (File? pickedImage) {
+                          if (pickedImage != null) {
+                            setState(() {
+                              carImages[1] = pickedImage;
+                            });
+                          }
                         });
                       },
                       imagePath: AppImages.add,
@@ -327,10 +337,12 @@ class _AddCarViewState extends State<AddCarView> {
                       width: 100,
                       onTap: () {
                         _imagePickerHelper.showAlertDialog(context,
-                            (File pickedImage) {
-                          setState(() {
-                            carImages[2] = pickedImage;
-                          });
+                            (File? pickedImage) {
+                          if (pickedImage != null) {
+                            setState(() {
+                              carImages[2] = pickedImage;
+                            });
+                          }
                         });
                       },
                       imagePath: AppImages.add,
@@ -354,11 +366,9 @@ class _AddCarViewState extends State<AddCarView> {
           bottom: 20,
         ),
         child: Obx(
-          // NEW CHANGE: Added Obx to observe inProgress
           () => CustomButton(
             text: 'Create',
-            isLoading:
-                addCarController.inProgress, // NEW CHANGE: Added isLoading prop
+            isLoading: addCarController.inProgress,
             onPressedAsync: () async {
               await createCar();
             },
@@ -370,24 +380,38 @@ class _AddCarViewState extends State<AddCarView> {
 
   Future<void> createCar() async {
     if (formKey.currentState!.validate()) {
+      // Validate and parse numeric fields
+      int mileage = int.tryParse(mileageController.text.trim()) ?? 0;
+      int price =
+          int.tryParse(priceController.text.trim().replaceAll(r'$', '')) ?? 0;
+      int year = int.tryParse(yearController.text.trim()) ?? 0;
+
+      if (mileage <= 0 || price <= 0 || year <= 0) {
+        showSnackBarMessage(
+            context,
+            'Please enter valid numeric values for Mileage, Price, and Year.',
+            true);
+        return;
+      }
+
       final bool isSuccess = await addCarController.addCar(
         brandController.text,
         modelController.text,
-        int.parse(mileageController.text),
+        mileage,
         fuelTypeController.text,
         transmissionController.text,
         descriptionController.text,
-        int.parse(priceController.text),
+        price,
         conditionController.text,
         colorController.text,
-        yearController.text,
-        carImages, // Pass the list of images (Front, Side, Sole)
-        cover: bannerImage, // Pass the main banner image
+        year,
+        carImages,
+        cover: bannerImage,
       );
 
       if (isSuccess) {
         if (mounted) {
-          showSnackBarMessage(context, 'Car added successfully');
+          // showSnackBarMessage(context, 'Car added successfully');
           Get.back();
         }
       } else {

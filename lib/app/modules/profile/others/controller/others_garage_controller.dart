@@ -1,10 +1,11 @@
+import 'package:get/get.dart';
+import 'package:dirve_society/app/modules/profile/model/my_garage_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
-import 'package:get/get.dart';
 
-class AddChatController extends GetxController {
+class OthersGarageController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
@@ -13,12 +14,10 @@ class AddChatController extends GetxController {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  String? _chatId;
-  String? get chatId => _chatId;
+  MyGarageModel? _myGarageModel;
+  List<MyGarageItemModel>? get myGarageList => _myGarageModel?.data;
 
-
-
-  Future<bool> addChat(String userId) async {
+  Future<bool> getOthersGarage({required String id}) async {
     if (_inProgress) {
       return false;
     }
@@ -28,25 +27,22 @@ class AddChatController extends GetxController {
     _inProgress = true;
     update();
 
-    Map<String, dynamic> requestBody = {
-      "participants": [
-        StorageUtil.getData(StorageUtil.profileId), // my profile id
-        userId // connected profile id
-      ]
+    // Map all filter parameters from FilterController
+    Map<String, dynamic> queryParams = {
+      "limit": 99999,
+      "page": 1,
     };
-    final NetworkResponse response = await networkCaller.postRequest(
-      Urls.addChatUrl,
-      requestBody,
+
+    final NetworkResponse response = await networkCaller.getRequest(
+      Urls.otherGarageById(id),
+      queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
 
     if (response.isSuccess) {
       _errorMessage = null;
       isSuccess = true;
-
-      _chatId = response.responseData['data']['_id'];
-
-      _errorMessage = null;
+      _myGarageModel = MyGarageModel.fromJson(response.responseData);
     } else {
       _errorMessage = response.errorMessage;
     }

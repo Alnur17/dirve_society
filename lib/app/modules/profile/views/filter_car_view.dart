@@ -1,4 +1,5 @@
 import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
+import 'package:dirve_society/app/modules/profile/controllers/filtegarage_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
@@ -18,13 +19,14 @@ class MyFilterGarageView extends StatefulWidget {
 }
 
 class _MyFilterGarageViewState extends State<MyFilterGarageView> {
-  final MyGarageController myGarageController = Get.put(MyGarageController());
+  final FilterGarageController filterGarageController =
+      Get.put(FilterGarageController());
 
   @override
   void initState() {
     super.initState();
     // Pass the filter data directly
-    myGarageController.getMyGarage(queryParamsData: widget.data);
+    filterGarageController.getMyGarage(queryParamsData: widget.data);
   }
 
   @override
@@ -35,6 +37,7 @@ class _MyFilterGarageViewState extends State<MyFilterGarageView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           sh20,
+          sh10,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
@@ -42,10 +45,10 @@ class _MyFilterGarageViewState extends State<MyFilterGarageView> {
               style: h1.copyWith(fontSize: 20),
             ),
           ),
-          GetBuilder<MyGarageController>(builder: (controller) {
+          GetBuilder<FilterGarageController>(builder: (controller) {
             if (controller.inProgress) {
               return SizedBox(
-                  height: 700,
+                  height: 500,
                   child: const Center(child: CircularProgressIndicator()));
             }
             if (controller.errorMessage != null) {
@@ -59,7 +62,7 @@ class _MyFilterGarageViewState extends State<MyFilterGarageView> {
             if (controller.myGarageList == null ||
                 controller.myGarageList!.isEmpty) {
               return SizedBox(
-                  height: 700,
+                  height: 500,
                   child: const Center(child: Text('No results found')));
             }
             return Expanded(

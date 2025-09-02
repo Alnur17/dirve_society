@@ -112,7 +112,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
     if (isSuccess) {
       showSnackBarMessage(context, 'Successfully done');
-      Get.to(() => OtpVerifyView(email));
+      Get.to(() => OtpVerifyView(email, previousPage: 'fp',));
     } else {
       showSnackBarMessage(
         context,

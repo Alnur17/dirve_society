@@ -197,7 +197,7 @@ class _LoginViewState extends State<LoginView> {
     if (isSuccess) {
       showSnackBarMessage(context, 'Successfully done');
       await profileController.fetchProfileData();
-      Get.to(() => const DashboardView());
+      Get.offAll(() => const DashboardView());
     } else {
       showSnackBarMessage(
         context,

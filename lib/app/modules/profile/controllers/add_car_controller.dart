@@ -29,7 +29,7 @@ class AddCarController extends GetxController {
       int price,
       String condition,
       String color,
-      String year,
+      int year,
       List<File?>? images, // Changed to List<File?>? to match AddCarView
       {File? cover}) async {
     if (_inProgress.value) {

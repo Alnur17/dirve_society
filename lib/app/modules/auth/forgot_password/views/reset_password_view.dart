@@ -3,9 +3,7 @@ import 'package:dirve_society/app/modules/auth/login/views/login_view.dart';
 import 'package:dirve_society/common/widgets/custom_background.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import '../../../../../common/app_color/app_colors.dart';
 import '../../../../../common/app_images/app_images.dart';
 import '../../../../../common/app_text_style/styles.dart';
@@ -23,10 +21,8 @@ class ResetPasswordView extends StatefulWidget {
 
 class _ResetPasswordViewState extends State<ResetPasswordView> {
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-  final ResetPasswordController _resetPasswordController =
-      Get.put(ResetPasswordController());
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final ResetPasswordController _resetPasswordController = Get.put(ResetPasswordController());
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +33,11 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
         backgroundColor: AppColors.transparent,
         title: Text(
           'Forgot Password',
-          style: appBarStyle,
+          style: TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+          ),
         ),
         centerTitle: true,
         leading: GestureDetector(
@@ -85,12 +85,9 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 hintTextStyle: const TextStyle(color: Colors.white),
                 textColor: Colors.white,
                 controller: passwordController,
-                onChange: (String value) {},
+                onChange: (String value) {}, // Note: Corrected to onChange
                 hintText: '**********',
-                sufIcon: Image.asset(
-                  AppImages.eyeClose,
-                  scale: 4,
-                ),
+                isPassword: true, // Enable password visibility toggle
               ),
               sh16,
               Text(
@@ -99,15 +96,12 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
               ),
               sh12,
               CustomTextField(
-                 hintTextStyle: const TextStyle(color: Colors.white),
-                      textColor: Colors.white,
+                hintTextStyle: const TextStyle(color: Colors.white),
+                textColor: Colors.white,
                 controller: confirmPasswordController,
-                onChange: (String value) {},
-                sufIcon: Image.asset(
-                  AppImages.eyeClose,
-                  scale: 4,
-                ),
+                onChange: (String value) {}, // Note: Corrected to onChange
                 hintText: '**********',
+                isPassword: true, // Enable password visibility toggle
               ),
               sh16,
               Obx(
@@ -130,14 +124,12 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
     );
   }
 
-  Future<void> resetPassword(
-      String email, String password, String confirmPassword) async {
-    final bool isSuccess = await _resetPasswordController.resetPassword(
-        email, password, confirmPassword);
+  Future<void> resetPassword(String email, String password, String confirmPassword) async {
+    final bool isSuccess = await _resetPasswordController.resetPassword(email, password, confirmPassword);
 
     if (isSuccess) {
       showSnackBarMessage(context, 'Successfully done');
-      Get.to(LoginView());
+      Get.to(() => const LoginView());
     } else {
       showSnackBarMessage(
         context,
@@ -145,5 +137,12 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
         true,
       );
     }
+  }
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
   }
 }

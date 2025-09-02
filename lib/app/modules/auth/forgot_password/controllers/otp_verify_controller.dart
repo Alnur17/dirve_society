@@ -39,7 +39,7 @@ class OtpVerifyController extends GetxController {
 
     Map<String, dynamic> requestBody = {"otp": otp};
 
-    final NetworkResponse response = await Get.find<NetworkCaller>()
+    final NetworkResponse response = await Get.find<NetworkCaller>() 
         .postRequest(Urls.otpVerifyUrl, requestBody, accesToken: token);
 
     if (response.isSuccess) {

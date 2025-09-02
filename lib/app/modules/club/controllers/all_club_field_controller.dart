@@ -46,7 +46,7 @@ class AllClubFeedController extends GetxController {
 
     Map<String, dynamic> queryParams = {'limit': _limit, 'page': page};
     final NetworkResponse response = await networkCaller.getRequest(
-      Urls.allClubFielsById(id),
+      Urls.allClubFielsById(id, 'club'),
       queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );

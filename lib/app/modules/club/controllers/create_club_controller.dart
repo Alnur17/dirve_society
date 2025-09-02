@@ -4,16 +4,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/urls.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
 
 class CreateClubController extends GetxController {
-  bool _inProgress = false;
-  bool get inProgress => _inProgress;
-
+  var _inProgress = false.obs; // Changed to RxBool
+  bool get inProgress => _inProgress.value; // Updated getter to use .value
   String? _errorMessage;
+
   String? get errorMessage => _errorMessage;
 
   /// 🔁 Update Profile Function
@@ -21,14 +22,14 @@ class CreateClubController extends GetxController {
       String name, String privacy, String description, File? image,
       {File? cover}) async {
     bool isSuccess = false;
-    _inProgress = true;
+    _inProgress.value = true;
     update();
 
     try {
       String? token = StorageUtil.getData(StorageUtil.userAccessToken);
       if (token == null || token.isEmpty) {
         _errorMessage = "User not authenticated";
-        _inProgress = false;
+        _inProgress.value = false;
         update();
         return false;
       }
@@ -100,7 +101,7 @@ class CreateClubController extends GetxController {
     } catch (e) {
       _errorMessage = "Error updating profile: $e";
     } finally {
-      _inProgress = false;
+      _inProgress.value = false;
       update();
     }
 

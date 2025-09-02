@@ -5,6 +5,7 @@ class Urls {
   // static const String socketUrl = 'http://192.168.10.144:4001/';
   static const String signUpUrl = '$_baseUrl/profiles/register';
   static const String otpVerifyUrl = '$_baseUrl/otp/verify-otp';
+  static const String resendOtpUrl = '$_baseUrl/otp/resend-otp';
   static const String loginUrl = '$_baseUrl/auth/login';
   static const String forgotPasswordUrl = '$_baseUrl/auth/forget-password';
   static const String changePasswordUrl = '$_baseUrl/auth/change-password';
@@ -15,6 +16,7 @@ class Urls {
   static const String myfeedUrl = '$_baseUrl/feeds/my-feed';
   static const String carRatingUrl = '$_baseUrl/car-ratings';
   static const String myGarageUrl = '$_baseUrl/cars/my-car';
+  static const String carUrl = '$_baseUrl/cars';
   static const String myClubUrl = '$_baseUrl/clubs/my-club';
   static const String myFavouriteUrl = '$_baseUrl/favorite/my-favorite';
   static const String createClubUrl = '$_baseUrl/clubs';
@@ -42,11 +44,30 @@ class Urls {
   static const String packageUrl = '$_baseUrl/packages';
   static const String subscriptionUrl = '$_baseUrl/subscriptions';
   static const String paymentCheckoutUrl = '$_baseUrl/payments/checkout';
+  static const String addChatUrl = '$_baseUrl/chats';
 
   static String getMarketPlaceUrlById(
     String id,
   ) {
     return '$_baseUrl/cars/$id';
+  }
+
+  static String getChatIdUrlById(
+    String id,
+  ) {
+    return '$_baseUrl/chats/user/$id';
+  }
+
+  static String otherProfileById(
+    String id,
+  ) {
+    return '$_baseUrl/profiles/$id';
+  }
+
+  static String otherGarageById(
+    String id,
+  ) {
+    return '$_baseUrl/cars/user/$id';
   }
 
   static String feedsById(
@@ -63,8 +84,9 @@ class Urls {
 
   static String allClubFielsById(
     String id,
+    String type,
   ) {
-    return '$_baseUrl/feeds/club/$id';
+    return '$_baseUrl/feeds/$type/$id';
   }
 
   static String changeConnectionRequestById(
@@ -135,7 +157,6 @@ class Urls {
 
   // old package
   static const String savePostUrl = '$_baseUrl/watch-later';
-  static const String addChatUrl = '$_baseUrl/chats';
   static const String feedPostUrl = '$_baseUrl/feeds';
   static const String reelsPostUrl = '$_baseUrl/reels';
   static const String createWishListUrl = '$_baseUrl/wishlists';

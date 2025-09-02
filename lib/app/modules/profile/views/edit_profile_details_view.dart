@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use, avoid_print
 
 import 'dart:io';
-
 import 'package:dirve_society/app/modules/profile/controllers/edit_profile_controller.dart';
 import 'package:dirve_society/app/modules/profile/controllers/profile_controller.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
@@ -10,7 +9,6 @@ import 'package:dirve_society/common/widgets/custom_textfield.dart';
 import 'package:dirve_society/common/widgets/image_picker.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 import '../../../../common/app_color/app_colors.dart';
@@ -34,12 +32,15 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
       Get.put(EditProfileController());
   final ProfileController profileController = Get.put(ProfileController());
   final formKey = GlobalKey<FormState>();
+
   File? image;
   File? bannerImage;
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
 
   @override
   void initState() {
+    super.initState();
+
     nameController.text =
         StorageUtil.getData(StorageUtil.profileName) ?? 'No name';
     emailController.text =
@@ -47,13 +48,13 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
     bioController.text = StorageUtil.getData(StorageUtil.profileBio) ?? '';
     addressController.text =
         StorageUtil.getData(StorageUtil.profileAddress) ?? '';
+
     print('Name: ${StorageUtil.getData(StorageUtil.profileName)}');
     print('Email: ${StorageUtil.getData(StorageUtil.profileEmail)}');
     print('Bio: ${StorageUtil.getData(StorageUtil.profileBio)}');
     print('Address: ${StorageUtil.getData(StorageUtil.profileAddress)}');
     print('Image: ${StorageUtil.getData(StorageUtil.profilePhotoUrl)}');
     print('Banner: ${StorageUtil.getData(StorageUtil.profileCoverPhoto)}');
-    super.initState();
   }
 
   @override
@@ -66,17 +67,21 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
             clipBehavior: Clip.none,
             children: [
               Positioned(
-                child: SizedBox(
-                  height: 240,
-                  width: double.infinity,
-                  child: bannerImage == null
-                      ? Image.network(
-                          StorageUtil.getData(StorageUtil.profileCoverPhoto)!,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(bannerImage!, fit: BoxFit.cover),
-                ),
-              ),
+                  child: SizedBox(
+                      height: 240,
+                      width: double.infinity,
+                      child:
+                          StorageUtil.getData(StorageUtil.profileCoverPhoto) !=
+                                  null
+                              ? Image.network(
+                                  StorageUtil.getData(
+                                      StorageUtil.profileCoverPhoto)!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  AppImages.carImageThree,
+                                  fit: BoxFit.cover,
+                                ))),
               Positioned(
                 left: 20,
                 top: 40,
@@ -85,14 +90,15 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                     Get.back();
                   },
                   child: Container(
-                      decoration: ShapeDecoration(
-                        shape: CircleBorder(),
-                        color: AppColors.black.withOpacity(0.3),
-                      ),
-                      child: Image.asset(
-                        AppImages.back,
-                        scale: 4,
-                      )),
+                    decoration: ShapeDecoration(
+                      shape: const CircleBorder(),
+                      color: AppColors.black.withOpacity(0.3),
+                    ),
+                    child: Image.asset(
+                      AppImages.back,
+                      scale: 4,
+                    ),
+                  ),
                 ),
               ),
               Positioned(
@@ -101,10 +107,14 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                 child: CircleAvatar(
                   radius: 45,
                   backgroundColor: AppColors.white,
-                  backgroundImage: image == null
-                      ? NetworkImage(
-                          StorageUtil.getData(StorageUtil.profilePhotoUrl)!)
-                      : FileImage(image!),
+                  backgroundImage:
+                      StorageUtil.getData(StorageUtil.profilePhotoUrl) != null
+                          ? NetworkImage(
+                              StorageUtil.getData(StorageUtil.profilePhotoUrl)!,
+                            )
+                          : AssetImage(
+                              AppImages.carImageThree,
+                            ),
                 ),
               ),
               Positioned(
@@ -121,7 +131,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       color: AppColors.darkRed,
@@ -147,7 +157,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       color: const Color.fromARGB(255, 247, 247, 247),
@@ -171,52 +181,40 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Name',
-                        style: h5,
-                      ),
+                      Text('Name', style: h5),
                       sh5,
                       CustomTextField(
                         onChange: (String value) {},
                         textColor: Colors.black,
                         controller: nameController,
-                        hintTextStyle: TextStyle(color: AppColors.black),
+                        hintTextStyle: const TextStyle(color: Colors.black),
                       ),
                       sh20,
-                      Text(
-                        'Email',
-                        style: h5,
-                      ),
+                      Text('Email', style: h5),
                       sh5,
                       CustomTextField(
                         onChange: (String value) {},
                         textColor: Colors.black,
                         controller: emailController,
-                        hintTextStyle: TextStyle(color: AppColors.black),
+                        hintTextStyle: const TextStyle(color: Colors.black),
                       ),
                       sh20,
-                      Text(
-                        'Bio',
-                        style: h5,
-                      ),
+                      Text('Bio', style: h5),
                       sh5,
                       CustomTextField(
                         onChange: (String value) {},
                         textColor: Colors.black,
                         controller: bioController,
-                        hintTextStyle: TextStyle(color: AppColors.black),
+                        hintTextStyle: const TextStyle(color: Colors.black),
                       ),
                       sh20,
-                      Text(
-                        'Address',
-                        style: h5,
-                      ),
+                      Text('Address', style: h5),
                       sh5,
                       CustomTextField(
                         onChange: (String value) {},
                         textColor: Colors.black,
                         controller: addressController,
-                        hintTextStyle: TextStyle(color: AppColors.black),
+                        hintTextStyle: const TextStyle(color: Colors.black),
                       ),
                       sh20,
                     ],
@@ -228,11 +226,9 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: Obx(
-              // NEW CHANGE: Added Obx to observe inProgress
               () => CustomButton(
                 text: 'Save',
-                isLoading: editProfileController
-                    .inProgress, // NEW CHANGE: Added isLoading prop
+                isLoading: editProfileController.inProgress,
                 onPressedAsync: () async {
                   await editProfile();
                 },
@@ -257,15 +253,15 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
       if (isSuccess) {
         if (mounted) {
           await profileController.fetchProfileData();
-          // showSnackBarMessage(context, 'Profile updated successfully');
           Get.back();
         }
       } else {
         if (mounted) {
           showSnackBarMessage(
-              context,
-              editProfileController.errorMessage ?? 'Failed to update profile',
-              true);
+            context,
+            editProfileController.errorMessage ?? 'Failed to update profile',
+            true,
+          );
         }
       }
     }

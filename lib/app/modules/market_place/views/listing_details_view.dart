@@ -1,4 +1,8 @@
 import 'package:dirve_society/app/data/dummy_data.dart';
+import 'package:dirve_society/app/modules/chat/controllers/add_chat_controller.dart';
+import 'package:dirve_society/app/modules/chat/controllers/get_chat_id_controller.dart';
+import 'package:dirve_society/app/modules/chat/views/chat_view.dart';
+import 'package:dirve_society/app/modules/chat/views/message_view.dart';
 import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
 import 'package:dirve_society/app/modules/market_place/controllers/all_review_controller.dart';
 import 'package:dirve_society/app/modules/market_place/controllers/market_details_controller.dart';
@@ -9,6 +13,7 @@ import 'package:dirve_society/common/helper/review_card.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:dirve_society/common/widgets/custom_circular_container.dart';
+import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
@@ -29,6 +34,10 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
       Get.put(MarketplaceDetailsController());
   final AllReviewController allReviewController =
       Get.put(AllReviewController());
+
+  final GetChatIdController getChatIdController =
+      Get.put(GetChatIdController());
+  final AddChatController addChatController = Get.put(AddChatController());
 
   @override
   void initState() {
@@ -64,6 +73,8 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
           if (controller.inProgress) {
             return const Center(child: CircularProgressIndicator());
           }
+          print(
+              'Product model ${controller.marketPlaceDetailsModel?.images.length}');
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -78,10 +89,7 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    controller.marketPlaceDetailsModel?.images.isNotEmpty ??
-                            false
-                        ? controller.marketPlaceDetailsModel!.images[0]
-                        : AppImages.carImageFour,
+                    controller.marketPlaceDetailsModel?.banner ?? '',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Image.asset(
                       AppImages.carImageFour,
@@ -90,53 +98,43 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 90,
-                child: ListView.builder(
-                  itemCount:
-                      (controller.marketPlaceDetailsModel?.images.length ?? 0) >
-                              1
-                          ? controller.marketPlaceDetailsModel!.images.length -
-                              1
-                          : 0,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        left: index == 0 ? 20 : 8,
-                        right: index ==
-                                (controller.marketPlaceDetailsModel!.images
-                                        .length -
-                                    1 -
-                                    1)
-                            ? 20
-                            : 0,
-                      ),
-                      child: Container(
-                        width: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: AppColors.silver,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            controller
-                                .marketPlaceDetailsModel!.images[index + 1],
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Image.asset(
-                              AppImages.carImageFour,
-                              fit: BoxFit.cover,
+              controller.marketPlaceDetailsModel!.images.isEmpty
+                  ? SizedBox.shrink()
+                  : SizedBox(
+                      height: 90,
+                      child: ListView.builder(
+                        itemCount:
+                            controller.marketPlaceDetailsModel!.images.length,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          print('Index: $index');
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Container(
+                              width: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: AppColors.silver,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  controller
+                                      .marketPlaceDetailsModel!.images[index],
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(
+                                    AppImages.carImageFour,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
               sh20,
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -246,11 +244,23 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                               ),
                             ],
                           ),
-                          // Spacer(),
-                          // Image.asset(
-                          //   AppImages.chatRed,
-                          //   scale: 4,
-                          // ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              addChat(
+                                  controller
+                                      .marketPlaceDetailsModel!.author!.id!,
+                                  controller
+                                      .marketPlaceDetailsModel!.author!.name!,
+                                  controller.marketPlaceDetailsModel!.author!
+                                          .photoUrl ??
+                                      'https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U');
+                            },
+                            child: Image.asset(
+                              AppImages.chatRed,
+                              scale: 4,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -271,21 +281,21 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                           style: h3,
                         ),
                         sh5,
-                        Row(
-                          children: [
-                            DynamicStarRating(
-                              rating:
-                                  4.7, // Replace with dynamic average if available
-                              starSize: 20,
-                              filledColor: AppColors.darkRed,
-                              emptyColor: AppColors.grey,
-                            ),
-                            sw8,
-                            Text(
-                                '${controller.marketPlaceDetailsModel!.avgRating ?? ''} (${controller.marketPlaceDetailsModel!.ratingCount ?? ''})',
-                                style: h7), // Update with dynamic data
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     DynamicStarRating(
+                        //       rating:
+                        //           4.7, // Replace with dynamic average if available
+                        //       starSize: 20,
+                        //       filledColor: AppColors.darkRed,
+                        //       emptyColor: AppColors.grey,
+                        //     ),
+                        //     sw8,
+                        //     Text(
+                        //         '${controller.marketPlaceDetailsModel!.avgRating ?? ''} (${controller.marketPlaceDetailsModel!.ratingCount ?? ''})',
+                        //         style: h7), // Update with dynamic data
+                        //   ],
+                        // ),
                       ],
                     ),
                     // InkWell(
@@ -366,5 +376,48 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
         }),
       ),
     );
+  }
+
+  // Future<void> getChatId(String userId, String name, String image) async {
+  //   final bool isSuccess = await getChatIdController.getChat(userId);
+  //   var chatId = getChatIdController.chatId;
+
+  //   if (isSuccess) {
+  //     if (mounted) {
+  //       Get.to(() => MessageView(
+  //             chatId: chatId ?? '',
+  //             receiverId: userId,
+  //             receiverName: name,
+  //             receiverImage: image,
+  //           ));
+  //     }
+  //   } else {
+  //     if (mounted) {
+  //       showSnackBarMessage(
+  //         context,
+  //         getChatIdController.errorMessage ?? 'Failed to update profile',
+  //         true,
+  //       );
+  //     }
+  //   }
+  // }
+
+  Future<void> addChat(String userId, String name, String image) async {
+    final bool isSuccess = await addChatController.addChat(userId);
+    var chatId = getChatIdController.chatId;
+
+    if (isSuccess) {
+      if (mounted) {
+        Get.to(() => ChatView());
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+          context,
+          addChatController.errorMessage ?? 'Failed to update profile',
+          true,
+        );
+      }
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dirve_society/app/modules/club/controllers/create_club_controller.dart';
+import 'package:dirve_society/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:dirve_society/app/modules/home/controllers/feed/create_story_controller.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_club_controller.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
@@ -75,7 +76,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                 ),
                 sh8,
                 CustomTextField(
-                   onChange: (String value) {  },
+                  onChange: (String value) {},
                   controller: captionController,
                   hintText: 'Write here',
                 ),
@@ -105,19 +106,21 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
         ),
       ),
       bottomSheet: Container(
-        color: AppColors.mainColor,
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: 20,
-        ),
-        child: CustomButton(
-          text: 'Add Story',
-          onPressed: () {
-            addStory();
-          },
-        ),
-      ),
+          color: AppColors.mainColor,
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 20,
+          ),
+          child: Obx(
+            () => CustomButton(
+              isLoading: addStoryController.inProgress,
+              text: 'Add Story',
+              onPressedAsync: () async {
+                await addStory();
+              },
+            ),
+          )),
     );
   }
 
@@ -127,12 +130,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
           captionController.text, profileImage);
 
       if (isSuccess) {
-        if (mounted) {
-          showSnackBarMessage(context, 'Club created successfully');
-
-          coverImage = null;
-          Get.back();
-        }
+        Get.to(() => DashboardView());
       } else {
         if (mounted) {
           showSnackBarMessage(

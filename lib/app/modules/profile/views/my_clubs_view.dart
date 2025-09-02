@@ -36,278 +36,289 @@ class _MyClubsViewState extends State<MyClubsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.mainColor,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Positioned(
-                  child: SizedBox(
-                    height: 200,
-                    width: double.infinity,
-                    child: Image.network(
-                      StorageUtil.getData(StorageUtil.profileCoverPhoto)!,
-                      fit: BoxFit.cover,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.mainColor,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned(
+                    child: SizedBox(
+                        height: 200,
+                        width: double.infinity,
+                        child: StorageUtil.getData(
+                                    StorageUtil.profileCoverPhoto) !=
+                                null
+                            ? Image.network(
+                                StorageUtil.getData(
+                                    StorageUtil.profileCoverPhoto),
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(AppImages.carImageThree)),
+                  ),
+                  Positioned(
+                    left: 20,
+ 
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Container(
+                          decoration: ShapeDecoration(
+                            shape: CircleBorder(),
+                            color: AppColors.black.withOpacity(0.3),
+                          ),
+                          child: Image.asset(
+                            AppImages.back,
+                            scale: 4,
+                          )),
                     ),
                   ),
-                ),
-                Positioned(
-                  left: 20,
-                  top: 40,
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Container(
-                      decoration: ShapeDecoration(
-                        shape: CircleBorder(),
-                        color: AppColors.black.withOpacity(0.3),
-                      ),
-                      child: Image.asset(
-                        AppImages.back,
-                        scale: 4,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: -25,
-                  left: 20,
-                  child: CircleAvatar(
-                    radius: 45,
-                    backgroundColor: AppColors.white,
-                    backgroundImage: NetworkImage(
-                        StorageUtil.getData(StorageUtil.profilePhotoUrl)!),
-                  ),
-                ),
-                Positioned(
-                  right: 20,
-                  left: Get.width * 0.32,
-                  bottom: 0,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${StorageUtil.getData(StorageUtil.profileName)}',
-                        style: h1.copyWith(
-                          fontSize: 20,
-                          color: AppColors.darkRed,
-                        ),
-                      ),
-                      sw8,
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star,
-                            size: 22,
+                  Positioned(
+                      bottom: -25,
+                      left: 20,
+                      child: CircleAvatar(
+                        radius: 45,
+                        backgroundColor: AppColors.white,
+                        backgroundImage:
+                            StorageUtil.getData(StorageUtil.profilePhotoUrl) !=
+                                    null
+                                ? NetworkImage(StorageUtil.getData(
+                                    StorageUtil.profilePhotoUrl))
+                                : AssetImage(AppImages.carImageThree),
+                      )),
+                  Positioned(
+                    right: 20,
+                    left: Get.width * 0.32,
+                    bottom: 0,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          StorageUtil.getData(StorageUtil.profileName) ?? '',
+                          style: h1.copyWith(
+                            fontSize: 20,
                             color: AppColors.darkRed,
                           ),
-                          sw5,
-                          Text(
-                            '${StorageUtil.getData(StorageUtil.profileAvgRating)}',
-                            style: h3.copyWith(
+                        ),
+                        sw8,
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star,
+                              size: 22,
                               color: AppColors.darkRed,
-                              fontWeight: FontWeight.w700,
+                            ),
+                            sw5,
+                            Text(
+                              StorageUtil.getData(StorageUtil.profileAvgRating)
+                                  .toString(),
+                              style: h3.copyWith(
+                                color: AppColors.darkRed,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              sh40,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Descriptions',
+                          style: h5.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.orange[600],
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${StorageUtil.getData(StorageUtil.profileScores)} Points',
+                              style: h5,
                             ),
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                    sh5,
+                    ReadMoreText(
+                      StorageUtil.getData(StorageUtil.profileBio) ?? '',
+                      trimLines: 2,
+                      trimMode: TrimMode.Line,
+                      trimCollapsedText: 'Show More',
+                      trimExpandedText: ' Show Less',
+                      style: h6,
+                      moreStyle: h6.copyWith(
+                        color: AppColors.grey,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
-                  ),
+                      lessStyle: h6.copyWith(
+                        color: AppColors.grey,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            sh40,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Descriptions',
-                        style: h5.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.orange[600],
+              ),
+              sh20,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'My Clubs',
+                      style: h1.copyWith(fontSize: 20),
+                    ),
+                    CustomButton(
+                      width: 160,
+                      height: 38,
+                      text: 'Create Club',
+                      onPressed: () {
+                        Get.to(() => CreateClubView());
+                      },
+                      imageAssetPath: AppImages.add,
+                      iconColor: AppColors.white,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 200,
+                child: GetBuilder<MyClubController>(builder: (controller) {
+                  if (myClubController.inProgress) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.myClubList == null ||
+                      controller.myClubList!.isEmpty) {
+                    return const SizedBox(
+                      height: 200,
+                      child: Center(child: Text('No Clubs Found')),
+                    );
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.myClubList?.length,
+                    itemBuilder: (context, index) => SizedBox(
+                      width: 160,
+                      height: 200,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GroupCard(
+                          isOneButton: true,
+                          acceptButton: () {},
+                          joinClubBtuton: () {},
+                          rejectedButton: () {},
+                          ontap: () {
+                            Get.to(() => ClubView(
+                                  isAuthor: true,
+                                  authorId:
+                                      controller.myClubList![index].owner?.id ??
+                                          '',
+                                  id: controller.myClubList?[index].id ?? '',
+                                ));
+                          },
+                          imageUrl:
+                              controller.myClubList?[index].profilePhoto ?? '',
+                          title: controller.myClubList?[index].name ??
+                              'Nissan R35 GTR',
+                          memberCount:
+                              '${controller.myClubList?[index].member ?? 0} Members',
+                          isPublic: true,
+                          isJoined: false,
+                          showButton: false,
                         ),
-                        child: Center(
-                          child: Text(
-                            '${StorageUtil.getData(StorageUtil.profileScores)} Points',
-                            style: h5,
-                          ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'My Join Clubs',
+                  style: h1.copyWith(fontSize: 20),
+                ),
+              ),
+              SizedBox(
+                height: 200,
+                child:
+                    GetBuilder<MyJoiningClubController>(builder: (controller) {
+                  if (controller.inProgress) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (controller.myJoiningClubList == null ||
+                      controller.myJoiningClubList!.isEmpty) {
+                    return const SizedBox(
+                      height: 200,
+                      child: Center(child: Text('No Clubs Found')),
+                    );
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.myJoiningClubList?.length,
+                    itemBuilder: (context, index) => SizedBox(
+                      width: 160,
+                      height: 200,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GroupCard(
+                          isOneButton: true,
+                          acceptButton: () {},
+                          joinClubBtuton: () {},
+                          rejectedButton: () {},
+                          ontap: () {
+                            Get.to(() => ClubView(
+                                  isAuthor: false,
+                                  authorId: controller.myJoiningClubList![index]
+                                          .reference?.owner ??
+                                      '',
+                                  id: controller.myJoiningClubList![index]
+                                          .reference?.id ??
+                                      '',
+                                ));
+                          },
+                          imageUrl: controller.myJoiningClubList![index]
+                                  .reference?.profilePhoto ??
+                              '',
+                          title: controller
+                                  .myJoiningClubList?[index].reference?.name ??
+                              'Nissan R35 GTR',
+                          memberCount:
+                              '${controller.myJoiningClubList?[index].reference?.member ?? 0} Members',
+                          isPublic: true,
+                          isJoined: false,
+                          showButton: false,
                         ),
                       ),
-                    ],
-                  ),
-                  sh5,
-                  ReadMoreText(
-                    '${StorageUtil.getData(StorageUtil.profileBio)}',
-                    trimLines: 2,
-                    trimMode: TrimMode.Line,
-                    trimCollapsedText: 'Show More',
-                    trimExpandedText: ' Show Less',
-                    style: h6,
-                    moreStyle: h6.copyWith(
-                      color: AppColors.grey,
-                      fontWeight: FontWeight.w600,
                     ),
-                    lessStyle: h6.copyWith(
-                      color: AppColors.grey,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            sh20,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'My Clubs',
-                    style: h1.copyWith(fontSize: 20),
-                  ),
-                  CustomButton(
-                    width: 160,
-                    height: 38,
-                    text: 'Create Club',
-                    onPressed: () {
-                      Get.to(() => CreateClubView());
-                    },
-                    imageAssetPath: AppImages.add,
-                    iconColor: AppColors.white,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 200,
-              child: GetBuilder<MyClubController>(builder: (controller) {
-                if (myClubController.inProgress) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (controller.myClubList == null ||
-                    controller.myClubList!.isEmpty) {
-                  return const SizedBox(
-                    height: 200,
-                    child: Center(child: Text('No Clubs Found')),
                   );
-                }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.myClubList?.length,
-                  itemBuilder: (context, index) => SizedBox(
-                    width: 160,
-                    height: 200,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GroupCard(
-                        isOneButton: true,
-                        acceptButton: () {},
-                        joinClubBtuton: () {},
-                        rejectedButton: () {},
-                        ontap: () {
-                          Get.to(() => ClubView(
-                                isAuthor: true,
-                                authorId:
-                                    controller.myClubList![index].owner?.id ??
-                                        '',
-                                id: controller.myClubList?[index].id ?? '',
-                              ));
-                        },
-                        imageUrl:
-                            controller.myClubList?[index].profilePhoto ?? '',
-                        title: controller.myClubList?[index].name ??
-                            'Nissan R35 GTR',
-                        memberCount:
-                            '${controller.myClubList?[index].member ?? 0} Members',
-                        isPublic: true,
-                        isJoined: false,
-                        showButton: false,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'My Join Clubs',
-                style: h1.copyWith(fontSize: 20),
+                }),
               ),
-            ),
-            SizedBox(
-              height: 200,
-              child: GetBuilder<MyJoiningClubController>(builder: (controller) {
-                if (controller.inProgress) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (controller.myJoiningClubList == null ||
-                    controller.myJoiningClubList!.isEmpty) {
-                  return const SizedBox(
-                    height: 200,
-                    child: Center(child: Text('No Clubs Found')),
-                  );
-                }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.myJoiningClubList?.length,
-                  itemBuilder: (context, index) => SizedBox(
-                    width: 160,
-                    height: 200,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GroupCard(
-                        isOneButton: true,
-                        acceptButton: () {},
-                        joinClubBtuton: () {},
-                        rejectedButton: () {},
-                        ontap: () {
-                          Get.to(() => ClubView(
-                                isAuthor: false,
-                                authorId: controller.myJoiningClubList![index]
-                                        .reference?.owner ??
-                                    '',
-                                id: controller.myJoiningClubList![index]
-                                        .reference?.id ??
-                                    '',
-                              ));
-                        },
-                        imageUrl: controller.myJoiningClubList![index].reference
-                                ?.profilePhoto ??
-                            '',
-                        title: controller
-                                .myJoiningClubList?[index].reference?.name ??
-                            'Nissan R35 GTR',
-                        memberCount:
-                            '${controller.myJoiningClubList?[index].reference?.member ?? 0} Members',
-                        isPublic: true,
-                        isJoined: false,
-                        showButton: false,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

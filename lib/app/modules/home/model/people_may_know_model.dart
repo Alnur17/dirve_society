@@ -44,7 +44,7 @@ class PeopleYouMayItemModel {
     final String? photoUrl;
     final String? coverPhoto;
     final String? bio;
-    final int? avgRating;
+    final dynamic avgRating;
     final int? ratingCount;
     final DateTime? createdAt;
 

@@ -1,11 +1,13 @@
+// ignore_for_file: avoid_print
+import 'package:dirve_society/app/modules/home/model/all_feed_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class AddChatController extends GetxController {
-  final NetworkCaller networkCaller = Get.put(NetworkCaller());
+class OthersClubFeedController extends GetxController {
+  final NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
   bool _inProgress = false;
   bool get inProgress => _inProgress;
@@ -13,12 +15,23 @@ class AddChatController extends GetxController {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  String? _chatId;
-  String? get chatId => _chatId;
+  AllFeedModel? postList;
+  List<AllFeedItemModel>? get allPostList => postList?.data;
 
+  String? _otpToken;
+  String? get otpToken => _otpToken;
 
+  final int _limit = 5;
+  int page = 0;
 
-  Future<bool> addChat(String userId) async {
+  int? lastPage;
+
+  @override
+  void onInit() {
+    super.onInit();
+  }
+
+  Future<bool> getOthersAllClubFeed(String id) async {
     if (_inProgress) {
       return false;
     }
@@ -28,25 +41,17 @@ class AddChatController extends GetxController {
     _inProgress = true;
     update();
 
-    Map<String, dynamic> requestBody = {
-      "participants": [
-        StorageUtil.getData(StorageUtil.profileId), // my profile id
-        userId // connected profile id
-      ]
-    };
-    final NetworkResponse response = await networkCaller.postRequest(
-      Urls.addChatUrl,
-      requestBody,
+    Map<String, dynamic> queryParams = {'limit': _limit, 'page': page};
+    final NetworkResponse response = await networkCaller.getRequest(
+      Urls.allClubFielsById(id, 'user'),
+      queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
 
     if (response.isSuccess) {
+      postList = AllFeedModel.fromJson(response.responseData);
       _errorMessage = null;
       isSuccess = true;
-
-      _chatId = response.responseData['data']['_id'];
-
-      _errorMessage = null;
     } else {
       _errorMessage = response.errorMessage;
     }

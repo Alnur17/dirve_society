@@ -48,7 +48,7 @@ class _ProfileViewState extends State<ProfileView> {
             children: [
               Positioned(
                 child: SizedBox(
-                  height: 240,
+                  height: 200,
                   width: double.infinity,
                   child: Image.network(
                     StorageUtil.getData(StorageUtil.profileCoverPhoto) ??
@@ -119,14 +119,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ),
                       ],
-                    ),
-                    //sh5,
-                    // Text(
-                    //   '5.0L V8 • 460HP • Custom Exhaust Clean, powerful, and ready to roar. Only 38k miles. DM to take it for a spin!',
-                    //   style: h6,
-                    //   maxLines: 3,
-                    //   overflow: TextOverflow.ellipsis,
-                    // )
+                    ),              
                   ],
                 ),
               ),
@@ -136,6 +129,7 @@ class _ProfileViewState extends State<ProfileView> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(

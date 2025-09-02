@@ -99,7 +99,8 @@ class _MarketPlaceViewState extends State<MarketPlaceView> {
               ),
               sh16,
               Expanded(
-                child: GetBuilder<AllMarketplaceController>(builder: (controller) {
+                child:
+                    GetBuilder<AllMarketplaceController>(builder: (controller) {
                   if (controller.inProgress) {
                     return const Center(child: CircularProgressIndicator());
                   }
@@ -163,7 +164,8 @@ class _MarketPlaceViewState extends State<MarketPlaceView> {
                         name: filteredItems[index].brand ?? '',
                         price: filteredItems[index].price.toString(),
                         date: dateFormatter.getRelativeTimeFormat(),
-                        imageUrl: filteredItems[index].images[0],
+                        imageUrl: filteredItems[index].banner ??
+                            '', // Fallback to placeholder
                         onTap: () {
                           Get.to(() => ListingDetailsView(
                                 id: filteredItems[index].id ?? '',
