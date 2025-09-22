@@ -13,7 +13,7 @@ void main()async {
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
-    ),
+    ), 
   );
 }
 

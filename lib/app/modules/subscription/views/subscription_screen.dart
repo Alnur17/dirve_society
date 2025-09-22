@@ -137,19 +137,28 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Obx(
-                      () => CustomButton(
-                        text: 'Buy Now',
-                        isLoading: subscriptionController.inProgress,
-                        onPressed: () {
-                          if (!subscriptionController.inProgress) {
-                            getPackage(controller.allPackageList?[0].id ?? '');
-                            print(
-                                'Package ID: ${controller.allPackageList?[0].id}');
-                          }
-                        },
-                      ),
-                    ),
+                    StorageUtil.getData(StorageUtil.isPaid) == true
+                        ? Obx(
+                            () => CustomButton(
+                              text: 'Buy Now',
+                              isLoading: subscriptionController.inProgress,
+                              onPressed: () {
+                                if (!subscriptionController.inProgress) {
+                                  getPackage(
+                                      controller.allPackageList?[0].id ?? '');
+                                  print(
+                                      'Package ID: ${controller.allPackageList?[0].id}');
+                                }
+                              },
+                            ),
+                          )
+                        : Opacity(
+                            opacity: 0.5,
+                            child: CustomButton(
+                                text: 'Alreardy Subscribed',
+                                isLoading: subscriptionController.inProgress,
+                                onPressed: () {}),
+                          ),
                   ],
                 ),
               )

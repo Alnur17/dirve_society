@@ -307,7 +307,7 @@ class _FeedPageState extends State<FeedPage> {
                         },
                         onMenuTap: () {
                           // Implement menu/bottom sheet (implement as needed)
-                        },
+                        }, 
                         onLikeTap: () {
                           print(
                               'Like tapped for post ID: ${feed.contentMeta?.id}');

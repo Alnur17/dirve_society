@@ -16,7 +16,7 @@ import '../../../../common/widgets/custom_textfield.dart';
 class MessageView extends StatefulWidget {
   final String chatId;
   final String receiverId;
-  final String receiverName;
+  final String receiverName; 
   final String receiverImage;
 
   const MessageView({

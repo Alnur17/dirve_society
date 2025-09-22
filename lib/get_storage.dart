@@ -34,4 +34,5 @@ class StorageUtil {
   static String profileCreatedAt = 'profile-created-at';
   static String profileAvgRating = 'profile-avg-rating';
   static String profileCoverPhoto = 'profile-cover-photo';
+  static String isPaid = 'profile-is-paid';
 }

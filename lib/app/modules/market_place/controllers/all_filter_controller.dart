@@ -1,13 +1,12 @@
-// ignore_for_file: avoid_print
-
-import 'package:dirve_society/app/modules/home/model/all_car_rating_model.dart';
+import 'package:dirve_society/app/modules/market_place/model/all_filter_model.dart';
+import 'package:dirve_society/app/modules/market_place/model/all_review_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class AllCarRatingController extends GetxController {
+class AllFilterController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
@@ -16,19 +15,13 @@ class AllCarRatingController extends GetxController {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  CarRatingModel? _carRatingModel;
-  List<CarRatingItemModel>? get carRatingList => _carRatingModel?.data;
+  AllFilterModel? _allReviewModel;
+  FilterData? get allReviewModel => _allReviewModel?.data;
 
+  final int _limit = 200;
+  int page = 0;
 
-  int? lastPage;
-
-  @override
-  void onInit() {
-    getAllCarRating();
-    super.onInit();
-  }
-
-  Future<bool> getAllCarRating() async {
+  Future<bool> getAllFilter(String contentId) async {
     if (_inProgress) {
       return false;
     }
@@ -36,13 +29,11 @@ class AllCarRatingController extends GetxController {
     bool isSuccess = false;
 
     _inProgress = true;
-    update(); 
+    update();
 
-    Map<String, dynamic> queryParams = {
-      'limit': 99999,
-    };
+    Map<String, dynamic> queryParams = {'limit': _limit, 'page': page};
     final NetworkResponse response = await networkCaller.getRequest(
-      Urls.carRatingUrl,
+      Urls.filterUrl,
       queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
@@ -51,7 +42,7 @@ class AllCarRatingController extends GetxController {
       _errorMessage = null;
       isSuccess = true;
 
-      _carRatingModel = CarRatingModel.fromJson(response.responseData);
+      _allReviewModel = AllFilterModel.fromJson(response.responseData);
 
       _errorMessage = null;
     } else {

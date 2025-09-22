@@ -7,7 +7,6 @@ import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/helper/market_place_widget.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../market_place/views/listing_details_view.dart';
-import '../controllers/my_garage_controller.dart';
 
 class MyFilterGarageView extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -88,10 +87,7 @@ class _MyFilterGarageViewState extends State<MyFilterGarageView> {
                         name: controller.myGarageList![index].brand ?? '',
                         price: controller.myGarageList![index].price.toString(),
                         date: dateFormatter.getFullDateFormat(),
-                        imageUrl:
-                            controller.myGarageList![index].images.isNotEmpty
-                                ? controller.myGarageList![index].images[0]
-                                : '',
+                        imageUrl: controller.myGarageList![index].banner ?? '',
                         onTap: () {
                           Get.to(() => ListingDetailsView(
                                 id: controller.myGarageList![index].id ?? '',

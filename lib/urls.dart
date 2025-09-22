@@ -45,6 +45,7 @@ class Urls {
   static const String subscriptionUrl = '$_baseUrl/subscriptions';
   static const String paymentCheckoutUrl = '$_baseUrl/payments/checkout';
   static const String addChatUrl = '$_baseUrl/chats';
+  static const String filterUrl = '$_baseUrl/cars/filters';
 
   static String getMarketPlaceUrlById(
     String id,

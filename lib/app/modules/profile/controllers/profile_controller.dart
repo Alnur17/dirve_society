@@ -54,6 +54,8 @@ class ProfileController extends GetxController {
           await StorageUtil.saveData(StorageUtil.profileName, profile.name);
         if (profile.email != null)
           await StorageUtil.saveData(StorageUtil.profileEmail, profile.email);
+          if (profile.email != null)
+          await StorageUtil.saveData(StorageUtil.isPaid, profile.isPremiumAccount);
         if (profile.photoUrl != null)
           await StorageUtil.saveData(
               StorageUtil.profilePhotoUrl, profile.photoUrl);

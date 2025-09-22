@@ -36,6 +36,7 @@ class ProfileData {
         required this.createdAt,
         required this.avgRating,
         required this.coverPhoto,
+        required this.isPremiumAccount,
     });
 
     final String? id;
@@ -44,12 +45,13 @@ class ProfileData {
     final String? photoUrl;
     final String? bio;
     final String? address;
-    final int? scores;
+    final dynamic scores;
     final String? status;
     final String? dataId;
     final DateTime? createdAt;
     final dynamic avgRating;
     final String? coverPhoto;
+    final bool? isPremiumAccount;
 
     factory ProfileData.fromJson(Map<String, dynamic> json){ 
         return ProfileData(
@@ -65,6 +67,7 @@ class ProfileData {
             createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
             avgRating: json["avgRating"],
             coverPhoto: json["coverPhoto"],
+            isPremiumAccount: json["isPremiumAccount"],
         );
     }
 

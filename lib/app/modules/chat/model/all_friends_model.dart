@@ -1,5 +1,5 @@
 class AllFriendsModel {
-  AllFriendsModel({
+  AllFriendsModel({ 
      this.success,
      this.message,
      this.data,

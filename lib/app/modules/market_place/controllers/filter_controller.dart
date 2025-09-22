@@ -1,6 +1,10 @@
 import 'package:get/get.dart';
+import '../controllers/all_filter_controller.dart';
 
 class FilterController extends GetxController {
+  final AllFilterController allFilterController =
+      Get.find<AllFilterController>();
+
   // Observable variables for single selection
   final minPrice = ''.obs;
   final maxPrice = ''.obs;
@@ -8,23 +12,50 @@ class FilterController extends GetxController {
   final selectedBrand = ''.obs;
   final selectedCondition = ''.obs;
   final selectedVehicleType = ''.obs;
-  final selectedYear = 0.obs;
+  final selectedYear = ''.obs; // Changed to String to match FilterData.year
   final selectedColor = ''.obs;
-  final selectedMileage = ''.obs;
+  final selectedMileage = 0.obs; // Kept as int to match FilterData.mileage
   final selectedTransmission = ''.obs;
   final selectedStore = ''.obs;
   final selectedRating = 0.obs;
 
-  // Data sources
-  final List<String> brands = ['Toyota', 'Honda', 'BMW', 'Jeep', 'Audi', 'Mazda', 'Nissan'];
-  final List<String> conditions = ['New', 'Used'];
-  final List<String> vehicleTypes = ['SUV', 'Sedan', 'Coupe', 'Hatchback', 'Van'];
-  final List<int> years = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
-  final List<String> colors = ['Black', 'White', 'Red'];
-  final List<String> mileages = ['10000', '20000', '30000', '40000'];
-  final List<String> transmissions = ['Automatic', 'Manual'];
-  final List<String> stores = ['TechHaven', 'Gadget Galaxy', 'TechTrends'];
-  final List<int> ratings = [1, 2, 3, 4, 5];
+  // Dynamic data sources
+  final RxList<String> brands = <String>[].obs;
+  final RxList<String> conditions = <String>[].obs;
+  final RxList<String> vehicleTypes =
+      <String>[].obs; // Assuming model is vehicleTypes
+  final RxList<String> years = <String>[].obs;
+  final RxList<String> colors = <String>[].obs;
+  final RxList<int> mileages = <int>[].obs;
+  final RxList<String> transmissions = <String>[].obs;
+  final RxList<String> stores =
+      <String>[].obs; // Static for now, update if API provides
+  final RxList<int> ratings = <int>[1, 2, 3, 4, 5].obs; // Static for now
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchFilterData();
+  }
+
+  // Fetch data from AllFilterController
+  Future<void> fetchFilterData() async {
+    final bool success = await allFilterController
+        .getAllFilter('some_content_id'); // Replace with actual contentId
+    if (success && allFilterController.allReviewModel != null) {
+      final filterData = allFilterController.allReviewModel!;
+      brands.assignAll(filterData.brand);
+      conditions.assignAll(filterData.condition);
+      vehicleTypes
+          .assignAll(filterData.model); // Assuming model maps to vehicleTypes
+      years.assignAll(filterData.year);
+      colors.assignAll(filterData.color);
+      mileages.assignAll(filterData.mileage);
+      transmissions.assignAll(filterData.transmission);
+      // If stores are provided by API, update here
+      // stores.assignAll(filterData.someStoreField ?? []);
+    }
+  }
 
   // Methods to set price
   void setMinPrice(String price) => minPrice.value = price;
@@ -39,27 +70,29 @@ class FilterController extends GetxController {
   }
 
   void selectCondition(String condition) {
-    selectedCondition.value = (selectedCondition.value == condition) ? '' : condition;
+    selectedCondition.value =
+        (selectedCondition.value == condition) ? '' : condition;
   }
 
   void selectVehicleType(String type) {
     selectedVehicleType.value = (selectedVehicleType.value == type) ? '' : type;
   }
 
-  void selectYear(int year) {
-    selectedYear.value = (selectedYear.value == year) ? 0 : year;
+  void selectYear(String year) {
+    selectedYear.value = (selectedYear.value == year) ? '' : year;
   }
 
   void selectColor(String color) {
     selectedColor.value = (selectedColor.value == color) ? '' : color;
   }
 
-  void selectMileage(String mileage) {
-    selectedMileage.value = (selectedMileage.value == mileage) ? '' : mileage;
+  void selectMileage(int mileage) {
+    selectedMileage.value = (selectedMileage.value == mileage) ? 0 : mileage;
   }
 
   void selectTransmission(String transmission) {
-    selectedTransmission.value = (selectedTransmission.value == transmission) ? '' : transmission;
+    selectedTransmission.value =
+        (selectedTransmission.value == transmission) ? '' : transmission;
   }
 
   void selectStore(String store) {
@@ -78,9 +111,9 @@ class FilterController extends GetxController {
     selectedBrand.value = '';
     selectedCondition.value = '';
     selectedVehicleType.value = '';
-    selectedYear.value = 0;
+    selectedYear.value = '';
     selectedColor.value = '';
-    selectedMileage.value = '';
+    selectedMileage.value = 0;
     selectedTransmission.value = '';
     selectedStore.value = '';
     selectedRating.value = 0;
@@ -89,16 +122,24 @@ class FilterController extends GetxController {
   // Return selected filters as a map
   Map<String, dynamic> getSelectedFilters() {
     final filters = <String, dynamic>{};
-    if (minPrice.value.isNotEmpty) filters['Min Price'] = minPrice.value;
-    if (maxPrice.value.isNotEmpty) filters['Max Price'] = maxPrice.value;
-    if (selectedRange.value.isNotEmpty) filters['Selected Range'] = selectedRange.value;
+    if (minPrice.value.isNotEmpty && maxPrice.value.isNotEmpty) {
+      filters['priceRange'] = '$minPrice-$maxPrice';
+    }
     if (selectedBrand.value.isNotEmpty) filters['Brands'] = selectedBrand.value;
-    if (selectedCondition.value.isNotEmpty) filters['Condition'] = selectedCondition.value;
-    if (selectedVehicleType.value.isNotEmpty) filters['Vehicle Type'] = selectedVehicleType.value;
-    if (selectedYear.value != 0) filters['Year'] = selectedYear.value;
-    if (selectedColor.value.isNotEmpty) filters['Colours'] = selectedColor.value;
-    if (selectedMileage.value.isNotEmpty) filters['Mileage'] = selectedMileage.value;
-    if (selectedTransmission.value.isNotEmpty) filters['Transmission'] = selectedTransmission.value;
+    if (selectedCondition.value.isNotEmpty) {
+      filters['Condition'] = selectedCondition.value;
+    }
+    if (selectedVehicleType.value.isNotEmpty) {
+      filters['Vehicle Type'] = selectedVehicleType.value;
+    }
+    if (selectedYear.value.isNotEmpty) filters['Year'] = selectedYear.value;
+    if (selectedColor.value.isNotEmpty) {
+      filters['Colours'] = selectedColor.value;
+    }
+    if (selectedMileage.value != 0) filters['Mileage'] = selectedMileage.value;
+    if (selectedTransmission.value.isNotEmpty) {
+      filters['Transmission'] = selectedTransmission.value;
+    }
     if (selectedStore.value.isNotEmpty) filters['Store'] = selectedStore.value;
     if (selectedRating.value != 0) filters['Reviews'] = selectedRating.value;
     return filters;

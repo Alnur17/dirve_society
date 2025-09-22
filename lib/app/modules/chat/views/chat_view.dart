@@ -20,7 +20,7 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  final SocketService socketService = Get.put(SocketService());
+  final SocketService socketService = Get.put(SocketService()); 
   final FriendController friendController = Get.put(FriendController());
   final TextEditingController searchCtrl = TextEditingController();
   String search = '';
