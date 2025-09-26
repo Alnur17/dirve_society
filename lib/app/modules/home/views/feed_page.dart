@@ -16,6 +16,8 @@ import 'package:dirve_society/common/helper/post_card.dart';
 import 'package:dirve_society/common/helper/story_widget.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
+import 'package:dirve_society/common/widgets/circle_shimmer_widget.dart';
+import 'package:dirve_society/common/widgets/feed_shimmer.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -81,7 +83,7 @@ class _FeedPageState extends State<FeedPage> {
         print('Current likes: $currentLikes');
         allFeedController.updatePostLike(postId, true, currentLikes + 1);
         if (mounted) {
-          showSnackBarMessage(context, 'Like successfully completed');
+          //  showSnackBarMessage(context, 'Like successfully completed');
         }
       } else {
         print('Post not found for ID: $postId');
@@ -108,7 +110,7 @@ class _FeedPageState extends State<FeedPage> {
         allFeedController.updatePostLike(
             postId, false, currentLikes > 0 ? currentLikes - 1 : 0);
         if (mounted) {
-          showSnackBarMessage(context, 'Dislike successfully completed');
+          // showSnackBarMessage(context, 'Dislike successfully completed');
         }
       } else {
         print('Post not found for ID: $postId');
@@ -128,7 +130,7 @@ class _FeedPageState extends State<FeedPage> {
     if (isSuccess) {
       allFeedController.updatePostSave(contentId, true);
       if (mounted) {
-        showSnackBarMessage(context, 'Post saved successfully');
+        // showSnackBarMessage(context, 'Post saved successfully');
       }
     } else {
       if (mounted) {
@@ -145,7 +147,7 @@ class _FeedPageState extends State<FeedPage> {
     if (isSuccess) {
       allFeedController.updatePostUnSave(postId, false);
       if (mounted) {
-        showSnackBarMessage(context, 'Post unsaved successfully');
+        // showSnackBarMessage(context, 'Post unsaved successfully');
       }
     } else {
       if (mounted) {
@@ -161,107 +163,114 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GetBuilder<AllStoryController>(builder: (controller) {
-          if (controller.inProgress) {
-            return Center(child: CircularProgressIndicator());
-          }
-          return Container(
-            color: Colors.transparent,
-            height: 90,
-            width: double.infinity,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Stack(
-                        children: [
-                          CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(StorageUtil.getData(
-                                  StorageUtil.profilePhotoUrl))),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: GestureDetector(
-                              onTap: () {
-                                Get.to(() => const AddStoryScreen());
-                              },
-                              child: CircleAvatar(
-                                radius: 10,
-                                backgroundColor: Colors.black,
-                                child: Icon(
-                                  Icons.add,
-                                  size: 12,
-                                  color: Colors.white,
-                                ),
+        Container(
+          color: Colors.transparent,
+          height: 90,
+          width: double.infinity,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: StorageUtil.getData(
+                                      StorageUtil.profilePhotoUrl) !=
+                                  null
+                              ? NetworkImage(StorageUtil.getData(
+                                  StorageUtil.profilePhotoUrl))
+                              : AssetImage(AppImages.carImageThree),
+                        ),
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.to(() => const AddStoryScreen());
+                            },
+                            child: CircleAvatar(
+                              radius: 10,
+                              backgroundColor: Colors.black,
+                              child: Icon(
+                                Icons.add,
+                                size: 12,
+                                color: Colors.white,
                               ),
                             ),
-                          )
-                        ],
-                      ),
-                      Text(
-                        'My Story',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600),
-                      )
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.storData?.length,
-                    itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.only(),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          StoryWidget(
-                            ontap: () {
-                              Get.to(() => StoryScreen(
-                                    userId: controller
-                                            .storData![index].user?.userId ??
-                                        '',
-                                  ));
-                            },
-                            image: controller.storData![index].user?.stories
-                                    .last.content ??
-                                '',
                           ),
-                          Text(
-                            controller.storData![index].user?.name ?? '',
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
-                          )
-                        ],
+                        )
+                      ],
+                    ),
+                    Text(
+                      'My Story',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    )
+                  ],
+                ),
+              ),
+              GetBuilder<AllStoryController>(builder: (controller) {
+                if (controller.inProgress) {
+                  return CircleItemShimmerEffectWidget();
+                } else if (controller.storData == null ||
+                    controller.storData!.isEmpty) {
+                  return SizedBox(height: 40, child: Center(child: Text('')));
+                } else {
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.storData?.length,
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.only(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            StoryWidget(
+                              ontap: () {
+                                Get.to(() => StoryScreen(
+                                      userId: controller
+                                              .storData![index].user?.userId ??
+                                          '',
+                                    ));
+                              },
+                              image: controller.storData![index].user?.stories
+                                      .last.content ??
+                                  '',
+                            ),
+                            Text(
+                              controller.storData![index].user?.name ?? '',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }),
+                  );
+                }
+              }),
+            ],
+          ),
+        ),
         sh12,
         Expanded(
           child: Obx(() {
             print(
                 'Obx rebuild triggered with postList length: ${allFeedController.postList.length}');
             if (allFeedController.inProgress && allFeedController.page == 1) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return FeedItemShimmerEffectWidget();
             }
             if (allFeedController.postList.isEmpty) {
               return const Center(
@@ -278,7 +287,7 @@ class _FeedPageState extends State<FeedPage> {
               itemBuilder: (context, index) {
                 final feed = allFeedController.postList[index];
                 final dateFormatter =
-                    DateFormatter(feed.createdAt ?? DateTime.now()); 
+                    DateFormatter(feed.createdAt ?? DateTime.now());
                 return feed.isHide == false
                     ? PostCard(
                         profileImage: feed.author?.photoUrl ?? '',
@@ -298,7 +307,7 @@ class _FeedPageState extends State<FeedPage> {
                         },
                         onMenuTap: () {
                           // Implement menu/bottom sheet (implement as needed)
-                        },
+                        }, 
                         onLikeTap: () {
                           print(
                               'Like tapped for post ID: ${feed.contentMeta?.id}');

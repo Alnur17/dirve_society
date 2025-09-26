@@ -38,7 +38,7 @@ class MyJoiningClubController extends GetxController {
 
     Map<String, dynamic> queryParams = {'limit': 99999, 'status': status};
     final NetworkResponse response = await networkCaller.getRequest(
-      Urls.discoverClubUrl,
+      Urls.myjoiningClub,
       queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
@@ -46,7 +46,8 @@ class MyJoiningClubController extends GetxController {
     if (response.isSuccess) {
       _errorMessage = null;
       isSuccess = true;
-
+      print('Response roken');
+      print(response.responseData);
       _myJoiningClubModel = MyJoiningClubModel.fromJson(response.responseData);
 
       _errorMessage = null;

@@ -63,7 +63,21 @@ class _SavedViewState extends State<SavedView> {
           ),
           GetBuilder<MyFavouriteController>(builder: (controller) {
             if (controller.inProgress) {
-              return const Center(child: CircularProgressIndicator());
+              return SizedBox(
+                height: 500,
+                child: const Center(child: CircularProgressIndicator()));
+            }
+            if (controller.myFavouriteList == null ||
+                controller.myFavouriteList!.isEmpty) {
+              return SizedBox(
+                height: 500,
+                child: Center(
+                  child: Text(
+                    'No Saved Posts',
+                    style: h4.copyWith(color: AppColors.black),
+                  ),
+                ),
+              );
             }
             return Expanded(
               child: Padding(

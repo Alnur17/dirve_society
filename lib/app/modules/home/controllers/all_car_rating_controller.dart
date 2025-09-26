@@ -36,7 +36,7 @@ class AllCarRatingController extends GetxController {
     bool isSuccess = false;
 
     _inProgress = true;
-    update();
+    update(); 
 
     Map<String, dynamic> queryParams = {
       'limit': 99999,

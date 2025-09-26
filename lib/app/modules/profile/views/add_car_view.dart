@@ -4,7 +4,6 @@ import 'package:dirve_society/app/modules/profile/controllers/add_car_controller
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/common/widgets/image_picker.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 import '../../../../common/app_color/app_colors.dart';
@@ -31,6 +30,10 @@ class _AddCarViewState extends State<AddCarView> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController transmissionController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController conditionController = TextEditingController();
+  final TextEditingController colorController = TextEditingController();
+  final TextEditingController yearController = TextEditingController();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final AddCarController addCarController = Get.put(AddCarController());
 
@@ -76,6 +79,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
+                  onChange: (String value) {},
                   hintText: 'Enter your car brand name',
                   controller: brandController,
                 ),
@@ -86,6 +90,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
+                  onChange: (String value) {},
                   hintText: 'Enter your car model name',
                   controller: modelController,
                 ),
@@ -96,6 +101,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
+                  onChange: (String value) {},
                   hintText: 'Enter mileage (e.g., 4)',
                   controller: mileageController,
                 ),
@@ -182,8 +188,69 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
-                  hintText: '\$4000',
+                  onChange: (String value) {},
+                  hintText: 'Enter selling price',
                   controller: priceController,
+                ),
+                sh16,
+                Text(
+                  'Year',
+                  style: h5,
+                ),
+                sh8,
+                CustomTextField(
+                  onChange: (String value) {},
+                  hintText: 'year',
+                  controller: yearController,
+                ),
+                sh16,
+                Text(
+                  'Condition',
+                  style: h5,
+                ),
+                sh8,
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                  ),
+                  value: conditionController.text.isEmpty
+                      ? 'New'
+                      : conditionController.text,
+                  items: ['New', 'Used']
+                      .map((String value) => DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          ))
+                      .toList(),
+                  onChanged: (newValue) {
+                    if (newValue != null) {
+                      conditionController.text = newValue;
+                    }
+                  },
+                ),
+                sh16,
+                Text(
+                  'Color',
+                  style: h5,
+                ),
+                sh8,
+                CustomTextField(
+                  onChange: (String value) {},
+                  hintText: 'Color',
+                  controller: colorController,
                 ),
                 sh16,
                 Text(
@@ -192,6 +259,7 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 CustomTextField(
+                  onChange: (String value) {},
                   height: 120,
                   hintText:
                       'Describe your car so people know what it\'s about.',
@@ -199,23 +267,30 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh16,
                 Text(
-                  'Car Photo',
+                  'Car cover Photo',
                   style: h5,
                 ),
                 sh8,
                 UploadWidget(
                   onTap: () {
                     _imagePickerHelper.showAlertDialog(context,
-                        (File pickedImage) {
-                      setState(() {
-                        bannerImage = pickedImage;
-                      });
+                        (File? pickedImage) {
+                      if (pickedImage != null) {
+                        setState(() {
+                          bannerImage = pickedImage;
+                        });
+                      }
                     });
                   },
                   imagePath: AppImages.upload,
                   imageFile: bannerImage,
                   label: 'Upload',
                   iconSize: 48,
+                ),
+                sh8,
+                Text(
+                  'Car Photos',
+                  style: h5,
                 ),
                 sh8,
                 Row(
@@ -226,10 +301,12 @@ class _AddCarViewState extends State<AddCarView> {
                       width: 100,
                       onTap: () {
                         _imagePickerHelper.showAlertDialog(context,
-                            (File pickedImage) {
-                          setState(() {
-                            carImages[0] = pickedImage;
-                          });
+                            (File? pickedImage) {
+                          if (pickedImage != null) {
+                            setState(() {
+                              carImages[0] = pickedImage;
+                            });
+                          }
                         });
                       },
                       imagePath: AppImages.add,
@@ -242,10 +319,12 @@ class _AddCarViewState extends State<AddCarView> {
                       width: 100,
                       onTap: () {
                         _imagePickerHelper.showAlertDialog(context,
-                            (File pickedImage) {
-                          setState(() {
-                            carImages[1] = pickedImage;
-                          });
+                            (File? pickedImage) {
+                          if (pickedImage != null) {
+                            setState(() {
+                              carImages[1] = pickedImage;
+                            });
+                          }
                         });
                       },
                       imagePath: AppImages.add,
@@ -258,10 +337,12 @@ class _AddCarViewState extends State<AddCarView> {
                       width: 100,
                       onTap: () {
                         _imagePickerHelper.showAlertDialog(context,
-                            (File pickedImage) {
-                          setState(() {
-                            carImages[2] = pickedImage;
-                          });
+                            (File? pickedImage) {
+                          if (pickedImage != null) {
+                            setState(() {
+                              carImages[2] = pickedImage;
+                            });
+                          }
                         });
                       },
                       imagePath: AppImages.add,
@@ -284,11 +365,14 @@ class _AddCarViewState extends State<AddCarView> {
           right: 20,
           bottom: 20,
         ),
-        child: CustomButton(
-          text: 'Create',
-          onPressed: () {
-            createCar();
-          },
+        child: Obx(
+          () => CustomButton(
+            text: 'Create',
+            isLoading: addCarController.inProgress,
+            onPressedAsync: () async {
+              await createCar();
+            },
+          ),
         ),
       ),
     );
@@ -296,21 +380,38 @@ class _AddCarViewState extends State<AddCarView> {
 
   Future<void> createCar() async {
     if (formKey.currentState!.validate()) {
+      // Validate and parse numeric fields
+      int mileage = int.tryParse(mileageController.text.trim()) ?? 0;
+      int price =
+          int.tryParse(priceController.text.trim().replaceAll(r'$', '')) ?? 0;
+      int year = int.tryParse(yearController.text.trim()) ?? 0;
+
+      if (mileage <= 0 || price <= 0 || year <= 0) {
+        showSnackBarMessage(
+            context,
+            'Please enter valid numeric values for Mileage, Price, and Year.',
+            true);
+        return;
+      }
+
       final bool isSuccess = await addCarController.addCar(
         brandController.text,
         modelController.text,
-        int.parse(mileageController.text),
+        mileage,
         fuelTypeController.text,
         transmissionController.text,
         descriptionController.text,
-        int.parse(priceController.text),
-        carImages, // Pass the list of images (Front, Side, Sole)
-        cover: bannerImage, // Pass the main banner image
+        price,
+        conditionController.text,
+        colorController.text,
+        year,
+        carImages,
+        cover: bannerImage,
       );
 
       if (isSuccess) {
         if (mounted) {
-          showSnackBarMessage(context, 'Car added successfully');
+          // showSnackBarMessage(context, 'Car added successfully');
           Get.back();
         }
       } else {

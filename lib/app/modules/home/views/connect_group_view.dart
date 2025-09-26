@@ -75,17 +75,32 @@ class _ConnectGroupViewState extends State<ConnectGroupView> {
                       child: SizedBox(
                           width: 200, // Ensure UserCard respects this width
                           child: GroupCard(
-                            isOneButton: true,
-                            acceptButton: () {},
+                            isOneButton: false,
+                            acceptButton: () {
+                              changeConnectionRequest(
+                                  contentId:
+                                      controller.myJoiningClubList![index].id ??
+                                          '',
+                                  status: 'approved');
+                            },
                             joinClubBtuton: () {},
-                            rejectedButton: () {},
+                            rejectedButton: () {
+                              changeConnectionRequest(
+                                  contentId:
+                                      controller.myJoiningClubList![index].id ??
+                                          '',
+                                  status: 'rejected');
+                            },
                             imageUrl: controller.myJoiningClubList![index]
                                     .reference?.profilePhoto ??
                                 '',
                             title: controller.myJoiningClubList![index]
                                     .reference?.name ??
                                 '',
-                            memberCount: '10.1K Members',
+                            memberCount: controller
+                                    .myJoiningClubList![index].reference?.member
+                                    .toString() ??
+                                '',
                             isPublic: true,
                             isJoined: true,
                           )),

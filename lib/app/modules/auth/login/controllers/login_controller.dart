@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 class LoginController extends GetxController {
   // final OtpVerifyController otpVerifyController = OtpVerifyController();
-  final NetworkCaller networkCaller = Get.put(NetworkCaller());
+  final NetworkCaller networkCaller = Get.put(NetworkCaller()); 
 
   final RxBool _inProgress = false.obs;
   bool get inProgress => _inProgress.value;
@@ -48,7 +48,7 @@ class LoginController extends GetxController {
       print('Response roken');
       print(response.responseData['data']['accessToken']);
       StorageUtil.saveData(
-        StorageUtil.userAccessToken,
+        StorageUtil.userAccessToken, 
         response.responseData['data']['accessToken'],
       );
   

@@ -12,7 +12,7 @@ class ConnectView extends StatefulWidget {
 
   @override
   State<ConnectView> createState() => _ConnectViewState();
-}
+} 
 
 class _ConnectViewState extends State<ConnectView> {
   final ConnectController controller = Get.put(ConnectController());

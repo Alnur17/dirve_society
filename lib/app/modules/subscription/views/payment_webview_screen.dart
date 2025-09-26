@@ -8,14 +8,12 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentView extends StatefulWidget {
   final Map<String, dynamic> paymentData;
-  final String? paymentUrl;
 
   static const String routeName = '/payment-webview-screen';
 
   const PaymentView({
     super.key,
     required this.paymentData,
-    this.paymentUrl,
   });
 
   @override
@@ -23,16 +21,12 @@ class PaymentView extends StatefulWidget {
 }
 
 class _PaymentViewState extends State<PaymentView> {
-  // ignore: unused_field
   late WebViewController _controller;
   final ConfirmedPaymentController confirmedPaymentController =
       ConfirmedPaymentController();
   final PaymentURLController paymentURLController = PaymentURLController();
 
-  // final SubscriptionPlanController subscriptionPlanController =
-  //     Get.put(SubscriptionPlanController());
-
-      @override
+  @override
   void initState() {
     super.initState();
     _controller = WebViewController()
@@ -43,18 +37,22 @@ class _PaymentViewState extends State<PaymentView> {
           onPageStarted: (String url) {
             debugPrint('Page start loading: $url');
           },
-          onPageFinished: (String url) {
+          onPageFinished: (String url) async {
             debugPrint('Page finished loading: $url');
-            if (url.contains("verify-session-for")) {
-              // subscriptionPlanController.paymentResults(paymentLink: url);
+            if (url.contains("confirm-payment")) {
+              debugPrint('Confirmed payment hoye geche............................');
+              final bool isSuccess = await paymentURLController.paymentUrl(url);
+              if (isSuccess) {
+                await confirmPayment('${widget.paymentData['reference']}');
+                Navigator.pushNamed(context, '/payment-success-screen'); // Adjust route name if needed
+              }
               debugPrint('::::::::::::: if condition ::::::::::::::::');
             }
           },
         ),
       )
-      ..loadRequest(Uri.parse(widget.paymentUrl ?? ''));
+      ..loadRequest(Uri.parse(widget.paymentData['link'] ?? ''));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +63,10 @@ class _PaymentViewState extends State<PaymentView> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 18),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); 
           },
         ),
-        title: Text('Payment', style: titleStyle), // Updated to use translation
+        title: Text('Payment', style: titleStyle),
         centerTitle: true,
       ),
       body: WebViewWidget(controller: _controller),
@@ -80,15 +78,10 @@ class _PaymentViewState extends State<PaymentView> {
         await confirmedPaymentController.confirmPaymentfunction(reference);
     if (isSuccess) {
       if (mounted) {
-      } else {
-        if (mounted) {
-          showSnackBarMessage(
-              context, confirmedPaymentController.errorMessage!, true);
-        }
+        // Success handling can be added here if needed
       }
     } else {
       if (mounted) {
-        // print('Error show ----------------------------------');
         showSnackBarMessage(context,
             confirmedPaymentController.errorMessage ?? 'Ekhanei problem', true);
       }

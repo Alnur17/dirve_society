@@ -98,6 +98,7 @@ class _CreateReviewScreenState extends State<CreateReviewScreen> {
                 child: CustomTextField(
                   controller: _reviewController,
                   hintText: 'Type your review here',
+                  onChange: (String value) {},
                 ),
               ),
               sh16,
@@ -129,18 +130,14 @@ class _CreateReviewScreenState extends State<CreateReviewScreen> {
                 }),
               ),
               sh30,
-              GetBuilder<CreateReviewController>(
-                builder: (controller) {
-                  return CustomButton(
-                    text: controller.inProgress
-                        ? 'Submitting...'
-                        : 'Submit Review',
-                    onPressedAsync: controller.inProgress
-                        ? null
-                        : _submitReview, // Use async callback
-                    isLoading: controller.inProgress,
-                  );
-                },
+              Obx(
+                () => CustomButton(
+                  text: 'Submit Review',
+                  isLoading: _createReviewController.inProgress,
+                  onPressedAsync: () async {
+                    await _submitReview();
+                  },
+                ),
               ),
             ],
           ),

@@ -3,6 +3,7 @@
 import 'package:dirve_society/app/modules/chat/views/chat_view.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/connect_view.dart';
 import 'package:dirve_society/app/modules/home/views/tab_feed.dart';
+import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
@@ -29,7 +30,10 @@ class _HomeViewState extends State<HomeView> {
           child: CircleAvatar(
             radius: 25,
             backgroundColor: AppColors.white,
-            backgroundImage: const AssetImage(AppImages.carImage),
+            backgroundImage: StorageUtil.getData(StorageUtil.profilePhotoUrl) !=
+                    null
+                ? NetworkImage(StorageUtil.getData(StorageUtil.profilePhotoUrl))
+                : AssetImage(AppImages.carImageThree),
           ),
         ),
         automaticallyImplyLeading: false,
@@ -51,7 +55,7 @@ class _HomeViewState extends State<HomeView> {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8), 
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: AppColors.silver),
               ),
               child: Image.asset(

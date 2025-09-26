@@ -11,7 +11,6 @@ import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../../../common/widgets/custom_circular_container.dart';
-import '../../../../common/widgets/custom_textfield.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView({super.key});
@@ -21,7 +20,7 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  final SocketService socketService = Get.put(SocketService());
+  final SocketService socketService = Get.put(SocketService()); 
   final FriendController friendController = Get.put(FriendController());
   final TextEditingController searchCtrl = TextEditingController();
   String search = '';
@@ -142,31 +141,47 @@ class _ChatViewState extends State<ChatView> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          sh16,
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: CustomTextField(
-              controller: searchCtrl,
-              preIcon: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  AppImages.search,
-                  scale: 4,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus(); // Dismiss keyboard on tap
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            sh16,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                height: 48,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(color: AppColors.borderColor),
+                  color: Colors.white,
+                ),
+                child: TextFormField(
+                  controller: searchCtrl,
+                  decoration: const InputDecoration(
+                    hintText: 'Search...',
+                    border: InputBorder.none,
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: AppColors.grey,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      search = value; // Update search query
+                    });
+                  },
                 ),
               ),
-              hintText: 'Search here..',
-              borderRadius: 30,
-              
             ),
-          ),
-          sh16,
-          Expanded(
-            child: ChatList(search: search),
-          ),
-        ],
+            sh16,
+            Expanded(
+              child: ChatList(search: search),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -199,8 +214,13 @@ class ChatList extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Image.asset(
+                AppImages.search,
+                height: 80,
+                width: 95,
+              ),
               Text(
-                'No results for "${search.isEmpty ? 'Friends' : search}"',
+                'No results for "${search.isEmpty ? 'Chats' : search}"',
                 style: h4.copyWith(
                   fontWeight: FontWeight.w600,
                   color: AppColors.white,
@@ -210,7 +230,7 @@ class ChatList extends StatelessWidget {
               Text(
                 'We couldn’t find any matching chats. Please refine your search or check back later.',
                 style: h6.copyWith(
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
                 textAlign: TextAlign.center,
               ),

@@ -1,4 +1,3 @@
-import 'package:dirve_society/app/modules/auth/forgot_password/views/forgot_password_view.dart';
 import 'package:dirve_society/app/modules/profile/controllers/change_password_controller.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +55,7 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
             children: [
               sh30,
               CustomTextField(
+                onChange: (String value) {},
                 controller: oldPassworfController,
                 hintText: 'Current Password',
                 sufIcon: Image.asset(
@@ -65,6 +65,7 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
               ),
               sh16,
               CustomTextField(
+                onChange: (String value) {},
                 controller: newPasswordController,
                 hintText: 'New Password',
                 sufIcon: Image.asset(
@@ -74,6 +75,7 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
               ),
               sh16,
               CustomTextField(
+                onChange: (String value) {},
                 controller: newPasswordController,
                 hintText: 'Confirm New Password',
                 sufIcon: Image.asset(
@@ -82,22 +84,26 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
                 ),
               ),
               sh16,
-              GestureDetector(
-                onTap: () {
-                  Get.to(() => ForgotPasswordView());
-                },
-                child: Text(
-                  'Forgot the password?',
-                  style: h5.copyWith(color: AppColors.darkRed),
+              // GestureDetector(
+              //   onTap: () {
+              //     Get.to(() => ForgotPasswordView());
+              //   },
+              //   child: Text(
+              //     'Forgot the password?',
+              //     style: h5.copyWith(color: AppColors.darkRed),
+              //   ),
+              // ),
+              // sh30,
+              Obx(
+                () => CustomButton(
+                  text: 'Confirm',
+                  isLoading: changePasswordController.inProgress,
+                  onPressedAsync: () async {
+                    await changePassword(
+                        oldPassworfController.text, newPasswordController.text);
+                  },
                 ),
               ),
-              sh30,
-              CustomButton(
-                  text: 'Confirm',
-                  onPressed: () {
-                    changePassword(
-                        oldPassworfController.text, newPasswordController.text);
-                  }),
             ],
           ),
         ),

@@ -72,6 +72,7 @@ class _CreateForumViewState extends State<CreateForumView> {
                 ),
                 sh8,
                 CustomTextField(
+                  onChange: (String value) {},
                   controller: titleController,
                   hintText: 'Enter title',
                 ),
@@ -82,7 +83,7 @@ class _CreateForumViewState extends State<CreateForumView> {
                 ),
                 sh8,
                 CustomTextField(
-                  maxline: 5,
+                  onChange: (String value) {},
                   controller: descriptionController,
                   hintText: 'Describe about your club',
                 ),
@@ -99,11 +100,14 @@ class _CreateForumViewState extends State<CreateForumView> {
           right: 20,
           bottom: 20,
         ),
-        child: CustomButton(
-          text: 'Create',
-          onPressed: () {
-            createForum();
-          },
+        child: Obx(
+          () => CustomButton(
+            text: 'Cerate Forum',
+            isLoading: createForumController.inProgress,
+            onPressedAsync: () async {
+              await createForum();
+            },
+          ),
         ),
       ),
     );
@@ -117,13 +121,12 @@ class _CreateForumViewState extends State<CreateForumView> {
           widget.clubId ?? '');
 
       if (isSuccess) {
-        if (mounted) {
-          await allClubForumController.getAllClubForum(widget.clubId ?? '');
-          await Get.to(() => ClubView(
-                authorId: widget.authorId ?? '',
-                id: widget.clubId ?? '',
-              ));
-        }
+        await allClubForumController.getAllClubForum(widget.clubId ?? '');
+        await Get.to(() => ClubView(
+              isAuthor: true,
+              authorId: widget.authorId ?? '',
+              id: widget.clubId ?? '',
+            ));
       } else {
         if (mounted) {
           showSnackBarMessage(

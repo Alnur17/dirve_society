@@ -9,13 +9,14 @@ class CustomTextField extends StatefulWidget {
   final TextStyle? hintTextStyle;
   final Widget? sufIcon;
   final Widget? preIcon;
-  final ValueChanged<String>? onChange;
+  final ValueChanged<String>? onChanged; // Changed to match naming convention
   final double borderRadius;
   final Color? containerColor;
   final Color? borderColor;
   final bool isPassword;
   final Color? textColor;
-  final int? maxline;
+  final int? maxLines; // Corrected naming to match common usage
+  final TextInputType? keyboardType; // Added to allow custom keyboard types
 
   const CustomTextField({
     super.key,
@@ -25,13 +26,14 @@ class CustomTextField extends StatefulWidget {
     this.hintTextStyle,
     this.sufIcon,
     this.preIcon,
-    this.onChange,
+    this.onChanged ,
     this.borderRadius = 12,
     this.containerColor,
     this.borderColor,
     this.isPassword = false,
     this.textColor,
-    this.maxline = 1,
+    this.maxLines = 1,
+    this.keyboardType, required ValueChanged<String> onChange,
   });
 
   @override
@@ -47,8 +49,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _obscureText = widget.isPassword;
   }
 
-  @override
-  Widget build(BuildContext context) {
+  @override   Widget build(BuildContext context) {
     return Container(
       height: widget.height,
       decoration: BoxDecoration(
@@ -58,20 +59,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
       ),
       child: TextField(
         textInputAction: TextInputAction.done,
-        onChanged: widget.onChange,
+        onChanged: widget.onChanged,
         controller: widget.controller,
-        maxLines: widget.maxline,
-        keyboardType: widget.isPassword
+        maxLines: widget.maxLines,
+        keyboardType: widget.keyboardType ?? (widget.isPassword
             ? TextInputType.text
-            : TextInputType.multiline, // No multiline for password
+            : TextInputType.text), // Default to number for price input
         obscureText: widget.isPassword ? _obscureText : false,
         style: TextStyle(color: widget.textColor ?? AppColors.black),
         decoration: InputDecoration(
           hintText: widget.hintText ?? '',
-          hintStyle:
-              widget.hintTextStyle ?? h5.copyWith(color: AppColors.black),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          hintStyle: widget.hintTextStyle ?? h5.copyWith(color: AppColors.black),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           prefixIcon: widget.preIcon,
           suffixIcon: widget.isPassword
               ? IconButton(

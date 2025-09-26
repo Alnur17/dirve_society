@@ -47,7 +47,7 @@ final h7 = GoogleFonts.roboto(
 
 final titleStyle = GoogleFonts.roboto(
   color: AppColors.black,
-  fontWeight: FontWeight.w600,
+  fontWeight: FontWeight.w600, 
   fontSize: 18,
 );
 

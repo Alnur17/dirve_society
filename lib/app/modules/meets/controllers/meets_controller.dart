@@ -1,11 +1,4 @@
 
-// import 'package:get/get.dart';
-
-// class MeetsController extends GetxController {
-
-// }
-
-
 import 'package:dirve_society/app/modules/meets/controllers/all_meet_controller.dart';
 import 'package:dirve_society/app/modules/meets/controllers/meet_controller.dart';
 import 'package:flutter/material.dart';

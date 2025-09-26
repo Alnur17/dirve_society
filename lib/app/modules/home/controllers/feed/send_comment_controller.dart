@@ -5,8 +5,8 @@ import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
 class SendCommentController extends GetxController {
-  bool _inProgress = false;
-  bool get inProgress => _inProgress;
+  var _inProgress = false.obs; // Changed to RxBool
+  bool get inProgress => _inProgress.value; // Updated getter to use .value
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
@@ -16,13 +16,17 @@ class SendCommentController extends GetxController {
 
   Future<bool> sendComment(String userId, String modelType, String contentId,
       String comment, bool isReply, String? replyRef) async {
+    if (_inProgress.value) { // Updated to use .value
+      return false;
+    }
+
     bool isSuccess = false;
 
-    _inProgress = true;
+    _inProgress.value = true; // Updated to use .value
     update();
-    Map<String, dynamic> requestBody;
 
-    {}
+    Map<String, dynamic> requestBody = {};
+
     print('reply reference : $replyRef');
     if (replyRef == null || replyRef.isEmpty) {
       requestBody = {
@@ -54,7 +58,7 @@ class SendCommentController extends GetxController {
       _errorMessage = response.errorMessage;
     }
 
-    _inProgress = false;
+    _inProgress.value = false; // Updated to use .value
     update();
     return isSuccess;
   }

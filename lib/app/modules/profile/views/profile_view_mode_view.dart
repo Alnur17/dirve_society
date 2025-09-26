@@ -124,7 +124,7 @@ class ProfileViewModeView extends GetView {
                       ),
                       child: Center(
                         child: Text(
-                          '190 Points',
+                          ' Points',
                           style: h6,
                         ),
                       ),

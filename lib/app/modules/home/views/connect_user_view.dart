@@ -1,8 +1,9 @@
+import 'package:dirve_society/app/modules/chat/controllers/add_chat_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/all_connection_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/add_connection_request_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/change_connection_status_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/people_may_know_controller.dart';
-import 'package:dirve_society/app/modules/profile/views/profile_view_mode_view.dart';
+import 'package:dirve_society/app/modules/profile/others/views/others_profile_screen.dart';
 import 'package:dirve_society/common/helper/user_card.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/get_storage.dart';
@@ -30,6 +31,8 @@ class _ConnectUserViewState extends State<ConnectUserView> {
 
   final ChangeConnectionStatusController changeConnectionStatusController =
       Get.put(ChangeConnectionStatusController());
+
+  final AddChatController addChatController = Get.put(AddChatController());
 
   @override
   void initState() {
@@ -89,9 +92,19 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                                     .reference?.name ??
                                 '',
                             rating: controller.allPendingConnectionList![index]
-                                    .reference?.ratingCount
-                                    .toString() ??
-                                '',
+                                        .reference!.ratingCount ==
+                                    null
+                                ? 0.0.toString()
+                                : controller.allPendingConnectionList![index]
+                                            .reference?.ratingCount ==
+                                        0
+                                    ? 0.0.toString()
+                                    : controller
+                                            .allPendingConnectionList![index]
+                                            .reference
+                                            ?.ratingCount!
+                                            .toString() ??
+                                        '',
                             description: controller
                                     .allPendingConnectionList![index]
                                     .reference
@@ -100,6 +113,11 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                             isAdded: true,
                             acceptButton: () {
                               changeConnectionRequest(
+                                  userId: controller
+                                          .allPendingConnectionList![index]
+                                          .reference!
+                                          .id ??
+                                      '',
                                   contentId: controller
                                           .allPendingConnectionList![index]
                                           .id ??
@@ -109,6 +127,11 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                             addFriendButton: () {},
                             rejectedButton: () {
                               changeConnectionRequest(
+                                  userId: controller
+                                          .allPendingConnectionList![index]
+                                          .reference!
+                                          .id ??
+                                      '',
                                   contentId: controller
                                           .allPendingConnectionList![index]
                                           .id ??
@@ -116,7 +139,13 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                                   status: 'rejected');
                             },
                             onUserDetails: () {
-                              Get.to(() => ProfileViewModeView());
+                              Get.to(() => OthersProfileView(
+                                    authorId: controller
+                                            .allPendingConnectionList![index]
+                                            .reference!
+                                            .id ??
+                                        '',
+                                  ));
                             },
                           ),
                         ),
@@ -187,7 +216,11 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                             },
                             rejectedButton: () {},
                             onUserDetails: () {
-                              Get.to(() => ProfileViewModeView());
+                              Get.to(() => OthersProfileView(
+                                    authorId: controller
+                                            .peopleYouMayList![index].id ??
+                                        '',
+                                  ));
                             },
                           ),
                         ),
@@ -225,15 +258,34 @@ class _ConnectUserViewState extends State<ConnectUserView> {
   }
 
   Future<void> changeConnectionRequest(
-      {required String contentId, required String status}) async {
+      {required String contentId,
+      required String status,
+      required String userId}) async {
     final bool isSuccess = await changeConnectionStatusController
         .changeConnectionStatus(contentId, status);
     if (isSuccess) {
+      status == 'approved' ? addChat(userId) : null;
       allPendingController.getAllPendingConnection();
     } else {
       if (mounted) {
         showSnackBarMessage(context,
             addConnectionRequestController.errorMessage ?? 'Failed', true);
+      }
+    }
+  }
+
+  Future<void> addChat(String userId) async {
+    final bool isSuccess = await addChatController.addChat(userId);
+
+    if (isSuccess) {
+      if (mounted) {}
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+          context,
+          addChatController.errorMessage ?? 'Failed to update profile',
+          true,
+        );
       }
     }
   }

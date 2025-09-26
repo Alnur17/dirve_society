@@ -1,136 +1,147 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/all_filter_controller.dart';
 
 class FilterController extends GetxController {
-  Rx<RangeValues> priceRange = const RangeValues(0, 500).obs;
-  RxString selectedRange = ''.obs;
+  final AllFilterController allFilterController =
+      Get.find<AllFilterController>();
 
-  // Data sources
-  final List<String> brands = ['Toyota', 'Honda', 'BMW', 'Jeep', 'Audi', 'Mazda', 'Nissan'];
-  final List<String> conditions = ['New', 'Used'];
-  final List<String> vehicleTypes = ['SUV', 'Sedan', 'Coupe', 'Hatchback', 'Van'];
-  final List<int> years = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
-  final List<String> colors = ['Black', 'White', 'Red'];
-  final List<String> mileages = ['<10,000 miles', '20,000 miles', '30,000 miles', '40,000 miles>'];
-  final List<String> transmissions = ['Automatic', 'Manual'];
-  final List<String> stores = ['TechHaven', 'Gadget Galaxy', 'TechTrends'];
-  final List<int> ratings = [1, 2, 3, 4, 5];
+  // Observable variables for single selection
+  final minPrice = ''.obs;
+  final maxPrice = ''.obs;
+  final selectedRange = ''.obs;
+  final selectedBrand = ''.obs;
+  final selectedCondition = ''.obs;
+  final selectedVehicleType = ''.obs;
+  final selectedYear = ''.obs; // Changed to String to match FilterData.year
+  final selectedColor = ''.obs;
+  final selectedMileage = 0.obs; // Kept as int to match FilterData.mileage
+  final selectedTransmission = ''.obs;
+  final selectedStore = ''.obs;
+  final selectedRating = 0.obs;
 
-  // Selected items
-  RxList<String> selectedBrands = <String>[].obs;
-  RxList<String> selectedConditions = <String>[].obs;
-  RxList<String> selectedVehicleTypes = <String>[].obs;
-  RxList<int> selectedYears = <int>[].obs;
-  RxList<String> selectedColors = <String>[].obs;
-  RxList<String> selectedMileages = <String>[].obs;
-  RxList<String> selectedTransmissions = <String>[].obs;
-  RxList<String> selectedStores = <String>[].obs;
-  RxList<int> selectedRatings = <int>[].obs;
+  // Dynamic data sources
+  final RxList<String> brands = <String>[].obs;
+  final RxList<String> conditions = <String>[].obs;
+  final RxList<String> vehicleTypes =
+      <String>[].obs; // Assuming model is vehicleTypes
+  final RxList<String> years = <String>[].obs;
+  final RxList<String> colors = <String>[].obs;
+  final RxList<int> mileages = <int>[].obs;
+  final RxList<String> transmissions = <String>[].obs;
+  final RxList<String> stores =
+      <String>[].obs; // Static for now, update if API provides
+  final RxList<int> ratings = <int>[1, 2, 3, 4, 5].obs; // Static for now
 
-  // Methods to toggle selections
-  void setPriceRange(RangeValues values) => priceRange.value = values;
+  @override
+  void onInit() {
+    super.onInit();
+    fetchFilterData();
+  }
 
-  void toggleBrandSelection(String brand) {
-    if (selectedBrands.contains(brand)) {
-      selectedBrands.remove(brand);
-    } else {
-      selectedBrands.add(brand);
+  // Fetch data from AllFilterController
+  Future<void> fetchFilterData() async {
+    final bool success = await allFilterController
+        .getAllFilter('some_content_id'); // Replace with actual contentId
+    if (success && allFilterController.allReviewModel != null) {
+      final filterData = allFilterController.allReviewModel!;
+      brands.assignAll(filterData.brand);
+      conditions.assignAll(filterData.condition);
+      vehicleTypes
+          .assignAll(filterData.model); // Assuming model maps to vehicleTypes
+      years.assignAll(filterData.year);
+      colors.assignAll(filterData.color);
+      mileages.assignAll(filterData.mileage);
+      transmissions.assignAll(filterData.transmission);
+      // If stores are provided by API, update here
+      // stores.assignAll(filterData.someStoreField ?? []);
     }
   }
 
-  void toggleConditionSelection(String condition) {
-    if (selectedConditions.contains(condition)) {
-      selectedConditions.remove(condition);
-    } else {
-      selectedConditions.add(condition);
-    }
+  // Methods to set price
+  void setMinPrice(String price) => minPrice.value = price;
+
+  void setMaxPrice(String price) => maxPrice.value = price;
+
+  void setSelectedRange(String range) => selectedRange.value = range;
+
+  // Methods to select one item at a time
+  void selectBrand(String brand) {
+    selectedBrand.value = (selectedBrand.value == brand) ? '' : brand;
   }
 
-  void toggleVehicleTypeSelection(String type) {
-    if (selectedVehicleTypes.contains(type)) {
-      selectedVehicleTypes.remove(type);
-    } else {
-      selectedVehicleTypes.add(type);
-    }
+  void selectCondition(String condition) {
+    selectedCondition.value =
+        (selectedCondition.value == condition) ? '' : condition;
   }
 
-  void toggleYearSelection(int year) {
-    if (selectedYears.contains(year)) {
-      selectedYears.remove(year);
-    } else {
-      selectedYears.add(year);
-    }
+  void selectVehicleType(String type) {
+    selectedVehicleType.value = (selectedVehicleType.value == type) ? '' : type;
   }
 
-  void toggleColorSelection(String color) {
-    if (selectedColors.contains(color)) {
-      selectedColors.remove(color);
-    } else {
-      selectedColors.add(color);
-    }
+  void selectYear(String year) {
+    selectedYear.value = (selectedYear.value == year) ? '' : year;
   }
 
-  void toggleMileageSelection(String mileage) {
-    if (selectedMileages.contains(mileage)) {
-      selectedMileages.remove(mileage);
-    } else {
-      selectedMileages.add(mileage);
-    }
+  void selectColor(String color) {
+    selectedColor.value = (selectedColor.value == color) ? '' : color;
   }
 
-  void toggleTransmissionSelection(String transmission) {
-    if (selectedTransmissions.contains(transmission)) {
-      selectedTransmissions.remove(transmission);
-    } else {
-      selectedTransmissions.add(transmission);
-    }
+  void selectMileage(int mileage) {
+    selectedMileage.value = (selectedMileage.value == mileage) ? 0 : mileage;
   }
 
-  void toggleStoreSelection(String store) {
-    if (selectedStores.contains(store)) {
-      selectedStores.remove(store);
-    } else {
-      selectedStores.add(store);
-    }
+  void selectTransmission(String transmission) {
+    selectedTransmission.value =
+        (selectedTransmission.value == transmission) ? '' : transmission;
   }
 
-  void toggleRatingSelection(int rating) {
-    if (selectedRatings.contains(rating)) {
-      selectedRatings.remove(rating);
-    } else {
-      selectedRatings.add(rating);
-    }
+  void selectStore(String store) {
+    selectedStore.value = (selectedStore.value == store) ? '' : store;
+  }
+
+  void selectRating(int rating) {
+    selectedRating.value = (selectedRating.value == rating) ? 0 : rating;
   }
 
   // Reset all filters
   void resetFilters() {
-    priceRange.value = const RangeValues(0, 500);
+    minPrice.value = '';
+    maxPrice.value = '';
     selectedRange.value = '';
-    selectedBrands.clear();
-    selectedConditions.clear();
-    selectedVehicleTypes.clear();
-    selectedYears.clear();
-    selectedColors.clear();
-    selectedMileages.clear();
-    selectedTransmissions.clear();
-    selectedStores.clear();
-    selectedRatings.clear();
+    selectedBrand.value = '';
+    selectedCondition.value = '';
+    selectedVehicleType.value = '';
+    selectedYear.value = '';
+    selectedColor.value = '';
+    selectedMileage.value = 0;
+    selectedTransmission.value = '';
+    selectedStore.value = '';
+    selectedRating.value = 0;
   }
 
   // Return selected filters as a map
   Map<String, dynamic> getSelectedFilters() {
-    return {
-      'priceRange': priceRange.value,
-      'selectedRange': selectedRange.value,
-      'selectedBrands': selectedBrands,
-      'selectedConditions': selectedConditions,
-      'selectedVehicleTypes': selectedVehicleTypes,
-      'selectedYears': selectedYears,
-      'selectedColors': selectedColors,
-      'selectedMileages': selectedMileages,
-      'selectedTransmissions': selectedTransmissions,
-      'selectedStores': selectedStores,
-      'selectedRatings': selectedRatings,
-    };
+    final filters = <String, dynamic>{};
+    if (minPrice.value.isNotEmpty && maxPrice.value.isNotEmpty) {
+      filters['priceRange'] = '$minPrice-$maxPrice';
+    }
+    if (selectedBrand.value.isNotEmpty) filters['Brands'] = selectedBrand.value;
+    if (selectedCondition.value.isNotEmpty) {
+      filters['Condition'] = selectedCondition.value;
+    }
+    if (selectedVehicleType.value.isNotEmpty) {
+      filters['Vehicle Type'] = selectedVehicleType.value;
+    }
+    if (selectedYear.value.isNotEmpty) filters['Year'] = selectedYear.value;
+    if (selectedColor.value.isNotEmpty) {
+      filters['Colours'] = selectedColor.value;
+    }
+    if (selectedMileage.value != 0) filters['Mileage'] = selectedMileage.value;
+    if (selectedTransmission.value.isNotEmpty) {
+      filters['Transmission'] = selectedTransmission.value;
+    }
+    if (selectedStore.value.isNotEmpty) filters['Store'] = selectedStore.value;
+    if (selectedRating.value != 0) filters['Reviews'] = selectedRating.value;
+    return filters;
   }
 }

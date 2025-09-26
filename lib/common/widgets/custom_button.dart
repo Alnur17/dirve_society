@@ -4,8 +4,8 @@ import '../app_text_style/styles.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
-  final VoidCallback? onPressed; // Existing synchronous callback
-  final Future<void> Function()? onPressedAsync; // New async callback
+  final VoidCallback? onPressed;
+  final Future<void> Function()? onPressedAsync; 
   final Color? backgroundColor;
   final Color? borderColor;
   final Color? textColor;
@@ -20,8 +20,8 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
     required this.text,
-    this.onPressed, // Keep for synchronous callbacks
-    this.onPressedAsync, // Add for asynchronous callbacks
+    this.onPressed,
+    this.onPressedAsync,
     this.backgroundColor,
     this.textStyle,
     this.textColor,
@@ -35,7 +35,7 @@ class CustomButton extends StatelessWidget {
   }) : assert(
           onPressed == null || onPressedAsync == null,
           'Cannot provide both onPressed and onPressedAsync',
-        ); // Ensure only one callback is provided
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,9 @@ class CustomButton extends StatelessWidget {
           ? null
           : () {
               if (onPressed != null) {
-                onPressed!(); // Call synchronous callback
+                onPressed!();
               } else if (onPressedAsync != null) {
-                onPressedAsync!(); // Call asynchronous callback
+                onPressedAsync!();
               }
             },
       child: Container(
@@ -59,41 +59,38 @@ class CustomButton extends StatelessWidget {
           color: backgroundColor ?? AppColors.darkRed,
         ),
         child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (isLoading) ...[
-                const Padding(
-                  padding: EdgeInsets.only(right: 8.0),
-                  child: SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: AppColors.white,
-                      strokeWidth: 2.5,
-                    ),
+          child: isLoading
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    color: AppColors.white,
+                    strokeWidth: 2.5,
                   ),
-                ),
-              ] else if (imageAssetPath != null) ...[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Image.asset(
-                    imageAssetPath!,
-                    scale: 4,
-                    color: iconColor,
-                  ),
-                ),
-              ],
-              Text(
-                text,
-                style: textStyle ??
-                    h3.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: textColor ?? AppColors.white,
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (imageAssetPath != null) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Image.asset(
+                          imageAssetPath!,
+                          scale: 4,
+                          color: iconColor,
+                        ),
+                      ),
+                    ],
+                    Text(
+                      text,
+                      style: textStyle ??
+                          h3.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: textColor ?? AppColors.white,
+                          ),
                     ),
-              ),
-            ],
-          ),
+                  ],
+                ),
         ),
       ),
     );

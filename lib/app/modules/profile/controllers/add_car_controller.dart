@@ -1,17 +1,19 @@
+
 // ignore_for_file: depend_on_referenced_packages, avoid_print
 
 import 'dart:convert';
 import 'dart:io';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/urls.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
 
 class AddCarController extends GetxController {
-  bool _inProgress = false;
-  bool get inProgress => _inProgress;
+  // Changed to RxBool for reactive state management
+  RxBool _inProgress = false.obs;
+  bool get inProgress => _inProgress.value; // Updated getter to use .value
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
@@ -25,17 +27,25 @@ class AddCarController extends GetxController {
       String transmission,
       String description,
       int price,
+      String condition,
+      String color,
+      int year,
       List<File?>? images, // Changed to List<File?>? to match AddCarView
       {File? cover}) async {
+    if (_inProgress.value) {
+      // Prevent multiple calls while in progress
+      return false;
+    }
+
     bool isSuccess = false;
-    _inProgress = true;
+    _inProgress.value = true; // Updated to use .value
     update();
 
     try {
       String? token = StorageUtil.getData(StorageUtil.userAccessToken);
       if (token == null || token.isEmpty) {
         _errorMessage = "User not authenticated";
-        _inProgress = false;
+        _inProgress.value = false; // Updated to use .value
         update();
         return false;
       }
@@ -54,7 +64,10 @@ class AddCarController extends GetxController {
         "fuelType": fuelType,
         "transmission": transmission,
         "description": description,
-        "price": price
+        "price": price,
+        "condition": condition,
+        "color": color,
+        "year": year
       };
 
       request.fields['data'] = jsonEncode(jsonFields);
@@ -111,7 +124,7 @@ class AddCarController extends GetxController {
     } catch (e) {
       _errorMessage = "Error adding car: $e";
     } finally {
-      _inProgress = false;
+      _inProgress.value = false; // Updated to use .value
       update();
     }
 

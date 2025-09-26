@@ -14,12 +14,6 @@ class StoryScreen extends StatefulWidget {
 
 class _StoryScreenState extends State<StoryScreen>
     with AutomaticKeepAliveClientMixin {
-  // final List<String> storyImages = [
-  //   'https://fastly.picsum.photos/id/221/200/300.jpg?hmac=vFrrajnPFCrr5ttjepVTsUDWzoo-orpnXOsqdqAd0LU',
-  //   'https://fastly.picsum.photos/id/884/200/300.jpg?hmac=VnWK-J-znCMSx2FSelz3LtT1DXhrxRLtzsX6-hkZDJk',
-  //   'https://fastly.picsum.photos/id/906/200/200.jpg?hmac=jQ-m5xgglMRMPvZhK3539qEkxPG1FVUae6AeV_HKQfg',
-  // ];
-
   final GetStoryController getStoryController = Get.put(GetStoryController());
 
   late PageController _pageController;
@@ -35,7 +29,7 @@ class _StoryScreenState extends State<StoryScreen>
   }
 
   void _startAutoSlide() {
-    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 8), (timer) {
       var l = getStoryController.specificStoryModel!.data!.user!.stories.length;
       if (_currentPage < l - 1) {
         _currentPage++;
@@ -83,63 +77,107 @@ class _StoryScreenState extends State<StoryScreen>
                   return Container(
                     width: double.infinity,
                     height: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(controller.specificStoryModel?.data!
-                                .user?.stories[index].content ??
-                            ''),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Column(
+                    child: Stack(
                       children: [
-                        SizedBox(
-                          height: 30,
+                        // Image with loading indicator
+                        Image.network(
+                          controller.specificStoryModel?.data!.user
+                                  ?.stories[index].content ??
+                              '',
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child; // Image is fully loaded
+                            }
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        (loadingProgress.expectedTotalBytes ??
+                                            1)
+                                    : null,
+                              ),
+                            ); // Show loading indicator while image is loading
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(
+                              child: Icon(
+                                Icons.error,
+                                color: Colors.red,
+                                size: 50,
+                              ),
+                            ); // Show error icon if image fails to load
+                          },
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          color: Colors.transparent,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                        // Overlay content
+                        Column(
+                          children: [
+                            SizedBox(height: 30),
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.transparent,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.grey,
-                                    radius: 20,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      Text(
-                                        controller.specificStoryModel!.data
-                                                ?.user?.name ??
-                                            '',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
+                                      CircleAvatar(
+                                        backgroundColor: Colors.grey,
+                                        radius: 20,
                                       ),
-                                      Text(
-                                        '9h',
-                                        style: TextStyle(
-                                            color: Colors.white54,
-                                            fontSize: 12),
+                                      const SizedBox(width: 8),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            controller.specificStoryModel!.data
+                                                    ?.user?.name ??
+                                                '',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16),
+                                          ),
+                                          Text(
+                                            '9h',
+                                            style: TextStyle(
+                                                color: Colors.white54,
+                                                fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(
+                                          child: Container(
+                                        width: 10,
+                                      )),
+                                      IconButton(
+                                        onPressed: () {
+                                          Get.back();
+                                        },
+                                        icon: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 30,
+                                        ),
                                       ),
                                     ],
                                   ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    controller.specificStoryModel!.data!.user
+                                            ?.stories[index].text ??
+                                        '',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                controller.specificStoryModel!.data!.user
-                                        ?.stories[index].text ??
-                                    '',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

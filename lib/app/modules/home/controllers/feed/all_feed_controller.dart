@@ -7,11 +7,11 @@ import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
 class AllFeedController extends GetxController {
-  final NetworkCaller networkCaller = Get.put(NetworkCaller());
+  final NetworkCaller networkCaller = Get.put(NetworkCaller()); 
 
   bool _inProgress = false;
   bool get inProgress => _inProgress;
-
+ 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
@@ -25,7 +25,7 @@ class AllFeedController extends GetxController {
   int page = 0;
 
   int? lastPage;
-
+ 
   @override
   void onInit() {
     getAllFeed();

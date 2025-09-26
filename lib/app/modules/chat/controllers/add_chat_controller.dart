@@ -1,47 +1,58 @@
+import 'package:dirve_society/get_storage.dart';
+import 'package:dirve_society/services/network_caller/network_caller.dart';
+import 'package:dirve_society/services/network_caller/network_response.dart';
+import 'package:dirve_society/urls.dart';
+import 'package:get/get.dart';
 
-// import 'package:get/get.dart';
-// import 'package:windx1999/app/services/network_caller/network_caller.dart';
-// import 'package:windx1999/app/services/network_caller/network_response.dart';
-// import 'package:windx1999/app/urls.dart';
-// import 'package:windx1999/get_storage.dart';
+class AddChatController extends GetxController {
+  final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
-// class AddChatController extends GetxController {
-//   bool _inProgress = false; 
-//   bool get inProgress => _inProgress;
+  bool _inProgress = false;
+  bool get inProgress => _inProgress;
 
-//   String? _errorMessage;
-//   String? get errorMessage => _errorMessage;
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
 
-//   String? _accessToken;
-//   String? get accessToken => _accessToken;
+  String? _chatId;
+  String? get chatId => _chatId;
 
-//   Future<bool> addChat(String userId, String friendId) async {
-//     bool isSuccess = false;
 
-//     _inProgress = true;
 
-//     update();
+  Future<bool> addChat(String userId) async {
+    if (_inProgress) {
+      return false;
+    }
 
-//     Map<String, dynamic> requestBody = {
-//       "participants": [
-//         userId, // userId
-//         friendId // therapistId
-//       ]
-//     };
+    bool isSuccess = false;
 
-//     final NetworkResponse response = await Get.find<NetworkCaller>()
-//         .postRequest(Urls.addChatUrl, requestBody,
-//             accesToken: StorageUtil.getData(StorageUtil.userAccessToken));
+    _inProgress = true;
+    update();
 
-//     if (response.isSuccess) {
-//       _errorMessage = null;
-//       isSuccess = true;
-//     } else {
-//       _errorMessage = response.errorMessage;
-//     }
+    Map<String, dynamic> requestBody = {
+      "participants": [
+        StorageUtil.getData(StorageUtil.profileId), // my profile id
+        userId // connected profile id
+      ]
+    };
+    final NetworkResponse response = await networkCaller.postRequest(
+      Urls.addChatUrl,
+      requestBody,
+      accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
+    );
 
-//     _inProgress = false;
-//     update();
-//     return isSuccess;
-//   }
-// }
+    if (response.isSuccess) {
+      _errorMessage = null;
+      isSuccess = true;
+
+      _chatId = response.responseData['data']['_id'];
+
+      _errorMessage = null;
+    } else {
+      _errorMessage = response.errorMessage;
+    }
+
+    _inProgress = false;
+    update();
+    return isSuccess;
+  }
+}

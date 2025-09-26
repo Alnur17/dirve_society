@@ -9,8 +9,6 @@ import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class CarRatingPage extends StatefulWidget {
   const CarRatingPage({super.key});
@@ -103,6 +101,21 @@ class _CarRatingPageState extends State<CarRatingPage> {
                     ],
                   ),
                 ),
+                Positioned(
+                  bottom: 26,
+                  right: 20,
+                  child: controller.carRatingList![index].isLiked ?? true
+                      ? Icon(
+                          Icons.thumb_up_sharp,
+                          color: Colors.blue,
+                          size: 30,
+                        )
+                      : Icon(
+                          Icons.thumb_up_alt_outlined,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                ),
               ],
             ),
           );
@@ -115,6 +128,8 @@ class _CarRatingPageState extends State<CarRatingPage> {
               // Check if id is not null before calling reactPost
               if (car.id != null) {
                 print('Swiped card $previousIndex to the LEFT, ID: ${car.id}');
+                print(
+                    'Swiped card $previousIndex to the LEFT, ID: ${controller.carRatingList![currentIndex].isLiked}');
               } else {
                 print('Swiped card $previousIndex to the LEFT, but ID is null');
                 if (mounted) {}
@@ -122,6 +137,7 @@ class _CarRatingPageState extends State<CarRatingPage> {
             } else if (direction == CardSwiperDirection.right) {
               reactPost(car.contentMeta!.id ?? '');
               print('Swiped card $previousIndex to the RIGHT, ID: ${car.id}');
+              'Swiped card $previousIndex to the LEFT, ID: ${controller.carRatingList![currentIndex].isLiked}';
               // Add your right swipe operation here
             }
           } else {

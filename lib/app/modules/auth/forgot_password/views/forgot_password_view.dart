@@ -3,9 +3,7 @@ import 'package:dirve_society/app/modules/auth/forgot_password/views/otp_verify_
 import 'package:dirve_society/common/widgets/custom_background.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import '../../../../../common/app_color/app_colors.dart';
 import '../../../../../common/app_images/app_images.dart';
 import '../../../../../common/app_text_style/styles.dart';
@@ -25,6 +23,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       Get.put(ForgotPasswordController());
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,29 +68,36 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               ),
               sh30,
               Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Email address',
-                    style: h4.copyWith(color: AppColors.white),
-                  )),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Email address',
+                  style: h4.copyWith(color: AppColors.white),
+                ),
+              ),
               sh8,
               Form(
                 key: _formKey,
                 child: CustomTextField(
+                  hintTextStyle: const TextStyle(color: Colors.white),
+                  textColor: Colors.white,
                   controller: _emailController,
                   hintText: 'Enter your email',
                   preIcon: Image.asset(
                     AppImages.message,
                     scale: 4,
                   ),
+                  onChange: (String value) {},
                 ),
               ),
               sh30,
-              CustomButton(
-                text: 'Send',
-                onPressed: () {
-                  otpVerifyFunction(_emailController.text);
-                },
+              Obx(
+                () => CustomButton(
+                  text: 'Send',
+                  isLoading: _forgotPasswordController.inProgress,
+                  onPressedAsync: () async {
+                    await otpVerifyFunction(_emailController.text);
+                  },
+                ),
               ),
             ],
           ),
@@ -106,7 +112,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
     if (isSuccess) {
       showSnackBarMessage(context, 'Successfully done');
-      Get.to(OtpVerifyView(email));
+      Get.to(() => OtpVerifyView(email, previousPage: 'fp',));
     } else {
       showSnackBarMessage(
         context,

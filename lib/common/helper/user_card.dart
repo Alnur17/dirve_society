@@ -94,13 +94,14 @@ class UserCard extends StatelessWidget {
                     height: 28,
                     text: 'Accecpt',
                     onPressed: acceptButton,
-                    backgroundColor: AppColors.darkRed,
+                    backgroundColor: const Color.fromARGB(255, 0, 109, 9),
                   ),
             SizedBox(
               height: 4,
             ),
             isOneButton == true
                 ? CustomButton(
+                  
                     height: 28,
                     text: 'Add Friend',
                     onPressed: addFriendButton,

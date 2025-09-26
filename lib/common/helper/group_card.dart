@@ -108,7 +108,7 @@ class GroupCard extends StatelessWidget {
                 height: 32,
                 text: isOneButton ? 'Join' : 'Accept',
                 onPressed: isOneButton ? joinClubBtuton : acceptButton,
-                backgroundColor: isJoined ? AppColors.grey : AppColors.darkRed,
+                backgroundColor: const Color.fromARGB(255, 0, 109, 9),
               ),
               SizedBox(height: 4),
               isOneButton
@@ -117,8 +117,7 @@ class GroupCard extends StatelessWidget {
                       height: 32,
                       text: 'Rejected',
                       onPressed: rejectedButton,
-                      backgroundColor:
-                          isJoined ? AppColors.grey : AppColors.darkRed,
+                      backgroundColor: AppColors.darkRed,
                     ),
             ],
           ],

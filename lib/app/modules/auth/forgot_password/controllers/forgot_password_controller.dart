@@ -25,7 +25,7 @@ class ForgotPasswordController extends GetxController {
   }
 
   String? _otpToken;
-  String? get otpToken => _otpToken;
+  String? get otpToken => _otpToken; 
 
   Future<bool> forgotPassword(String email) async {
     _inProgress.value = true;

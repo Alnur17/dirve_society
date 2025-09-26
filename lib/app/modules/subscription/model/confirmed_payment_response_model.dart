@@ -13,7 +13,7 @@ class ConfirmedPaymentResponseModel {
 
   factory ConfirmedPaymentResponseModel.fromJson(Map<String, dynamic> json) {
     return ConfirmedPaymentResponseModel(
-      success: json["success"],
+      success: json["success"], 
       statusCode: json["statusCode"],
       message: json["message"],
       data: json["data"] == null
@@ -62,7 +62,7 @@ class ConfirmedPaymentResponseItemModel {
       modelType: json["modelType"],
       account: json["account"] == null ? null : Account.fromJson(json["account"]),
       reference: json["reference"] == null ? null : Reference.fromJson(json["reference"]),
-      transactionId: json["transactionId"],
+      transactionId: json["tranId"],
       amount: (json["amount"] as num?)?.toDouble(), // ✅ FIXED HERE
       status: json["status"],
       paymentIntentId: json["paymentIntentId"],

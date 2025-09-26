@@ -16,7 +16,7 @@ import '../../../../common/widgets/custom_textfield.dart';
 class MessageView extends StatefulWidget {
   final String chatId;
   final String receiverId;
-  final String receiverName;
+  final String receiverName; 
   final String receiverImage;
 
   const MessageView({
@@ -32,7 +32,7 @@ class MessageView extends StatefulWidget {
 }
 
 class _MessageViewState extends State<MessageView> {
-  final ProfileController profileController = Get.find<ProfileController>();
+  final ProfileController profileController = Get.put(ProfileController());
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final SocketService socketService = Get.put(SocketService());
   final TextEditingController messageController = TextEditingController();
@@ -348,6 +348,7 @@ class _MessageViewState extends State<MessageView> {
             sw12,
             Expanded(
               child: CustomTextField(
+                onChange: (String value) {},
                 controller: messageController,
                 hintText: 'Message',
                 borderRadius: 30,

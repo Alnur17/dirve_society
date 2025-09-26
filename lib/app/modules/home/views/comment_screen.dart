@@ -19,20 +19,22 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenState extends State<CommentScreen> {
-  // AllPostController allPostController = Get.put(AllPostController());
-  ProfileController profileController = Get.put(ProfileController());
 
   final CommentController commentController = Get.put(CommentController());
   final SendCommentController sendCommentController =
       Get.put(SendCommentController());
   final TextEditingController commentCtrl = TextEditingController();
-  final TextEditingController replyCtrl = TextEditingController();
-  int? selectedCommentIndex; // নতুন স্টেট ভেরিয়েবল
+  int? selectedCommentIndex; // Tracks which comment is being replied to
+  String? replyRef; // Stores the ID of the comment being replied to
 
   @override
   void initState() {
-    // profileController.getMyProfile();
-    commentController.getAllComment(widget.postId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+     
+      commentController.getAllComment(widget.postId);
+      print('PostId: ${widget.postId}');
+      print('PostType: ${widget.postType}');
+    });
     super.initState();
   }
 
@@ -40,37 +42,32 @@ class _CommentScreenState extends State<CommentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           children: [
-            SizedBox(
-              height: 30,
-            ),
+            SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: Icon(Icons.arrow_back_ios)),
+                  onPressed: () {
+                    Get.back();
+                  },
+                  icon: const Icon(Icons.arrow_back_ios),
+                ),
                 Center(
-                    child: Text(
-                  'All Comment',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                )),
-                Container(
-                  width: 60,
-                )
+                  child: Text(
+                    'All Comments',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Container(width: 60),
               ],
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Expanded(
               child: GetBuilder<CommentController>(builder: (cController) {
-                print(
-                    "Comment Data: ${cController.commentData?.length}"); // ডিবাগ
+                print("Comment Data: ${cController.commentData?.length}"); // Debug
                 if (cController.inProgress) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -87,7 +84,7 @@ class _CommentScreenState extends State<CommentScreen> {
                 }
 
                 return ListView.builder(
-                  padding: EdgeInsets.all(0),
+                  padding: EdgeInsets.zero,
                   itemCount: cController.commentData?.length,
                   itemBuilder: (context, index) {
                     final comment = cController.commentData![index];
@@ -100,14 +97,10 @@ class _CommentScreenState extends State<CommentScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CircleAvatar(
-                                backgroundImage: NetworkImage(comment
-                                        .user?.photoUrl ??
+                                backgroundImage: NetworkImage(comment.user?.photoUrl ??
                                     'https://fastly.picsum.photos/id/471/200/300.jpg?hmac=N_ZXTRU2OGQ7b_1b8Pz2X8e6Qyd84Q7xAqJ90bju2WU'),
                               ),
-                              //widthBox8,
-                              SizedBox(
-                                width: 10,
-                              ),
+                              SizedBox(width: 10),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +118,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 5),
                                         child: ListView.builder(
-                                          padding: EdgeInsets.all(0),
+                                          padding: EdgeInsets.zero,
                                           shrinkWrap: true,
                                           physics:
                                               NeverScrollableScrollPhysics(),
@@ -149,9 +142,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                                                 ?.photoUrl ??
                                                             'https://fastly.picsum.photos/id/471/200/300.jpg?hmac=N_ZXTRU2OGQ7b_1b8Pz2X8e6Qyd84Q7xAqJ90bju2WU'),
                                                   ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
+                                                  SizedBox(width: 10),
                                                   Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
@@ -163,14 +154,12 @@ class _CommentScreenState extends State<CommentScreen> {
                                                             color: Colors.black,
                                                             fontSize: 16,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .w600),
+                                                                FontWeight.w600),
                                                       ),
                                                       Text(
                                                         reply.comment ?? '',
                                                         style: TextStyle(
-                                                            color:
-                                                                Colors.black),
+                                                            color: Colors.black),
                                                       ),
                                                     ],
                                                   ),
@@ -184,7 +173,8 @@ class _CommentScreenState extends State<CommentScreen> {
                                       onTap: () {
                                         setState(() {
                                           selectedCommentIndex = index;
-                                          replyCtrl.text = '';
+                                          replyRef = comment.id;
+                                          commentCtrl.text = '';
                                         });
                                       },
                                       child: Text(
@@ -198,43 +188,6 @@ class _CommentScreenState extends State<CommentScreen> {
                             ],
                           ),
                         ),
-                        if (selectedCommentIndex == index &&
-                            replyCtrl.text.isEmpty)
-                          Padding(
-                            padding: EdgeInsets.only(left: 40, top: 5),
-                            child: SizedBox(
-                              width: 200,
-                              child: TextFormField(
-                                controller: replyCtrl,
-                                style: TextStyle(color: Colors.black),
-                                decoration: InputDecoration(
-                                  hintText: 'Write a reply...',
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                ),
-                                onFieldSubmitted: (value) {
-                                  if (value.isNotEmpty) {
-                                    sendReply(
-                                      contentId: widget.postId,
-                                      modelType: widget.postType == 'feed'
-                                          ? 'Feed'
-                                          : 'Forum',
-                                      comment: value,
-                                      isReply: true,
-                                      userId: StorageUtil.getData(
-                                          StorageUtil.profileId),
-                                      replyRef: comment.id ?? '',
-                                    );
-                                    setState(() {
-                                      selectedCommentIndex = null;
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
                       ],
                     );
                   },
@@ -269,28 +222,82 @@ class _CommentScreenState extends State<CommentScreen> {
                           decoration: InputDecoration(
                             hintStyle: TextStyle(color: Colors.black),
                             fillColor: Colors.transparent,
-                            hintText: 'Writes a comment',
+                            hintText: selectedCommentIndex == null
+                                ? 'Write a comment'
+                                : 'Write a reply to ${commentController.commentData?[selectedCommentIndex ?? 0].user?.name ?? ''}',
                             contentPadding: EdgeInsets.all(10),
                           ),
+                          onFieldSubmitted: (value) {
+                            if (value.isNotEmpty && !sendCommentController.inProgress) {
+                              if (selectedCommentIndex == null) {
+                                sendComment(
+                                  contentId: widget.postId,
+                                  modelType: widget.postType == 'feed'
+                                      ? 'Feed'
+                                      : 'Forum',
+                                  comment: value,
+                                  isReply: false,
+                                  userId:
+                                      StorageUtil.getData(StorageUtil.profileId),
+                                );
+                              } else {
+                                sendReply(
+                                  contentId: widget.postId,
+                                  modelType: widget.postType == 'feed'
+                                      ? 'Feed'
+                                      : 'Forum',
+                                  comment: value,
+                                  isReply: true,
+                                  userId:
+                                      StorageUtil.getData(StorageUtil.profileId),
+                                  replyRef: replyRef ?? '',
+                                );
+                              }
+                            }
+                          },
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          if (commentCtrl.text.isNotEmpty) {
-                            sendComment(
-                                contentId: widget.postId,
-                                modelType: widget.postType == 'feed'
-                                    ? 'Feed'
-                                    : 'Forum',
-                                comment: commentCtrl.text,
-                                isReply: false,
-                                userId:
-                                    StorageUtil.getData(StorageUtil.profileId));
-                          }
-                        },
-                        child: Icon(
-                          Icons.send,
-                          color: Colors.black,
+                      Obx(
+                        () => GestureDetector(
+                          onTap: sendCommentController.inProgress
+                              ? null
+                              : () {
+                                  if (commentCtrl.text.isNotEmpty) {
+                                    if (selectedCommentIndex == null) {
+                                      sendComment(
+                                        contentId: widget.postId,
+                                        modelType: widget.postType == 'feed'
+                                            ? 'Feed'
+                                            : 'Forum',
+                                        comment: commentCtrl.text,
+                                        isReply: false,
+                                        userId:
+                                            StorageUtil.getData(StorageUtil.profileId),
+                                      );
+                                    } else {
+                                      sendReply(
+                                        contentId: widget.postId,
+                                        modelType: widget.postType == 'feed'
+                                            ? 'Feed'
+                                            : 'Forum',
+                                        comment: commentCtrl.text,
+                                        isReply: true,
+                                        userId:
+                                            StorageUtil.getData(StorageUtil.profileId),
+                                        replyRef: replyRef ?? '',
+                                      );
+                                    }
+                                  }
+                                },
+                          child: sendCommentController.inProgress
+                              ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: const CircularProgressIndicator())
+                              : const Icon(
+                                  Icons.send,
+                                  color: Colors.black,
+                                ),
                         ),
                       ),
                     ],
@@ -298,30 +305,31 @@ class _CommentScreenState extends State<CommentScreen> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
           ],
         ),
       ),
     );
   }
 
-  Future<void> sendComment(
-      {required String userId,
-      required String modelType,
-      required String contentId,
-      required String comment,
-      required bool isReply,
-      String? repReference}) async {
+  Future<void> sendComment({
+    required String userId,
+    required String modelType,
+    required String contentId,
+    required String comment,
+    required bool isReply,
+    String? repReference,
+  }) async {
     final bool isSuccess = await sendCommentController.sendComment(
         userId, modelType, contentId, comment, isReply, repReference);
     if (isSuccess) {
-      //  allPostController.updatePostHide(contentId, true);
       commentController.getAllComment(contentId);
       if (mounted) {
-        // showSnackBarMessage(context, 'Comment successfully posted');
         commentCtrl.clear();
+        setState(() {
+          selectedCommentIndex = null; // Reset reply state
+          replyRef = null;
+        });
       }
     } else {
       if (mounted) {
@@ -331,14 +339,15 @@ class _CommentScreenState extends State<CommentScreen> {
     }
   }
 
-  Future<void> sendReply(
-      {required String userId,
-      required String modelType,
-      required String contentId,
-      required String comment,
-      required bool isReply,
-      required String replyRef,
-      String? repReference}) async {
+  Future<void> sendReply({
+    required String userId,
+    required String modelType,
+    required String contentId,
+    required String comment,
+    required bool isReply,
+    required String replyRef,
+    String? repReference,
+  }) async {
     if (replyRef.isEmpty) {
       if (mounted) {
         showSnackBarMessage(context, 'Reply reference is invalid!', true);
@@ -350,9 +359,11 @@ class _CommentScreenState extends State<CommentScreen> {
     if (isSuccess) {
       commentController.getAllComment(contentId);
       if (mounted) {
-        //   allPostController.updatePostHide(contentId, true);
-        // showSnackBarMessage(context, 'Reply successfully posted');
-        replyCtrl.clear();
+        commentCtrl.clear();
+        setState(() {
+          selectedCommentIndex = null; // Reset reply state
+          replyRef = '';
+        });
       }
     } else {
       if (mounted) {
