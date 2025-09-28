@@ -1,7 +1,7 @@
+import 'package:dirve_society/common/widgets/toogle_button.dart';
 import 'package:flutter/material.dart';
 
-
-class MarketPlaceWidget extends StatelessWidget {
+class MarketPlaceWidget extends StatefulWidget {
   final String name;
   final String price;
   final String date;
@@ -9,6 +9,8 @@ class MarketPlaceWidget extends StatelessWidget {
   final double? height;
   final double? width;
   final VoidCallback onTap;
+
+  final Widget? taggle;
 
   const MarketPlaceWidget({
     super.key,
@@ -19,15 +21,21 @@ class MarketPlaceWidget extends StatelessWidget {
     required this.onTap,
     this.width = 180,
     this.height = 250,
+    this.taggle,
   });
 
   @override
+  State<MarketPlaceWidget> createState() => _MarketPlaceWidgetState();
+}
+
+class _MarketPlaceWidgetState extends State<MarketPlaceWidget> {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
-        height: height,
-        width: width,
+        height: widget.height,
+        width: widget.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
@@ -45,7 +53,7 @@ class MarketPlaceWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                imageUrl,
+                widget.imageUrl,
                 height: double.infinity,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -72,6 +80,7 @@ class MarketPlaceWidget extends StatelessWidget {
             //     ),
             //   ),
             // ),
+
             Positioned(
               bottom: 0,
               left: 0,
@@ -87,32 +96,56 @@ class MarketPlaceWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          price,
+                          widget.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          widget.price,
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
                         ),
+                      ],
+                    ),
+                    SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        widget.taggle == null
+                            ? Container()
+                            : Row(
+                                children: [
+                                  Text(
+                                    'Sale on Market Place',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  widget.taggle ?? Container(),
+                                ],
+                              ),
                         SizedBox(height: 4),
                         Text(
-                          date,
+                          widget.date,
                           style: TextStyle(
                             color: Colors.grey[300],
-                            fontSize: 12,
+                            fontSize: 10,
                           ),
                         ),
                       ],

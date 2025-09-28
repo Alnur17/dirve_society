@@ -12,7 +12,7 @@ import '../../../../common/app_images/app_images.dart';
 import '../../home/views/home_view.dart';
 
 class DashboardView extends StatefulWidget {
-  const DashboardView({super.key});
+  const DashboardView({super.key}); 
 
   @override
   State<DashboardView> createState() => _DashboardViewState();

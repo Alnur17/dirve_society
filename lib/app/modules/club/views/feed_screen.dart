@@ -71,7 +71,7 @@ class _FeedScreenState extends State<FeedScreen> {
         print('Current likes: $currentLikes');
         allClubFeedController.updatePostLike(postId, true, currentLikes + 1);
         if (mounted) {
-          showSnackBarMessage(context, 'Like successfully completed');
+         // showSnackBarMessage(context, 'Like successfully completed');
         }
       } else {
         print('Post not found for ID: $postId');
@@ -98,7 +98,7 @@ class _FeedScreenState extends State<FeedScreen> {
         allClubFeedController.updatePostLike(
             postId, false, currentLikes > 0 ? currentLikes - 1 : 0);
         if (mounted) {
-          showSnackBarMessage(context, 'Dislike successfully completed');
+          // showSnackBarMessage(context, 'Dislike successfully completed');
         }
       } else {
         print('Post not found for ID: $postId');

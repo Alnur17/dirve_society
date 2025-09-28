@@ -71,7 +71,8 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
       body: SingleChildScrollView(
         child: GetBuilder<MarketplaceDetailsController>(builder: (controller) {
           if (controller.inProgress) {
-            return const Center(child: CircularProgressIndicator());
+            return SizedBox(
+              height: 550, child: const Center(child: CircularProgressIndicator()));
           }
           print(
               'Product model ${controller.marketPlaceDetailsModel?.images.length}');

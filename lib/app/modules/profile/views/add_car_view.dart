@@ -25,12 +25,12 @@ class AddCarView extends StatefulWidget {
 class _AddCarViewState extends State<AddCarView> {
   final TextEditingController brandController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
-  final TextEditingController fuelTypeController = TextEditingController();
+  final TextEditingController fuelTypeController = TextEditingController(text: 'Gasoline');
   final TextEditingController mileageController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
-  final TextEditingController transmissionController = TextEditingController();
+  final TextEditingController transmissionController = TextEditingController(text: 'Manual');
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController conditionController = TextEditingController();
+  final TextEditingController conditionController = TextEditingController(text: 'New');
   final TextEditingController colorController = TextEditingController();
   final TextEditingController yearController = TextEditingController();
 
@@ -69,6 +69,7 @@ class _AddCarViewState extends State<AddCarView> {
         child: SingleChildScrollView(
           child: Form(
             key: formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -82,6 +83,15 @@ class _AddCarViewState extends State<AddCarView> {
                   onChange: (String value) {},
                   hintText: 'Enter your car brand name',
                   controller: brandController,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Brand is required';
+                    }
+                    if (value.trim().length < 2) {
+                      return 'Brand must be at least 2 characters';
+                    }
+                    return null;
+                  },
                 ),
                 sh16,
                 Text(
@@ -93,6 +103,15 @@ class _AddCarViewState extends State<AddCarView> {
                   onChange: (String value) {},
                   hintText: 'Enter your car model name',
                   controller: modelController,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Model is required';
+                    }
+                    if (value.trim().length < 2) {
+                      return 'Model must be at least 2 characters';
+                    }
+                    return null;
+                  },
                 ),
                 sh16,
                 Text(
@@ -102,8 +121,19 @@ class _AddCarViewState extends State<AddCarView> {
                 sh8,
                 CustomTextField(
                   onChange: (String value) {},
-                  hintText: 'Enter mileage (e.g., 4)',
+                  hintText: 'Enter mileage (e.g., 4000)',
                   controller: mileageController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Mileage is required';
+                    }
+                    final mileage = int.tryParse(value.trim());
+                    if (mileage == null || mileage <= 0) {
+                      return 'Enter a valid mileage greater than 0';
+                    }
+                    return null;
+                  },
                 ),
                 sh16,
                 Text(
@@ -141,6 +171,12 @@ class _AddCarViewState extends State<AddCarView> {
                     if (newValue != null) {
                       fuelTypeController.text = newValue;
                     }
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Fuel type is required';
+                    }
+                    return null;
                   },
                 ),
                 sh16,
@@ -180,6 +216,12 @@ class _AddCarViewState extends State<AddCarView> {
                       transmissionController.text = newValue;
                     }
                   },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Transmission is required';
+                    }
+                    return null;
+                  },
                 ),
                 sh16,
                 Text(
@@ -189,8 +231,19 @@ class _AddCarViewState extends State<AddCarView> {
                 sh8,
                 CustomTextField(
                   onChange: (String value) {},
-                  hintText: 'Enter selling price',
+                  hintText: 'Enter selling price (e.g., 15000)',
                   controller: priceController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Price is required';
+                    }
+                    final price = int.tryParse(value.trim().replaceAll(r'$', ''));
+                    if (price == null || price <= 0) {
+                      return 'Enter a valid price greater than 0';
+                    }
+                    return null;
+                  },
                 ),
                 sh16,
                 Text(
@@ -200,8 +253,19 @@ class _AddCarViewState extends State<AddCarView> {
                 sh8,
                 CustomTextField(
                   onChange: (String value) {},
-                  hintText: 'year',
+                  hintText: 'Enter year (e.g., 2020)',
                   controller: yearController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Year is required';
+                    }
+                    final year = int.tryParse(value.trim());
+                    if (year == null || year < 1900 || year > DateTime.now().year) {
+                      return 'Enter a valid year between 1900 and ${DateTime.now().year}';
+                    }
+                    return null;
+                  },
                 ),
                 sh16,
                 Text(
@@ -240,6 +304,12 @@ class _AddCarViewState extends State<AddCarView> {
                       conditionController.text = newValue;
                     }
                   },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Condition is required';
+                    }
+                    return null;
+                  },
                 ),
                 sh16,
                 Text(
@@ -249,8 +319,17 @@ class _AddCarViewState extends State<AddCarView> {
                 sh8,
                 CustomTextField(
                   onChange: (String value) {},
-                  hintText: 'Color',
+                  hintText: 'Enter color (e.g., Red)',
                   controller: colorController,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Color is required';
+                    }
+                    if (value.trim().length < 2) {
+                      return 'Color must be at least 2 characters';
+                    }
+                    return null;
+                  },
                 ),
                 sh16,
                 Text(
@@ -261,13 +340,22 @@ class _AddCarViewState extends State<AddCarView> {
                 CustomTextField(
                   onChange: (String value) {},
                   height: 120,
-                  hintText:
-                      'Describe your car so people know what it\'s about.',
+                  hintText: 'Describe your car so people know what it\'s about.',
                   controller: descriptionController,
+                  maxLines: 5,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Description is required';
+                    }
+                    if (value.trim().length < 10) {
+                      return 'Description must be at least 10 characters';
+                    }
+                    return null;
+                  },
                 ),
                 sh16,
                 Text(
-                  'Car cover Photo',
+                  'Car Cover Photo',
                   style: h5,
                 ),
                 sh8,
@@ -379,49 +467,92 @@ class _AddCarViewState extends State<AddCarView> {
   }
 
   Future<void> createCar() async {
-    if (formKey.currentState!.validate()) {
-      // Validate and parse numeric fields
-      int mileage = int.tryParse(mileageController.text.trim()) ?? 0;
-      int price =
-          int.tryParse(priceController.text.trim().replaceAll(r'$', '')) ?? 0;
-      int year = int.tryParse(yearController.text.trim()) ?? 0;
-
-      if (mileage <= 0 || price <= 0 || year <= 0) {
-        showSnackBarMessage(
-            context,
-            'Please enter valid numeric values for Mileage, Price, and Year.',
-            true);
-        return;
-      }
-
-      final bool isSuccess = await addCarController.addCar(
-        brandController.text,
-        modelController.text,
-        mileage,
-        fuelTypeController.text,
-        transmissionController.text,
-        descriptionController.text,
-        price,
-        conditionController.text,
-        colorController.text,
-        year,
-        carImages,
-        cover: bannerImage,
+    // Validate form fields
+    if (!formKey.currentState!.validate()) {
+      showSnackBarMessage(
+        context,
+        'Please fill all required fields correctly.',
+        true,
       );
+      return;
+    }
 
-      if (isSuccess) {
-        if (mounted) {
-          // showSnackBarMessage(context, 'Car added successfully');
-          Get.back();
-        }
-      } else {
-        if (mounted) {
-          showSnackBarMessage(
-            context,
-            addCarController.errorMessage ?? 'Failed to add car',
-            true,
-          );
-        }
+    // Validate cover photo
+    if (bannerImage == null) {
+      showSnackBarMessage(
+        context,
+        'Please upload a cover photo.',
+        true,
+      );
+      return;
+    }
+
+    // Validate car photos (at least one required)
+    if (carImages.every((image) => image == null)) {
+      showSnackBarMessage(
+        context,
+        'Please upload at least one car photo (Front, Side, or Sole).',
+        true,
+      );
+      return;
+    }
+
+    // Validate and parse numeric fields
+    int mileage = int.tryParse(mileageController.text.trim()) ?? 0;
+    int price = int.tryParse(priceController.text.trim().replaceAll(r'$', '')) ?? 0;
+    int year = int.tryParse(yearController.text.trim()) ?? 0;
+
+    if (mileage <= 0 || price <= 0 || year <= 0) {
+      showSnackBarMessage(
+        context,
+        'Please enter valid numeric values for Mileage, Price, and Year.',
+        true,
+      );
+      return;
+    }
+
+    final bool isSuccess = await addCarController.addCar(
+      brandController.text.trim(),
+      modelController.text.trim(),
+      mileage,
+      fuelTypeController.text,
+      transmissionController.text,
+      descriptionController.text.trim(),
+      price,
+      conditionController.text,
+      colorController.text.trim(),
+      year,
+      carImages,
+      cover: bannerImage,
+    );
+
+    if (isSuccess) {
+      if (mounted) {
+        // Clear all form data
+        brandController.clear();
+        modelController.clear();
+        mileageController.clear();
+        priceController.clear();
+        descriptionController.clear();
+        colorController.clear();
+        yearController.clear();
+        fuelTypeController.text = 'Gasoline'; // Reset to default
+        transmissionController.text = 'Manual'; // Reset to default
+        conditionController.text = 'New'; // Reset to default
+        setState(() {
+          bannerImage = null;
+          carImages = [null, null, null];
+        });
+        showSnackBarMessage(context, 'Car added successfully');
+        Get.back();
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+          context,
+          addCarController.errorMessage ?? 'Failed to add car',
+          true,
+        );
       }
     }
   }

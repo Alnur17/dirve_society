@@ -297,46 +297,53 @@ class _ClubViewState extends State<ClubView> {
                                 'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA'),
                           ),
                           sw12,
-                          SizedBox(
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color.fromARGB(155, 226, 228, 228),
+                            ),
                             width: 140,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  controller.clubDetails!.name ?? '',
-                                  style: h1.copyWith(
-                                      fontSize: 20, color: AppColors.darkRed),
-                                ),
-                                sh5,
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Image.asset(
-                                      AppImages.groupLight,
-                                      scale: 4,
-                                    ),
-                                    sw5,
-                                    Text(
-                                      '${controller.clubDetails!.member.toString()} Members',
-                                      style: h6,
-                                    ),
-                                  ],
-                                ),
-                                sh5,
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Image.asset(
-                                      AppImages.public,
-                                      scale: 4,
-                                    ),
-                                    sw5,
-                                    Text(controller.clubDetails!.type ?? '',
-                                        style: h6),
-                                  ],
-                                ),
-                              ],
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    controller.clubDetails!.name ?? '',
+                                    style: h1.copyWith(
+                                        fontSize: 20, color: AppColors.darkRed),
+                                  ),
+                                  sh5,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        AppImages.groupLight,
+                                        scale: 4,
+                                      ),
+                                      sw5,
+                                      Text(
+                                        '${controller.clubDetails!.member.toString()} Members',
+                                        style: h6,
+                                      ),
+                                    ],
+                                  ),
+                                  sh5,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        AppImages.public,
+                                        scale: 4,
+                                      ),
+                                      sw5,
+                                      Text(controller.clubDetails!.type ?? '',
+                                          style: h6),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Spacer(),

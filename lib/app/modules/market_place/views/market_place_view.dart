@@ -1,5 +1,6 @@
 import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
 import 'package:dirve_society/app/modules/market_place/controllers/market_place_controller.dart';
+import 'package:dirve_society/app/modules/market_place/controllers/sell_taggle_controller.dart';
 import 'package:dirve_society/app/modules/market_place/views/filter_view.dart';
 import 'package:dirve_society/app/modules/market_place/views/listing_details_view.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
@@ -7,6 +8,8 @@ import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:dirve_society/common/helper/market_place_widget.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
+import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
+import 'package:dirve_society/common/widgets/toogle_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,6 +23,7 @@ class MarketPlaceView extends StatefulWidget {
 class _MarketPlaceViewState extends State<MarketPlaceView> {
   final AllMarketplaceController allMarketplaceController =
       Get.put(AllMarketplaceController());
+  
   String search = '';
 
   @override
@@ -171,6 +175,7 @@ class _MarketPlaceViewState extends State<MarketPlaceView> {
                                 id: filteredItems[index].id ?? '',
                               ));
                         },
+                        
                       );
                     },
                   );
@@ -182,4 +187,6 @@ class _MarketPlaceViewState extends State<MarketPlaceView> {
       ),
     );
   }
+
+ 
 }

@@ -157,7 +157,7 @@ class _CarRatingPageState extends State<CarRatingPage> {
     final bool isSuccess = await reactPostController.reactPost(postId);
     if (isSuccess) {
       if (mounted) {
-        showSnackBarMessage(context, 'Like successfully completed');
+       // showSnackBarMessage(context, 'Like successfully completed');
       }
     } else {
       if (mounted) {

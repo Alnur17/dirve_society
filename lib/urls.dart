@@ -150,6 +150,12 @@ class Urls {
     return '$_baseUrl/reviews/reference/$id';
   }
 
+  static String sellTaggleById(
+    String id,
+  ) {
+    return '$_baseUrl/cars/sale/$id';
+  }
+
   static String updateUserByUrl(
     String id,
   ) {

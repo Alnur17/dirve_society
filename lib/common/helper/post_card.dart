@@ -110,13 +110,16 @@ class PostCard extends StatelessWidget {
             ),
             // Media Content
             contentPath.isNotEmpty
-                ? MediaContainer(
-                    mediaPath: contentPath,
-                    height: 300,
-                    width: MediaQuery.of(context).size.width,
-                    borderColor: Colors.white,
-                    borderRadius: 12,
-                  )
+                ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: MediaContainer(
+                      mediaPath: contentPath,
+                      height: 280,
+                      width: MediaQuery.of(context).size.width,
+                      borderColor: Colors.white,
+                      borderRadius: 12,
+                    ),
+                )
                 : Container(),
             // Post Actions
             Padding(

@@ -1,7 +1,10 @@
 import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
+import 'package:dirve_society/app/modules/market_place/controllers/sell_taggle_controller.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_garage_controller.dart';
 import 'package:dirve_society/app/modules/profile/views/add_car_view.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
+import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
+import 'package:dirve_society/common/widgets/toogle_button.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,6 +25,7 @@ class MyGarageView extends StatefulWidget {
 
 class _MyGarageViewState extends State<MyGarageView> {
   final MyGarageController myGarageController = Get.put(MyGarageController());
+  final SellTaggleController sellTaggleController = SellTaggleController();
 
   @override
   void initState() {
@@ -255,6 +259,13 @@ class _MyGarageViewState extends State<MyGarageView> {
                                   id: controller.myGarageList![index].id ?? '',
                                 ));
                           },
+                          taggle: ToggleButton(
+                            isToggled: controller.myGarageList![index].isSale == true
+                                ? true
+                                : false,
+                            onToggle: (value) => sellTaggle(
+                                controller.myGarageList![index].id ?? ''),
+                          ),
                         ),
                       );
                     },
@@ -266,5 +277,30 @@ class _MyGarageViewState extends State<MyGarageView> {
         ),
       ),
     );
+  }
+
+  Future<void> sellTaggle(String contentId) async {
+    final bool isSuccess = await sellTaggleController.sellTaggle(contentId);
+
+    if (isSuccess) {
+      if (mounted) {
+        sellTaggleController.isSell;
+        showSnackBarMessage(
+          context,
+          sellTaggleController.isSell == true
+              ? 'Car added on market place'
+              : 'Car removed from market place',
+          false,
+        );
+      }
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+          context,
+          sellTaggleController.errorMessage ?? 'Failed to update profile',
+          true,
+        );
+      }
+    }
   }
 }

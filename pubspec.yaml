@@ -58,6 +58,8 @@ dependencies:
   url_launcher: ^6.3.2
   webview_flutter:
   shimmer: ^3.0.0
+  crash_safe_image: ^0.2.0
+
 
 
  

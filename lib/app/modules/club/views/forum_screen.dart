@@ -106,7 +106,7 @@ class _ForumScreenState extends State<ForumScreen> {
           print('Current likes: $currentLikes');
           allClubForumController.updatePostLike(postId, true, currentLikes + 1);
           if (mounted) {
-            showSnackBarMessage(context, 'Like successfully completed');
+           // showSnackBarMessage(context, 'Like successfully completed');
           }
         } else {
           print('Post not found for ID: $postId');
@@ -173,7 +173,7 @@ class _ForumScreenState extends State<ForumScreen> {
           allClubForumController.updatePostDislike(
               postId, true, currentDislikes + 1);
           if (mounted) {
-            showSnackBarMessage(context, 'Dislike successfully completed');
+           // showSnackBarMessage(context, 'Dislike successfully completed');
           }
         } else {
           print('Post not found for ID: $postId');

@@ -9,14 +9,15 @@ class CustomTextField extends StatefulWidget {
   final TextStyle? hintTextStyle;
   final Widget? sufIcon;
   final Widget? preIcon;
-  final ValueChanged<String>? onChanged; // Changed to match naming convention
+  final ValueChanged<String>? onChange;
   final double borderRadius;
   final Color? containerColor;
   final Color? borderColor;
   final bool isPassword;
   final Color? textColor;
-  final int? maxLines; // Corrected naming to match common usage
-  final TextInputType? keyboardType; // Added to allow custom keyboard types
+  final int? maxLines;
+  final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     super.key,
@@ -26,14 +27,15 @@ class CustomTextField extends StatefulWidget {
     this.hintTextStyle,
     this.sufIcon,
     this.preIcon,
-    this.onChanged ,
+    this.onChange,
     this.borderRadius = 12,
     this.containerColor,
     this.borderColor,
     this.isPassword = false,
     this.textColor,
     this.maxLines = 1,
-    this.keyboardType, required ValueChanged<String> onChange,
+    this.keyboardType,
+    this.validator,
   });
 
   @override
@@ -49,7 +51,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _obscureText = widget.isPassword;
   }
 
-  @override   Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: widget.height,
       decoration: BoxDecoration(
@@ -57,16 +60,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
         border: Border.all(color: widget.borderColor ?? AppColors.borderColor),
         color: widget.containerColor,
       ),
-      child: TextField(
+      child: TextFormField(
         textInputAction: TextInputAction.done,
-        onChanged: widget.onChanged,
+        onChanged: widget.onChange,
         controller: widget.controller,
         maxLines: widget.maxLines,
         keyboardType: widget.keyboardType ?? (widget.isPassword
             ? TextInputType.text
-            : TextInputType.text), // Default to number for price input
+            : TextInputType.text),
         obscureText: widget.isPassword ? _obscureText : false,
         style: TextStyle(color: widget.textColor ?? AppColors.black),
+        validator: widget.validator,
         decoration: InputDecoration(
           hintText: widget.hintText ?? '',
           hintStyle: widget.hintTextStyle ?? h5.copyWith(color: AppColors.black),
@@ -86,6 +90,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 )
               : widget.sufIcon,
           border: InputBorder.none,
+          errorStyle: TextStyle(color: AppColors.red),
         ),
       ),
     );
