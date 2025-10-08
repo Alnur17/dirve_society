@@ -55,11 +55,11 @@ class _MyGarageViewState extends State<MyGarageView> {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 Image.asset(
-                              AppImages.carImageThree,
+                              AppImages.noImage,
                               fit: BoxFit.cover,
                             ),
                           )
-                        : Image.asset(AppImages.carImageThree),
+                        : Image.asset(AppImages.noBanner),
                   ),
                 ),
                 Positioned(
@@ -93,45 +93,57 @@ class _MyGarageViewState extends State<MyGarageView> {
                             null
                         ? NetworkImage(
                             StorageUtil.getData(StorageUtil.profilePhotoUrl))
-                        : const AssetImage(AppImages.carImageThree),
+                        : const AssetImage(AppImages.noImage),
                   ),
                 ),
                 Positioned(
                   right: 20,
                   left: Get.width * 0.32,
                   bottom: 0,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        StorageUtil.getData(StorageUtil.profileName) ?? '',
-                        style: h1.copyWith(
-                          fontSize: 20,
-                          color: AppColors.darkRed,
-                        ),
-                      ),
-                      sw8,
-                      Row(
+                  child: Container(
+                    decoration: BoxDecoration(
+                    color: Colors.grey[300]?.withOpacity(0.5),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(
-                            Icons.star,
-                            size: 22,
-                            color: AppColors.darkRed,
-                          ),
-                          sw5,
                           Text(
-                            StorageUtil.getData(StorageUtil.profileAvgRating)
-                                    ?.toString() ??
-                                '0',
-                            style: h3.copyWith(
+                            StorageUtil.getData(StorageUtil.profileName) ?? '',
+                            style: h1.copyWith(
+                              fontSize: 20,
                               color: AppColors.darkRed,
-                              fontWeight: FontWeight.w700,
                             ),
+                          ),
+                          sw8,
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                size: 22,
+                                color: AppColors.darkRed,
+                              ),
+                              sw5,
+                              Text(
+                                StorageUtil.getData(StorageUtil.profileAvgRating)
+                                        ?.toString() ??
+                                    '0',
+                                style: h3.copyWith(
+                                  color: AppColors.darkRed,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ],
@@ -238,7 +250,7 @@ class _MyGarageViewState extends State<MyGarageView> {
                       // final imageUrl =
                       //     controller.myGarageList![index].images.isNotEmpty
                       //         ? controller.myGarageList![index].images[0]
-                      //         : AppImages.carImageThree;
+                      //         : AppImages.noImage;
                       return Padding(
                         padding: EdgeInsets.only(
                           top: index == 0 ? 12 : 8,

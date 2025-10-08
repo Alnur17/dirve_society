@@ -105,7 +105,7 @@ class _CreateMeetsViewState extends State<CreateMeetsView> {
                     onChange: (String value) {},
                   ),
                   sh16,
-                  Text('Date', style: h5),
+                  Text('Date', style: h5), 
                   sh8,
                   GestureDetector(
                     onTap: () async {

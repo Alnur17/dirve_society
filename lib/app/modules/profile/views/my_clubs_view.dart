@@ -58,11 +58,10 @@ class _MyClubsViewState extends State<MyClubsView> {
                                     StorageUtil.profileCoverPhoto),
                                 fit: BoxFit.cover,
                               )
-                            : Image.asset(AppImages.carImageThree)),
+                            : Image.asset(AppImages.noBanner)),
                   ),
                   Positioned(
                     left: 20,
- 
                     child: GestureDetector(
                       onTap: () {
                         Get.back();
@@ -89,43 +88,57 @@ class _MyClubsViewState extends State<MyClubsView> {
                                     null
                                 ? NetworkImage(StorageUtil.getData(
                                     StorageUtil.profilePhotoUrl))
-                                : AssetImage(AppImages.carImageThree),
+                                : AssetImage(AppImages.noImage),
                       )),
                   Positioned(
                     right: 20,
                     left: Get.width * 0.32,
                     bottom: 0,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          StorageUtil.getData(StorageUtil.profileName) ?? '',
-                          style: h1.copyWith(
-                            fontSize: 20,
-                            color: AppColors.darkRed,
-                          ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300]?.withOpacity(0.5),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
                         ),
-                        sw8,
-                        Row(
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
-                              Icons.star,
-                              size: 22,
-                              color: AppColors.darkRed,
-                            ),
-                            sw5,
                             Text(
-                              StorageUtil.getData(StorageUtil.profileAvgRating)
-                                  .toString(),
-                              style: h3.copyWith(
+                              StorageUtil.getData(StorageUtil.profileName) ??
+                                  '',
+                              style: h1.copyWith(
+                                fontSize: 20,
                                 color: AppColors.darkRed,
-                                fontWeight: FontWeight.w700,
                               ),
+                            ),
+                            sw8,
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  size: 22,
+                                  color: AppColors.darkRed,
+                                ),
+                                sw5,
+                                Text(
+                                  StorageUtil.getData(
+                                          StorageUtil.profileAvgRating)
+                                      .toString(),
+                                  style: h3.copyWith(
+                                    color: AppColors.darkRed,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ],

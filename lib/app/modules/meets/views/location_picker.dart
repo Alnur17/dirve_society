@@ -1,4 +1,3 @@
-
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +45,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
           final double lng = double.parse(data[0]['lon']);
           setState(() {
             selectedPosition = LatLng(lat, lng);
-            _mapController.move(selectedPosition, 13.0);
+            _mapController.move(selectedPosition, 13.0); // Move map to new location
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -74,42 +73,42 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
       ),
       body: Stack(
         children: [
-          // FlutterMap(
-          //   mapController: _mapController,
-          //   options: MapOptions(
-          //     initialCenter: widget.initialPosition,
-          //     initialZoom: 13.0,
-          //     onTap: (tapPosition, point) {
-          //       setState(() {
-          //         selectedPosition = point;
-          //       });
-          //     },
-          //   ),
-          //   children: [
-          //     TileLayer(
-          //       urlTemplate:
-          //           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          //       subdomains: const ['a', 'b', 'c'],
-          //     ),
-          //     MarkerLayer(
-          //       markers: [
-          //         Marker(
-          //           width: 80.0,
-          //           height: 80.0,
-          //           point: selectedPosition,
-          //           child: const Icon(
-          //             Icons.location_pin,
-          //             color: Colors.red,
-          //             size: 40,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
+          // Add FlutterMap here
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: widget.initialPosition,
+              initialZoom: 13.0,
+              onTap: (tapPosition, point) {
+                setState(() {
+                  selectedPosition = point;
+                });
+              },
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    width: 80.0,
+                    height: 80.0,
+                    point: selectedPosition,
+                    child: const Icon(
+                      Icons.location_pin,
+                      color: Colors.red,
+                      size: 40,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
           // Search bar at the top
           Positioned(
-            top: 60, // Adjusted to ensure visibility
+            top: 60,
             left: 10,
             right: 10,
             child: Container(
@@ -128,7 +127,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
               child: TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
-                  hintText: 'Search location (e.g., Banani)',
+                  hintText: 'Search location',
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () {

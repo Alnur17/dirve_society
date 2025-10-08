@@ -35,7 +35,7 @@ class ProfileViewModeView extends GetView {
                 left: 20,
                 top: 40,
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () { 
                     Get.back();
                   },
                   child: Container(
@@ -265,7 +265,7 @@ class ProfileViewModeView extends GetView {
           //               itemBuilder: (context, index) => ClipRRect(
           //                 borderRadius: BorderRadius.circular(12),
           //                 child: Image.asset(
-          //                   AppImages.carImageThree,
+          //                   AppImages.noImage,
           //                   scale: 4,
           //                   fit: BoxFit.cover,
           //                 ),

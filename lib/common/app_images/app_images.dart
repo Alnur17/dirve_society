@@ -101,11 +101,14 @@ class AppImages {
   static const gallery = "assets/icons/gallery.png";
   static const car = "assets/icons/car.png";
   static const carShipped = "assets/icons/car shipped.png";
+ 
 
   //================ Images ==================>
 
   static const splashBackImage = "assets/images/splash back image.png";
   static const backgroundImage = "assets/images/backgroundImage.jpg";
+  static const noImage = "assets/images/no_image.jpg";
+  static const noBanner = "assets/images/no_banner.jpg";
 
 
 

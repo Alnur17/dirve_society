@@ -37,7 +37,7 @@ class DummyData {
      'name': 'Nissan R35 GTR',
      'price': '£500,000',
      'date': 'April 4',
-     'image': AppImages.carImageThree
+     'image': AppImages.noImage
    },
    {
      'name': 'Nissan R35 GTR',
@@ -79,7 +79,7 @@ class DummyData {
      'description': 'Phasellus cursus nisi vel tempor gravida.',
    },
    {
-     'image': AppImages.carImageThree,
+     'image': AppImages.noImage,
      'name': 'Audi R8',
      'rating': 4.7,
      'description': 'Vivamus sollicitudin a nisi eu aliquam.',

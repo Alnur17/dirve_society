@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, avoid_print
+// ignore_for_file: depend_on_referenced_packages, avoid_print, prefer_final_fields
 
 import 'dart:convert';
 import 'dart:io';
@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
-
+ 
 class EditProfileController extends GetxController {
   // Changed to RxBool for reactive state management
   RxBool _inProgress = false.obs;

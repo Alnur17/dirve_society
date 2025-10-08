@@ -120,7 +120,7 @@ class MeetsView extends StatelessWidget {
               child: TextField(
                 controller: searchController,
                 decoration: InputDecoration(
-                  hintText: 'Search location (e.g., Banani)',
+                  hintText: 'Search location',
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () {

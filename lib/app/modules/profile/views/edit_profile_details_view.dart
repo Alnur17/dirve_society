@@ -67,21 +67,25 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
             clipBehavior: Clip.none,
             children: [
               Positioned(
-                  child: SizedBox(
-                      height: 240,
-                      width: double.infinity,
-                      child:
-                          StorageUtil.getData(StorageUtil.profileCoverPhoto) !=
-                                  null
-                              ? Image.network(
-                                  StorageUtil.getData(
-                                      StorageUtil.profileCoverPhoto)!,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  AppImages.carImageThree,
-                                  fit: BoxFit.cover,
-                                ))),
+                child: SizedBox(
+                  height: 240,
+                  width: double.infinity,
+                  child: bannerImage != null
+                      ? Image.file(
+                          bannerImage!,
+                          fit: BoxFit.cover,
+                        )
+                      : StorageUtil.getData(StorageUtil.profileCoverPhoto) != null
+                          ? Image.network(
+                              StorageUtil.getData(StorageUtil.profileCoverPhoto)!,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              AppImages.noImage,
+                              fit: BoxFit.cover,
+                            ),
+                ),
+              ),
               Positioned(
                 left: 20,
                 top: 40,
@@ -107,14 +111,13 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                 child: CircleAvatar(
                   radius: 45,
                   backgroundColor: AppColors.white,
-                  backgroundImage:
-                      StorageUtil.getData(StorageUtil.profilePhotoUrl) != null
+                  backgroundImage: image != null
+                      ? FileImage(image!)
+                      : StorageUtil.getData(StorageUtil.profilePhotoUrl) != null
                           ? NetworkImage(
                               StorageUtil.getData(StorageUtil.profilePhotoUrl)!,
                             )
-                          : AssetImage(
-                              AppImages.carImageThree,
-                            ),
+                          : const AssetImage(AppImages.noImage),
                 ),
               ),
               Positioned(
@@ -122,11 +125,10 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                 left: 90,
                 child: InkWell(
                   onTap: () {
-                    _imagePickerHelper.showAlertDialog(context, (
-                      File pickedImage,
-                    ) {
+                    _imagePickerHelper.showAlertDialog(context, (File pickedImage) {
                       setState(() {
                         image = pickedImage;
+                        print('Selected Image: $image');
                       });
                     });
                   },
@@ -148,11 +150,10 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                 right: 20,
                 child: InkWell(
                   onTap: () {
-                    _imagePickerHelper.showAlertDialog(context, (
-                      File pickedImage,
-                    ) {
+                    _imagePickerHelper.showAlertDialog(context, (File pickedImage) {
                       setState(() {
                         bannerImage = pickedImage;
+                        print('Selected Banner Image: $bannerImage');
                       });
                     });
                   },
@@ -241,6 +242,7 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
   }
 
   Future<void> editProfile() async {
+    print('Edit profile called');
     if (formKey.currentState!.validate()) {
       final bool isSuccess = await editProfileController.updateProfile(
         nameController.text,

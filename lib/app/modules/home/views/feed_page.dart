@@ -187,7 +187,7 @@ class _FeedPageState extends State<FeedPage> {
                                   null
                               ? NetworkImage(StorageUtil.getData(
                                   StorageUtil.profilePhotoUrl))
-                              : AssetImage(AppImages.carImageThree),
+                              : AssetImage(AppImages.noImage),
                         ),
                         Positioned(
                           right: 0,

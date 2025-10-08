@@ -33,7 +33,7 @@ class _HomeViewState extends State<HomeView> {
             backgroundImage: StorageUtil.getData(StorageUtil.profilePhotoUrl) !=
                     null
                 ? NetworkImage(StorageUtil.getData(StorageUtil.profilePhotoUrl))
-                : AssetImage(AppImages.carImageThree),
+                : AssetImage(AppImages.noImage),
           ),
         ),
         automaticallyImplyLeading: false,

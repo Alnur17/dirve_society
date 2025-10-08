@@ -50,11 +50,13 @@ class _ProfileViewState extends State<ProfileView> {
                 child: SizedBox(
                   height: 200,
                   width: double.infinity,
-                  child: Image.network(
-                    StorageUtil.getData(StorageUtil.profileCoverPhoto) ??
-                        'https://fastly.picsum.photos/id/1/200/300.jpg?hmac=jH5bDkLr6Tgy3oAg5khKCHeunZMHq0ehBZr6vGifPLY',
-                    fit: BoxFit.cover,
-                  ),
+                  child: StorageUtil.getData(StorageUtil.profileCoverPhoto) !=
+                          null
+                      ? Image.network(
+                          StorageUtil.getData(StorageUtil.profileCoverPhoto)!,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(AppImages.noBanner, fit: BoxFit.fill),
                 ),
               ),
               Positioned(
@@ -81,46 +83,60 @@ class _ProfileViewState extends State<ProfileView> {
                 child: CircleAvatar(
                   radius: 45,
                   backgroundColor: AppColors.white,
-                  backgroundImage: NetworkImage(StorageUtil.getData(
-                          StorageUtil.profilePhotoUrl) ??
-                      'https://fastly.picsum.photos/id/1/200/300.jpg?hmac=jH5bDkLr6Tgy3oAg5khKCHeunZMHq0ehBZr6vGifPLY'),
+                  backgroundImage:
+                      StorageUtil.getData(StorageUtil.profilePhotoUrl) != null
+                          ? NetworkImage(
+                              StorageUtil.getData(StorageUtil.profilePhotoUrl)!)
+                          : AssetImage(AppImages.noImage),
                 ),
               ),
               Positioned(
                 right: 20,
                 left: Get.width * 0.32,
                 bottom: 0,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      StorageUtil.getData(StorageUtil.profileName) ?? '',
-                      style: h1.copyWith(
-                        fontSize: 20,
-                        color: AppColors.darkRed,
-                      ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300]?.withOpacity(0.5),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
                     ),
-                    sw8,
-                    Row(
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          Icons.star,
-                          size: 22,
-                          color: AppColors.darkRed,
-                        ),
-                        sw5,
                         Text(
-                          StorageUtil.getData(StorageUtil.profileAvgRating)
-                              .toString(),
-                          style: h3.copyWith(
+                          StorageUtil.getData(StorageUtil.profileName) ?? '',
+                          style: h1.copyWith(
+                            fontSize: 20,
                             color: AppColors.darkRed,
-                            fontWeight: FontWeight.w700,
                           ),
                         ),
+                        sw8,
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star,
+                              size: 22,
+                              color: AppColors.darkRed,
+                            ),
+                            sw5,
+                            Text(
+                              StorageUtil.getData(StorageUtil.profileAvgRating)
+                                  .toString(),
+                              style: h3.copyWith(
+                                color: AppColors.darkRed,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
-                    ),              
-                  ],
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -310,6 +326,19 @@ class _ProfileViewState extends State<ProfileView> {
           },
           yesOntap: () {
             StorageUtil.deleteData(StorageUtil.userAccessToken);
+            StorageUtil.deleteData(StorageUtil.profileId);
+            StorageUtil.deleteData(StorageUtil.profileName);
+            StorageUtil.deleteData(StorageUtil.profileEmail);
+            StorageUtil.deleteData(StorageUtil.profilePhotoUrl);
+            StorageUtil.deleteData(StorageUtil.profileBio);
+            StorageUtil.deleteData(StorageUtil.profileScores);
+            StorageUtil.deleteData(StorageUtil.profileStatus);
+            StorageUtil.deleteData(StorageUtil.profileDataId);
+            StorageUtil.deleteData(StorageUtil.profileCreatedAt);
+            StorageUtil.deleteData(StorageUtil.profileAvgRating);
+            StorageUtil.deleteData(StorageUtil.profileCoverPhoto);
+            StorageUtil.deleteData(StorageUtil.isPaid);
+
             Get.offAll(() => LoginView());
           },
           iconData: Icons.logout,

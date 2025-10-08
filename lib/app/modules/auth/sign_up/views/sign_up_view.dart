@@ -150,7 +150,7 @@ class _SignUpViewState extends State<SignUpView> {
                       onChange: (String value) {},
                       controller: passwordController,
                       sufIcon: Image.asset(
-                        AppImages.eyeClose,
+                        AppImages.eyeClose, 
                         scale: 4,
                       ),
                       hintText: '**********',
