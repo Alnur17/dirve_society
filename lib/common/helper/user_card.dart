@@ -84,7 +84,7 @@ class UserCard extends StatelessWidget {
               description,
               style: h6.copyWith(color: AppColors.grey),
               textAlign: TextAlign.center,
-              maxLines: 2,
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             sh12,
@@ -101,7 +101,6 @@ class UserCard extends StatelessWidget {
             ),
             isOneButton == true
                 ? CustomButton(
-                  
                     height: 28,
                     text: 'Add Friend',
                     onPressed: addFriendButton,

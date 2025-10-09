@@ -3,14 +3,13 @@ import 'package:dirve_society/app/modules/home/controllers/all_connection_contro
 import 'package:dirve_society/app/modules/home/controllers/connection_view/add_connection_request_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/change_connection_status_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/people_may_know_controller.dart';
+import 'package:dirve_society/app/modules/home/views/all_people_you_may_screen.dart';
 import 'package:dirve_society/app/modules/profile/others/views/others_profile_screen.dart';
 import 'package:dirve_society/common/helper/user_card.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class ConnectUserView extends StatefulWidget {
   const ConnectUserView({super.key});
@@ -86,28 +85,28 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                           width: 200, // Ensure UserCard respects this width
                           child: UserCard(
                             image: controller.allPendingConnectionList![index]
-                                    .reference?.photoUrl ??
+                                    .user?.photoUrl ??
                                 '',
                             title: controller.allPendingConnectionList![index]
-                                    .reference?.name ??
+                                    .user?.name ??
                                 '',
                             rating: controller.allPendingConnectionList![index]
-                                        .reference!.ratingCount ==
+                                        .user!.avgRating ==
                                     null
                                 ? 0.0.toString()
                                 : controller.allPendingConnectionList![index]
-                                            .reference?.ratingCount ==
+                                            .user?.avgRating ==
                                         0
                                     ? 0.0.toString()
                                     : controller
                                             .allPendingConnectionList![index]
-                                            .reference
-                                            ?.ratingCount!
+                                            .user
+                                            ?.avgRating!
                                             .toString() ??
                                         '',
                             description: controller
                                     .allPendingConnectionList![index]
-                                    .reference
+                                    .user
                                     ?.bio ??
                                 '',
                             isAdded: true,
@@ -115,7 +114,7 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                               changeConnectionRequest(
                                   userId: controller
                                           .allPendingConnectionList![index]
-                                          .reference!
+                                          .user!
                                           .id ??
                                       '',
                                   contentId: controller
@@ -129,7 +128,7 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                               changeConnectionRequest(
                                   userId: controller
                                           .allPendingConnectionList![index]
-                                          .reference!
+                                          .user!
                                           .id ??
                                       '',
                                   contentId: controller
@@ -142,7 +141,7 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                               Get.to(() => OthersProfileView(
                                     authorId: controller
                                             .allPendingConnectionList![index]
-                                            .reference!
+                                            .user!
                                             .id ??
                                         '',
                                   ));
@@ -156,14 +155,31 @@ class _ConnectUserViewState extends State<ConnectUserView> {
               },
             ),
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              'People you may know',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'People you may know',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Get.to(() => AllPeopleYouMayScreen());
+                  },
+                  child: Text(
+                    'view all',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.lightBlue),
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(
@@ -186,7 +202,9 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                 return ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: controller.peopleYouMayList!.length,
+                  itemCount: controller.peopleYouMayList!.length < 4
+                      ? controller.peopleYouMayList!.length
+                      : 4,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -202,7 +220,7 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                                 .peopleYouMayList![index].ratingCount
                                 .toString(),
                             description:
-                                'Duis vitae egestas sapien. Quisque onaaque in',
+                                controller.peopleYouMayList![index].bio ?? '',
                             isAdded: true,
                             acceptButton: () {},
                             addFriendButton: () {

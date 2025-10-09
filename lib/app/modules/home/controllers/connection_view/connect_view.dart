@@ -127,6 +127,6 @@ class _ConnectViewState extends State<ConnectView> {
           ),
         ],
       ),
-    );
+    );                 
   }
 }

@@ -38,9 +38,9 @@ class AllPendingConnectionItemModel {
     });
 
     final String? id;
-    final String? user;
+    final User? user;
     final String? modelType;
-    final Reference? reference;
+    final String? reference;
     final String? status;
     final bool? isDeleted;
     final DateTime? createdAt;
@@ -49,9 +49,9 @@ class AllPendingConnectionItemModel {
     factory AllPendingConnectionItemModel.fromJson(Map<String, dynamic> json){ 
         return AllPendingConnectionItemModel(
             id: json["_id"],
-            user: json["user"],
+            user: json["user"] == null ? null : User.fromJson(json["user"]),
             modelType: json["modelType"],
-            reference: json["reference"] == null ? null : Reference.fromJson(json["reference"]),
+            reference: json["reference"],
             status: json["status"],
             isDeleted: json["isDeleted"],
             createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
@@ -61,28 +61,28 @@ class AllPendingConnectionItemModel {
 
 }
 
-class Reference {
-    Reference({
-        required this.ratingCount,
+class User {
+    User({
         required this.id,
         required this.name,
         required this.photoUrl,
         required this.bio,
+        required this.avgRating,
     });
 
-    final int? ratingCount;
     final String? id;
     final String? name;
     final String? photoUrl;
     final String? bio;
+    final dynamic avgRating;
 
-    factory Reference.fromJson(Map<String, dynamic> json){ 
-        return Reference(
-            ratingCount: json["ratingCount"],
+    factory User.fromJson(Map<String, dynamic> json){ 
+        return User(
             id: json["_id"],
             name: json["name"],
             photoUrl: json["photoUrl"],
             bio: json["bio"],
+            avgRating: json["avgRating"],
         );
     }
 

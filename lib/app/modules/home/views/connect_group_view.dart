@@ -2,11 +2,11 @@ import 'package:dirve_society/app/modules/home/controllers/connection_view/add_c
 import 'package:dirve_society/app/modules/home/controllers/connection_view/change_connection_status_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/discover_club_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/my_joining_club_controller.dart';
+import 'package:dirve_society/app/modules/home/views/all_populer_group_screen.dart';
 import 'package:dirve_society/common/helper/group_card.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ConnectGroupView extends StatefulWidget {
@@ -110,14 +110,31 @@ class _ConnectGroupViewState extends State<ConnectGroupView> {
               );
             }),
           ),
-          const Padding(
+           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              'Discover Popular Groups',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Discover Popular Groups',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                      Get.to(() => AllPopulerScreen());
+                  },
+                  child: Text(
+                    'view all',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.blue),
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(
@@ -137,7 +154,7 @@ class _ConnectGroupViewState extends State<ConnectGroupView> {
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: controller.discoverClubList?.length,
+                itemCount: controller.discoverClubList!.length < 4 ? controller.discoverClubList?.length : 4,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),

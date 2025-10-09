@@ -25,7 +25,7 @@ class Urls {
   static const String addStoryUrl = '$_baseUrl/stories';
   static const String allPendingConnection =
       '$_baseUrl/connect-requests/my-connection';
-  static const String allmarketPlaceUrl = '$_baseUrl/cars';
+  static const String allmarketPlaceUrl = '$_baseUrl/cars/marketplace';
   static const String contentUrl = '$_baseUrl/contents';
   static const String addCarUrl = '$_baseUrl/cars';
   static const String reviewUrl = '$_baseUrl/reviews';

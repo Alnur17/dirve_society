@@ -35,7 +35,7 @@ class AllMarketplaceController extends GetxController {
 
     Map<String, dynamic> queryParams = {
       'limit': 99999,
-    };
+    }; 
     final NetworkResponse response = await networkCaller.getRequest(
       Urls.allmarketPlaceUrl,
       queryParams: queryParams,
