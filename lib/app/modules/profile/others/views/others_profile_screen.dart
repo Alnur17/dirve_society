@@ -86,10 +86,12 @@ class _OthersProfileViewState extends State<OthersProfileView> {
                   height: screenHeight * 0.3,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(
-                        controller.profileData?.coverPhoto ??
-                            'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA',
-                      ),
+                      image: controller.profileData?.coverPhoto == null
+                          ? AssetImage(AppImages.noBanner)
+                          : NetworkImage(
+                              controller.profileData?.coverPhoto ??
+                                  'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA',
+                            ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -133,27 +135,37 @@ class _OthersProfileViewState extends State<OthersProfileView> {
                             CircleAvatar(
                               radius: 50,
                               backgroundColor: AppColors.white,
-                              backgroundImage: NetworkImage(
-                                controller.profileData?.photoUrl ??
-                                    'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA',
-                              ),
+                              backgroundImage:
+                                  controller.profileData?.photoUrl == null
+                                      ? AssetImage(AppImages.noImage)
+                                      : NetworkImage(
+                                          controller.profileData?.photoUrl ??
+                                              'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA',
+                                        ),
                             ),
                             sw12,
-                            SizedBox(
-                              width: 140,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    controller.profileData?.name ?? 'No name',
-                                    style: h1.copyWith(
-                                      fontSize: 20,
-                                      color: AppColors.darkRed,
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.white.withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: SizedBox(
+                                width: 140,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      controller.profileData?.name ?? 'No name',
+                                      style: h1.copyWith(
+                                        fontSize: 20,
+                                        color: AppColors.darkRed,
+                                      ),
                                     ),
-                                  ),
-                                  sh50,
-                                ],
+                                    sh50,
+                                  ],
+                                ),
                               ),
                             ),
                             const Spacer(),
@@ -247,7 +259,6 @@ class _OthersProfileViewState extends State<OthersProfileView> {
                         child: selectedIndex == 0
                             ? OthersFeedScreen(authorId: widget.authorId)
                             : OthersProfileMarketPlace(id: widget.authorId),
-                        // TODO: Replace with OthersForumScreen if different content is needed
                       ),
                     ],
                   ),

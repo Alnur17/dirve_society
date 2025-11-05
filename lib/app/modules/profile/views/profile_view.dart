@@ -3,6 +3,7 @@ import 'package:dirve_society/app/modules/profile/controllers/content_controller
 import 'package:dirve_society/app/modules/profile/views/changed_password_view.dart';
 import 'package:dirve_society/app/modules/profile/views/edit_profile_details_view.dart';
 import 'package:dirve_society/app/modules/profile/views/my_clubs_view.dart';
+import 'package:dirve_society/app/modules/profile/views/my_friend_screen.dart';
 import 'package:dirve_society/app/modules/profile/views/my_garage_view.dart';
 import 'package:dirve_society/app/modules/profile/views/my_post_view.dart';
 import 'package:dirve_society/app/modules/profile/views/privacy_and_security_view.dart';
@@ -232,6 +233,15 @@ class _ProfileViewState extends State<ProfileView> {
                         },
                         leadingImage: AppImages.edit,
                         title: 'My Clubs',
+                        trailingImage: AppImages.arrowRightSmall,
+                      ),
+                      sh12,
+                      CustomListTile(
+                        onTap: () {
+                          Get.to(() => MyFriendScreen());
+                        },
+                        leadingImage: AppImages.edit,
+                        title: 'My Friends',
                         trailingImage: AppImages.arrowRightSmall,
                       ),
                       sh12,

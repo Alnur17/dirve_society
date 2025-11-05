@@ -1,9 +1,12 @@
 // post_card.dart
 // ignore_for_file: unused_local_variable
 
+import 'package:dirve_society/app/modules/profile/others/views/others_profile_screen.dart';
 import 'package:dirve_society/common/helper/media_cobtainer.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:readmore/readmore.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
@@ -11,6 +14,7 @@ import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
 
 class PostCard extends StatelessWidget {
+  final String? id;
   final String profileImage;
   final String clubName;
   final String userName;
@@ -46,6 +50,7 @@ class PostCard extends StatelessWidget {
     required this.onLikeTap,
     required this.onCommentTap,
     required this.onBookmarkTap,
+    this.id,
   });
 
   @override
@@ -68,62 +73,70 @@ class PostCard extends StatelessWidget {
                 horizontal: 20,
                 vertical: 8,
               ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20.0,
-                    backgroundImage: NetworkImage(profileImage),
-                  ),
-                  sw8,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        clubName,
-                        style: h5.copyWith(
-                          fontWeight: FontWeight.w600,
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(() => OthersProfileView(
+                        authorId: id!,
+                      ));
+                },
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20.0,
+                      backgroundImage: NetworkImage(profileImage),
+                    ),
+                    sw8,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          clubName,
+                          style: h5.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      // Text(
-                      //   'BY $userName'.toUpperCase(),
-                      //   style: h7,
-                      // ),
-                    ],
-                  ),
-                  // Spacer(),
-                  // GestureDetector(
-                  //   onTap: onMenuTap,
-                  //   child: Container(
-                  //     padding: EdgeInsets.all(8),
-                  //     decoration: ShapeDecoration(
-                  //       shape: CircleBorder(),
-                  //       color: AppColors.silver,
-                  //     ),
-                  //     child: Image.asset(
-                  //       AppImages.menu,
-                  //       scale: 4,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                        // Text(
+                        //   'BY $userName'.toUpperCase(),
+                        //   style: h7,
+                        // ),
+                      ],
+                    ),
+                    // Spacer(),
+                    // GestureDetector(
+                    //   onTap: onMenuTap,
+                    //   child: Container(
+                    //     padding: EdgeInsets.all(8),
+                    //     decoration: ShapeDecoration(
+                    //       shape: CircleBorder(),
+                    //       color: AppColors.silver,
+                    //     ),
+                    //     child: Image.asset(
+                    //       AppImages.menu,
+                    //       scale: 4,
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             ),
             // Media Content
             contentPath.isNotEmpty
                 ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: MediaContainer(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: MediaContainer(
                       mediaPath: contentPath,
                       height: 280,
                       width: MediaQuery.of(context).size.width,
                       borderColor: Colors.white,
                       borderRadius: 12,
                     ),
-                )
+                  )
                 : Container(),
             // Post Actions
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 4.0),
               child: Row(
                 children: [
                   GestureDetector(

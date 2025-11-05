@@ -1,34 +1,34 @@
 // ignore_for_file: avoid_print
 
-import 'package:dirve_society/app/modules/home/model/all_car_rating_model.dart';
+import 'package:dirve_society/app/modules/home/model/all_pending_connection_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class AllCarRatingController extends GetxController {
+class MyFriendController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
   bool get inProgress => _inProgress;
 
-  String? _errorMessage; 
+  String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  CarRatingModel? _carRatingModel;
-  List<CarRatingItemModel>? get carRatingList => _carRatingModel?.data;
-
+  AllPendingConnectionModel? _allPendingConnectionModel;
+  List<AllPendingConnectionItemModel>? get allPendingConnectionList =>
+      _allPendingConnectionModel?.data;
 
   int? lastPage;
 
   @override
   void onInit() {
-    getAllCarRating();
+    getMyFriendConnection();
     super.onInit();
   }
 
-  Future<bool> getAllCarRating() async {
+  Future<bool> getMyFriendConnection() async {
     if (_inProgress) {
       return false;
     }
@@ -36,13 +36,11 @@ class AllCarRatingController extends GetxController {
     bool isSuccess = false;
 
     _inProgress = true;
-    update(); 
+    update();
 
-    Map<String, dynamic> queryParams = {
-      'limit': 99999,
-    };
+    Map<String, dynamic> queryParams = {'limit': 99999, 'status': 'approved'};
     final NetworkResponse response = await networkCaller.getRequest(
-      Urls.carRatingUrl,
+      Urls.allPendingConnection,
       queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
@@ -51,7 +49,8 @@ class AllCarRatingController extends GetxController {
       _errorMessage = null;
       isSuccess = true;
 
-      _carRatingModel = CarRatingModel.fromJson(response.responseData);
+      _allPendingConnectionModel =
+          AllPendingConnectionModel.fromJson(response.responseData);
 
       _errorMessage = null;
     } else {

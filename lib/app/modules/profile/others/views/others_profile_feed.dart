@@ -27,35 +27,53 @@ class _OthersFeedScreenState extends State<OthersFeedScreen> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
-      child: Expanded(child: GetBuilder<OthersClubFeedController>(
-        builder: (controller) {
-          if (controller.inProgress) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return GridView.builder(
-              itemCount: controller.allPostList?.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16),
-              itemBuilder: (context, index) {
-                return Container(
-                    decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                      image: NetworkImage(
-                          controller.allPostList![index].content.first),
-                      fit: BoxFit.cover),
-                ));
+      child: Column(
+        children: [
+          Expanded(
+            child: GetBuilder<OthersClubFeedController>(
+              builder: (controller) {
+                if (controller.inProgress) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (controller.allPostList == null ||
+                    controller.allPostList!.isEmpty) {
+                  return const SizedBox(
+                    height: 300,
+                    child: Center(
+                      child: Text('No Post Found'),
+                    ),
+                  );
+                } else {
+                  return GridView.builder(
+                    itemCount: controller.allPostList?.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                    ),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              controller.allPostList![index].content.first,
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
-            );
-          }
-        },
-      )),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

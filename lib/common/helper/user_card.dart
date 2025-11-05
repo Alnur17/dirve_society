@@ -6,6 +6,7 @@ import '../size_box/custom_sizebox.dart';
 import '../widgets/custom_button.dart';
 
 class UserCard extends StatelessWidget {
+  final String? addFriendName;
   final String title;
   final String rating;
   final String description;
@@ -28,7 +29,7 @@ class UserCard extends StatelessWidget {
     this.isOneButton,
     required this.rejectedButton,
     required this.addFriendButton,
-    this.image,
+    this.image, this.addFriendName,
   });
 
   @override
@@ -102,7 +103,7 @@ class UserCard extends StatelessWidget {
             isOneButton == true
                 ? CustomButton(
                     height: 28,
-                    text: 'Add Friend',
+                    text: addFriendName ?? 'Add Friend',
                     onPressed: addFriendButton,
                     backgroundColor: AppColors.darkRed,
                   )

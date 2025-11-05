@@ -230,7 +230,7 @@ class _FeedPageState extends State<FeedPage> {
                       scrollDirection: Axis.horizontal,
                       itemCount: controller.storData?.length,
                       itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.only(),
+                        padding: EdgeInsets.only(left: 4),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -252,7 +252,7 @@ class _FeedPageState extends State<FeedPage> {
                               style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.w600),
+                                  fontWeight: FontWeight.w500),
                             )
                           ],
                         ),
@@ -290,6 +290,7 @@ class _FeedPageState extends State<FeedPage> {
                     DateFormatter(feed.createdAt ?? DateTime.now());
                 return feed.isHide == false
                     ? PostCard(
+                        id: feed.author?.id ?? '',
                         profileImage: feed.author?.photoUrl ?? '',
                         clubName: feed.author?.name ?? '',
                         userName: feed.author?.name ?? 'Unknown',
@@ -307,7 +308,7 @@ class _FeedPageState extends State<FeedPage> {
                         },
                         onMenuTap: () {
                           // Implement menu/bottom sheet (implement as needed)
-                        }, 
+                        },
                         onLikeTap: () {
                           print(
                               'Like tapped for post ID: ${feed.contentMeta?.id}');

@@ -103,7 +103,7 @@ class _ConnectUserViewState extends State<ConnectUserView> {
                                             .user
                                             ?.avgRating!
                                             .toString() ??
-                                        '',
+                                        '', 
                             description: controller
                                     .allPendingConnectionList![index]
                                     .user

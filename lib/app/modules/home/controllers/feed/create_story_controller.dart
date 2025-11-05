@@ -18,7 +18,7 @@ class AddStoryController extends GetxController {
   String? get errorMessage => _errorMessage;
 
   /// 🔁 Add Story Function
-  Future<bool> addStory(
+   Future<bool> addStory(
     String caption,
     File? image,
   ) async {

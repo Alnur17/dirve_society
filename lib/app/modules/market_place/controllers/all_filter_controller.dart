@@ -1,11 +1,10 @@
 import 'package:dirve_society/app/modules/market_place/model/all_filter_model.dart';
-import 'package:dirve_society/app/modules/market_place/model/all_review_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
-
+ 
 class AllFilterController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 

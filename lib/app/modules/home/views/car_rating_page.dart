@@ -2,6 +2,7 @@
 
 import 'package:dirve_society/app/modules/home/controllers/all_car_rating_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/feed/react_controller.dart';
+import 'package:dirve_society/app/modules/profile/others/views/others_profile_screen.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
@@ -72,30 +73,60 @@ class _CarRatingPageState extends State<CarRatingPage> {
                   bottom: 16,
                   left: 16,
                   right: 16,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircleAvatar(
-                        radius: 25,
-                        backgroundImage: car.author?.photoUrl != null
-                            ? NetworkImage(car.author!.photoUrl!)
-                            : const AssetImage(AppImages.carImageFive),
+                      Text(
+                        car.description ?? 'Unknown',
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 12,
+                          shadows: [
+                            Shadow(
+                              color: AppColors.black,
+                              offset: Offset(1, 1),
+                              blurRadius: 2,
+                            ),
+                          ],
+                        ),
                       ),
-                      sw5,
-                      Expanded(
-                        child: Text(
-                          car.author?.name ?? 'Unknown',
-                          style: const TextStyle(
-                            color: AppColors.white,
-                            fontSize: 14,
-                            shadows: [
-                              Shadow(
-                                color: AppColors.black,
-                                offset: Offset(1, 1),
-                                blurRadius: 2,
+                      sh8,
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(
+                            () => OthersProfileView(
+                              authorId: car.author!.id ?? '',
+                            ),
+                          );
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundImage: car.author?.photoUrl != null
+                                  ? NetworkImage(car.author!.photoUrl!)
+                                  : const AssetImage(AppImages.carImageFive),
+                            ),
+                            sw5,
+                            Expanded(
+                              child: Text(
+                                car.author?.name ?? 'Unknown',
+                                style: const TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 14,
+                                  shadows: [
+                                    Shadow(
+                                      color: AppColors.black,
+                                      offset: Offset(1, 1),
+                                      blurRadius: 2,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -157,7 +188,7 @@ class _CarRatingPageState extends State<CarRatingPage> {
     final bool isSuccess = await reactPostController.reactPost(postId);
     if (isSuccess) {
       if (mounted) {
-       // showSnackBarMessage(context, 'Like successfully completed');
+        // showSnackBarMessage(context, 'Like successfully completed');
       }
     } else {
       if (mounted) {

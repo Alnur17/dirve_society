@@ -12,11 +12,10 @@ import '../controllers/all_filter_controller.dart';
 import '../controllers/filter_controller.dart';
 
 class FilterView extends GetView<FilterController> {
-  FilterView({super.key});
+  const FilterView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Initialize controllers
     Get.put(AllFilterController());
     Get.put(FilterController());
 
@@ -30,10 +29,7 @@ class FilterView extends GetView<FilterController> {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Image.asset(
-              AppImages.close,
-              scale: 4,
-            ),
+            child: Image.asset(AppImages.close, scale: 4),
           ),
         ],
       ),
@@ -46,16 +42,16 @@ class FilterView extends GetView<FilterController> {
             return Center(
                 child: Text('Error: ${allFilterController.errorMessage}'));
           }
+
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Price Range
-                Text(
-                  'Price',
-                  style: h4.copyWith(fontWeight: FontWeight.bold),
-                ),
+                sh16,
+
+                // Price
+                _buildSectionTitle('Price'),
                 sh8,
                 Row(
                   children: [
@@ -63,301 +59,145 @@ class FilterView extends GetView<FilterController> {
                       child: CustomTextField(
                         hintText: 'Min',
                         borderColor: AppColors.darkRed,
-                        onChange: (value) => controller.setMinPrice(value),
+                        keyboardType: TextInputType.number,
+                        onChange: (v) => controller.minPrice.value = v,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    sw16,
                     Expanded(
                       child: CustomTextField(
                         hintText: 'Max',
                         borderColor: AppColors.darkRed,
-                        onChange: (value) => controller.setMaxPrice(value),
+                        keyboardType: TextInputType.number,
+                        onChange: (v) => controller.maxPrice.value = v,
                       ),
                     ),
                   ],
                 ),
                 sh16,
-                // Brands
-                Text(
-                  'Brands',
-                  style: h4.copyWith(fontWeight: FontWeight.bold),
-                ),
-                sh8,
-                Obx(
-                  () => controller.brands.isEmpty
-                      ? const Text('No brands available')
-                      : Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: controller.brands.map((brand) {
-                            return GestureDetector(
-                              onTap: () => controller.selectBrand(brand),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: controller.selectedBrand.value == brand
-                                      ? AppColors.darkRed
-                                      : AppColors.silver,
-                                ),
-                                child: Text(
-                                  brand,
-                                  style: h6.copyWith(
-                                    color:
-                                        controller.selectedBrand.value == brand
-                                            ? AppColors.white
-                                            : AppColors.black,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                ),
-                sh16,
+
+                // Brand
+                Obx(() => _buildDropdown(
+                      hint: 'Select Brand',
+                      items: controller.brands,
+                      selected: controller.selectedBrand.value,
+                      onChanged: (val) => controller.selectBrand(val!),
+                    )),
+                sh12,
+
+                // Model - Independent
+                Obx(() => _buildDropdown(
+                      hint: 'Select Model',
+                      items: controller.models, // সব মডেল সবসময়
+                      selected: controller.selectedModel.value,
+                      onChanged: (val) => controller.selectModel(val!),
+                    )),
+
                 // Condition
-                Text(
-                  'Condition',
-                  style: h4.copyWith(fontWeight: FontWeight.bold),
-                ),
+                _buildSectionTitle('Condition'),
                 sh8,
-                Obx(
-                  () => controller.conditions.isEmpty
-                      ? const Text('No conditions available')
-                      : Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: controller.conditions.map((condition) {
-                            return GestureDetector(
-                              onTap: () =>
-                                  controller.selectCondition(condition),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: controller.selectedCondition.value ==
-                                          condition
-                                      ? AppColors.darkRed
-                                      : AppColors.silver,
-                                ),
-                                child: Text(
-                                  condition,
-                                  style: h6.copyWith(
-                                    color: controller.selectedCondition.value ==
-                                            condition
-                                        ? AppColors.white
-                                        : AppColors.black,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                ),
+                Obx(() => Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: controller.conditions.map((c) {
+                        return _chip(
+                          label: c,
+                          selected: controller.selectedCondition.value == c,
+                          onTap: () => controller.selectCondition(c),
+                        );
+                      }).toList(),
+                    )),
                 sh16,
-                // Vehicle Type
-                // Text(
-                //   'Vehicle Type',
-                //   style: h4.copyWith(fontWeight: FontWeight.bold),
-                // ),
-                // sh8,
-                // Obx(
-                //   () => controller.vehicleTypes.isEmpty
-                //       ? const Text('No vehicle types available')
-                //       : Wrap(
-                //           spacing: 8,
-                //           runSpacing: 8,
-                //           children: controller.vehicleTypes.map((type) {
-                //             return GestureDetector(
-                //               onTap: () => controller.selectVehicleType(type),
-                //               child: Container(
-                //                 padding: const EdgeInsets.symmetric(
-                //                     horizontal: 12, vertical: 8),
-                //                 decoration: BoxDecoration(
-                //                   borderRadius: BorderRadius.circular(30),
-                //                   color: controller.selectedVehicleType.value == type
-                //                       ? AppColors.darkRed
-                //                       : AppColors.silver,
-                //                 ),
-                //                 child: Text(
-                //                   type,
-                //                   style: h6.copyWith(
-                //                     color: controller.selectedVehicleType.value == type
-                //                         ? AppColors.white
-                //                         : AppColors.black,
-                //                   ),
-                //                 ),
-                //               ),
-                //             );
-                //           }).toList(),
-                //         ),
-                // ),
 
                 // Year
-                Text(
-                  'Year',
-                  style: h4.copyWith(fontWeight: FontWeight.bold),
-                ),
+                _buildSectionTitle('Year'),
                 sh8,
-                Obx(
-                  () => controller.years.isEmpty
-                      ? const Text('No years available')
-                      : Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: controller.years.map((year) {
-                            return GestureDetector(
-                              onTap: () => controller.selectYear(year),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: controller.selectedYear.value == year
-                                      ? AppColors.darkRed
-                                      : AppColors.silver,
-                                ),
-                                child: Text(
-                                  year,
-                                  style: h6.copyWith(
-                                    color: controller.selectedYear.value == year
-                                        ? AppColors.white
-                                        : AppColors.black,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        hintText: 'Min Year',
+                        keyboardType: TextInputType.number,
+                        onChange: (v) => controller.minYear.value = v,
+                      ),
+                    ),
+                    sw16,
+                    Expanded(
+                      child: CustomTextField(
+                        hintText: 'Max Year',
+                        keyboardType: TextInputType.number,
+                        onChange: (v) => controller.maxYear.value = v,
+                      ),
+                    ),
+                  ],
                 ),
                 sh16,
-                // Colours
-                Text(
-                  'Colours',
-                  style: h4.copyWith(fontWeight: FontWeight.bold),
-                ),
-                sh8,
-                Obx(
-                  () => controller.colors.isEmpty
-                      ? const Text('No colors available')
-                      : Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: controller.colors.map((color) {
-                            return GestureDetector(
-                              onTap: () => controller.selectColor(color),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: controller.selectedColor.value == color
-                                      ? AppColors.darkRed
-                                      : AppColors.silver,
-                                ),
-                                child: Text(
-                                  color,
-                                  style: h6.copyWith(
-                                    color:
-                                        controller.selectedColor.value == color
-                                            ? AppColors.white
-                                            : AppColors.black,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                ),
-                sh16,
-                // Mileage
-                Text(
-                  'Mileage',
-                  style: h4.copyWith(fontWeight: FontWeight.bold),
-                ),
-                sh8,
-                Obx(
-                  () => controller.mileages.isEmpty
-                      ? const Text('No mileage options available')
-                      : Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: controller.mileages.map((mileage) {
-                            return GestureDetector(
-                              onTap: () => controller.selectMileage(mileage),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: controller.selectedMileage.value ==
-                                          mileage
-                                      ? AppColors.darkRed
-                                      : AppColors.silver,
-                                ),
-                                child: Text(
-                                  mileage.toString(),
-                                  style: h6.copyWith(
-                                    color: controller.selectedMileage.value ==
-                                            mileage
-                                        ? AppColors.white
-                                        : AppColors.black,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                ),
-                sh16,
-                // Transmission
-                Text(
-                  'Transmission',
-                  style: h4.copyWith(fontWeight: FontWeight.bold),
-                ),
-                sh8,
-                Obx(
-                  () => controller.transmissions.isEmpty
-                      ? const Text('No transmissions available')
-                      : Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children:
-                              controller.transmissions.map((transmission) {
-                            return GestureDetector(
-                              onTap: () =>
-                                  controller.selectTransmission(transmission),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color:
-                                      controller.selectedTransmission.value ==
-                                              transmission
-                                          ? AppColors.darkRed
-                                          : AppColors.silver,
-                                ),
-                                child: Text(
-                                  transmission,
-                                  style: h6.copyWith(
-                                    color:
-                                        controller.selectedTransmission.value ==
-                                                transmission
-                                            ? AppColors.white
-                                            : AppColors.black,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                ),
-                sh16,
-                // Stores
 
+                // Colours
+                _buildSectionTitle('Colours'),
+                sh8,
+                Obx(() => _buildDropdown(
+                      hint: 'Select Colour',
+                      items: [...controller.colors, 'Custom'],
+                      selected: controller.selectedColor.value,
+                      onChanged: (val) {
+                        if (val == 'Custom') {
+                          _showCustomColorDialog(context);
+                        } else {
+                          controller.selectColor(val!);
+                        }
+                      },
+                    )),
+                sh16,
+
+                // Mileage
+                _buildSectionTitle('Mileage'),
+                sh8,
+                CustomTextField(
+                  hintText: 'Enter max mileage',
+                  keyboardType: TextInputType.number,
+                  onChange: (v) => controller.maxMileage.value = v,
+                ),
+                sh16,
+
+                // Engine Size
+                _buildSectionTitle('Engine Size (cc)'),
+                sh8,
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        hintText: 'Min',
+                        keyboardType: TextInputType.number,
+                        onChange: (v) => controller.minEngineSize.value = v,
+                      ),
+                    ),
+                    sw16,
+                    Expanded(
+                      child: CustomTextField(
+                        hintText: 'Max',
+                        keyboardType: TextInputType.number,
+                        onChange: (v) => controller.maxEngineSize.value = v,
+                      ),
+                    ),
+                  ],
+                ),
+                sh16,
+
+                // Transmission
+                _buildSectionTitle('Transmission'),
+                sh8,
+                Obx(() => Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: controller.transmissions.map((t) {
+                        return _chip(
+                          label: t,
+                          selected: controller.selectedTransmission.value == t,
+                          onTap: () => controller.selectTransmission(t),
+                        );
+                      }).toList(),
+                    )),
                 sh16,
               ],
             ),
@@ -394,12 +234,79 @@ class FilterView extends GetView<FilterController> {
                 Get.to(() => MyFilterGarageView(data: filters));
               },
               textStyle: h4.copyWith(
-                color: AppColors.white,
-                fontWeight: FontWeight.bold,
-              ),
+                  color: AppColors.white, fontWeight: FontWeight.bold),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(title, style: h4.copyWith(fontWeight: FontWeight.bold));
+  }
+
+  Widget _buildDropdown({
+    required String hint,
+    required List<String> items,
+    required String selected,
+    required Function(String?)? onChanged,
+  }) {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        hintText: hint,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      ),
+      value: selected.isEmpty ? null : selected,
+      items: items
+          .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+          .toList(),
+      onChanged: onChanged,
+      dropdownColor: Colors.white,
+      icon: const Icon(Icons.keyboard_arrow_down),
+    );
+  }
+
+  Widget _chip(
+      {required String label,
+      required bool selected,
+      required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: selected ? AppColors.darkRed : AppColors.silver,
+        ),
+        child: Text(label,
+            style: h6.copyWith(color: selected ? Colors.white : Colors.black)),
+      ),
+    );
+  }
+
+  void _showCustomColorDialog(BuildContext context) {
+    final textController = TextEditingController();
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Enter Custom Colour'),
+        content: CustomTextField(
+          controller: textController,
+          hintText: 'e.g. Midnight Blue',
+        ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              final color = textController.text.trim();
+              if (color.isNotEmpty) controller.selectColor(color);
+              Get.back();
+            },
+            child: const Text('Add'),
+          ),
+        ],
       ),
     );
   }

@@ -27,7 +27,6 @@ class AddStoryScreen extends StatefulWidget {
 
 class _AddStoryScreenState extends State<AddStoryScreen> {
   final TextEditingController captionController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
 
   final CreateClubController createClubController =
       Get.put(CreateClubController());
@@ -36,8 +35,38 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
 
   final formKey = GlobalKey<FormState>();
   File? profileImage;
-  File? coverImage;
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
+
+  /// ইমেজ প্রিভিউ দেখানোর জন্য
+  void _showImagePreview(File image) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Stack(
+          children: [
+            Center(
+              child: InteractiveViewer(
+                child: Image.file(
+                  image,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 40,
+              right: 20,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +75,13 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.mainColor,
         scrolledUnderElevation: 0,
-        title: Text(
-          'Add Story',
-          style: appBarStyle,
-        ),
+        title: Text('Add Story', style: appBarStyle),
         centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.only(left: 16),
           child: CustomCircularContainer(
             imagePath: AppImages.back,
-            onTap: () {
-              Get.back();
-            },
+            onTap: () => Get.back(),
             padding: 4,
           ),
         ),
@@ -70,34 +94,29 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Caption',
-                  style: h5,
-                ),
+                Text('Caption', style: h5),
                 sh8,
                 CustomTextField(
-                  onChange: (String value) {},
                   controller: captionController,
                   hintText: 'Write here',
+                  maxLines: 3,
                 ),
                 sh16,
-                Text(
-                  'Profile Photo',
-                  style: h5,
-                ),
+                Text('Profile Photo', style: h5),
                 sh8,
                 UploadWidget(
                   onTap: () {
-                    _imagePickerHelper.showAlertDialog(context,
-                        (File pickedImage) {
-                      setState(() {
-                        profileImage = pickedImage;
-                      });
+                    _imagePickerHelper.showAlertDialog(context, (File picked) {
+                      setState(() => profileImage = picked);
                     });
                   },
                   imagePath: AppImages.upload,
                   imageFile: profileImage,
                   label: 'Upload',
+                  // ইমেজ থাকলে ট্যাপ করে প্রিভিউ দেখানো
+                  onImageTap: profileImage != null
+                      ? () => _showImagePreview(profileImage!)
+                      : null,
                 ),
                 sh100,
               ],
@@ -106,39 +125,34 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
         ),
       ),
       bottomSheet: Container(
-          color: AppColors.mainColor,
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            bottom: 20,
-          ),
-          child: Obx(
-            () => CustomButton(
+        color: AppColors.mainColor,
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+        child: Obx(() => CustomButton(
               isLoading: addStoryController.inProgress,
               text: 'Add Story',
-              onPressedAsync: () async {
-                await addStory();
-              },
-            ),
-          )),
+              onPressedAsync: () async => await _addStory(),
+            )),
+      ),
     );
   }
 
-  Future<void> addStory() async {
-    if (formKey.currentState!.validate()) {
-      final bool isSuccess = await addStoryController.addStory(
-          captionController.text, profileImage);
+  Future<void> _addStory() async {
+    if (!formKey.currentState!.validate()) return;
 
-      if (isSuccess) {
-        Get.to(() => DashboardView());
-      } else {
-        if (mounted) {
-          showSnackBarMessage(
-            context,
-            addStoryController.errorMessage ?? 'Failed to create club',
-            true,
-          );
-        }
+    final bool success = await addStoryController.addStory(
+      captionController.text.trim(),
+      profileImage,
+    );
+
+    if (success) {
+      Get.offAll(() => const DashboardView());
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+          context,
+          addStoryController.errorMessage ?? 'Failed to add story',
+          true,
+        );
       }
     }
   }
