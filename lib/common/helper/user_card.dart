@@ -29,7 +29,8 @@ class UserCard extends StatelessWidget {
     this.isOneButton,
     required this.rejectedButton,
     required this.addFriendButton,
-    this.image, this.addFriendName,
+    this.image,
+    this.addFriendName,
   });
 
   @override
@@ -63,31 +64,37 @@ class UserCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
               title,
               style: h1.copyWith(fontSize: 16),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.star,
-                  color: AppColors.darkRed,
-                ),
-                sw5,
-                Text(
-                  rating.toString(),
-                  style: h3,
-                ),
-              ],
-            ),
+            rating == ''
+                ? const SizedBox()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.star,
+                        color: AppColors.darkRed,
+                      ),
+                      sw5,
+                      Text(
+                        rating.toString(),
+                        style: h3,
+                      ),
+                    ],
+                  ),
             sh5,
-            Text(
-              description,
-              style: h6.copyWith(color: AppColors.grey),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            description == ''
+                ? const SizedBox()
+                : Text(
+                    description,
+                    style: h6.copyWith(color: AppColors.grey),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
             sh12,
             isOneButton == true
                 ? Container()

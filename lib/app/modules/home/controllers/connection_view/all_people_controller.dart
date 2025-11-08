@@ -1,13 +1,13 @@
 // ignore_for_file: avoid_print
-import 'package:dirve_society/app/modules/home/model/people_may_know_model.dart';
+import 'package:dirve_society/app/modules/home/model/all_profile_model.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/network_caller.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
-class PeopleMayKnowController extends GetxController {
-  final NetworkCaller networkCaller = Get.put(NetworkCaller()); 
+class AllPeoplesController extends GetxController {
+  final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
   bool get inProgress => _inProgress;
@@ -15,18 +15,13 @@ class PeopleMayKnowController extends GetxController {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  PeopleYouMayModel? _peopleYouMayModel;
-  List<PeopleYouMayItemModel>? get peopleYouMayList => _peopleYouMayModel?.data;
+  AllProfilesModel? _allProfilesModel;
+  List<AllProfileItemModel>? get allProfilesList => _allProfilesModel?.data;
 
   int? lastPage;
 
-  @override
-  void onInit() {
-    getPeopleMayKnow();
-    super.onInit();
-  }
 
-  Future<bool> getPeopleMayKnow() async {
+  Future<bool> getAllProfile(String? name) async {
     if (_inProgress) {
       return false;
     }
@@ -36,11 +31,9 @@ class PeopleMayKnowController extends GetxController {
     _inProgress = true;
     update();
 
-    Map<String, dynamic> queryParams = {
-      'limit': 99999,
-    };
+    Map<String, dynamic> queryParams = {'limit': 99999,};
     final NetworkResponse response = await networkCaller.getRequest(
-      Urls.peopleMayKnowUrl,
+      Urls.allPeopleUrl,
       queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
@@ -49,7 +42,7 @@ class PeopleMayKnowController extends GetxController {
       _errorMessage = null;
       isSuccess = true;
 
-      _peopleYouMayModel = PeopleYouMayModel.fromJson(response.responseData);
+      _allProfilesModel = AllProfilesModel.fromJson(response.responseData);
 
       _errorMessage = null;
     } else {

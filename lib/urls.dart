@@ -33,6 +33,7 @@ class Urls {
   static const String allStoryUrl = '$_baseUrl/stories';
   static const String clubDetailsUrl = '$_baseUrl/stories';
   static const String peopleMayKnowUrl = '$_baseUrl/profiles/discover-profile';
+  static const String allPeopleUrl = '$_baseUrl/profiles';
   static const String discoverClubUrl = '$_baseUrl/clubs/discover';
   static const String addConnectionRequestUrl = '$_baseUrl/connect-requests';
   static const String allMeetUrl = '$_baseUrl/meets';

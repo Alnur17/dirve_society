@@ -1,3 +1,4 @@
+import 'package:dirve_society/app/modules/home/views/all_people_screen.dart';
 import 'package:dirve_society/app/modules/home/views/connect_group_view.dart';
 import 'package:dirve_society/app/modules/home/views/connect_user_view.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
@@ -44,6 +45,9 @@ class _ConnectViewState extends State<ConnectView> {
             padding: 4,
           ),
         ),
+        actions: [IconButton(onPressed:() {
+          Get.to(AllPeopleScreen());
+        } , icon: const Icon(Icons.search, size: 26,))],
         title: const Text('Connect'),
         centerTitle: true,
       ),
