@@ -17,6 +17,7 @@ class UserCard extends StatelessWidget {
   final VoidCallback onUserDetails;
   final bool? isOneButton;
   final String? image;
+  final bool? isDisabled;
 
   const UserCard({
     super.key,
@@ -31,6 +32,7 @@ class UserCard extends StatelessWidget {
     required this.addFriendButton,
     this.image,
     this.addFriendName,
+    this.isDisabled,
   });
 
   @override
@@ -108,12 +110,22 @@ class UserCard extends StatelessWidget {
               height: 4,
             ),
             isOneButton == true
-                ? CustomButton(
-                    height: 28,
-                    text: addFriendName ?? 'Add Friend',
-                    onPressed: addFriendButton,
-                    backgroundColor: AppColors.darkRed,
-                  )
+                ? isDisabled == true
+                    ? Opacity(
+                        opacity: 0.5,
+                        child: CustomButton(
+                          height: 28,
+                          text: addFriendName ?? 'Add Friend',
+                          onPressed: () {},
+                          backgroundColor: AppColors.darkRed,
+                        ),
+                      )
+                    : CustomButton(
+                        height: 28,
+                        text: addFriendName ?? 'Add Friend',
+                        onPressed: addFriendButton,
+                        backgroundColor: AppColors.darkRed,
+                      )
                 : CustomButton(
                     height: 28,
                     text: 'Rejected',

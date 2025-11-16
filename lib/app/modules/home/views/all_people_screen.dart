@@ -1,6 +1,5 @@
 import 'package:dirve_society/app/modules/home/controllers/connection_view/add_connection_request_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/all_people_controller.dart';
-import 'package:dirve_society/app/modules/home/controllers/connection_view/people_may_know_controller.dart';
 import 'package:dirve_society/app/modules/profile/others/views/others_profile_screen.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/helper/user_card.dart';
@@ -162,24 +161,32 @@ class _AllPeopleScreenState extends State<AllPeopleScreen> {
                                 rating: '',
                                 description: filteredItems[index].bio ?? '',
                                 isAdded: true,
+                                isDisabled:
+                                    filteredItems[index].connectStatus ==
+                                        'pending',
                                 acceptButton: () {},
                                 addFriendName:
                                     filteredItems[index].connectStatus ==
-                                            'Pending'
+                                            'pending'
                                         ? 'Pending'
                                         : filteredItems[index].isConnect == true
                                             ? 'Details'
                                             : 'Add Friend',
                                 addFriendButton: () {
-                                  filteredItems[index].isConnect == false
-                                      ? addUserRequest(
+                                  filteredItems[index].connectStatus ==
+                                              'pending' ||
+                                          filteredItems[index].isConnect == true
+                                      ? Get.to(() => OthersProfileView(
+                                            authorId:
+                                                filteredItems[index].id ?? '',
+                                          ))
+                                      : addUserRequest(
                                           userId: StorageUtil.getData(
                                               StorageUtil.profileId),
                                           modelType: 'User',
                                           reference:
                                               filteredItems[index].id ?? '',
-                                        )
-                                      : () {};
+                                        );
                                 },
                                 rejectedButton: () {},
                                 onUserDetails: () {
