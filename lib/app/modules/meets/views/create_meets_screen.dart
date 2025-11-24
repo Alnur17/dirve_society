@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dirve_society/app/modules/club/controllers/create_club_controller.dart';
+import 'package:dirve_society/app/modules/meets/controllers/all_meet_controller.dart';
 import 'package:dirve_society/app/modules/meets/controllers/create_meet_controller.dart';
 import 'package:dirve_society/app/modules/meets/views/location_picker.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_club_controller.dart';
@@ -105,7 +106,7 @@ class _CreateMeetsViewState extends State<CreateMeetsView> {
                     onChange: (String value) {},
                   ),
                   sh16,
-                  Text('Date', style: h5), 
+                  Text('Date', style: h5),
                   sh8,
                   GestureDetector(
                     onTap: () async {
@@ -358,20 +359,11 @@ class _CreateMeetsViewState extends State<CreateMeetsView> {
 
       if (isSuccess) {
         if (mounted) {
+          final AllMeetsController allMeetsController =
+              Get.put(AllMeetsController());
+          await allMeetsController.getMeet();
           showSnackBarMessage(context, 'Club meet created successfully');
-          myClubController.getMyClub();
-          nameController.clear();
-          entryFeeController.clear();
-          descriptionController.clear();
-          locationController.clear();
-          privacy = 'public';
-          coverImage = null;
-          setState(() {
-            selectedDate = null;
-            selectedTime = null;
-            selectedLocation = null;
-          });
-          Get.back();
+          Navigator.pop(context);
         }
       } else {
         if (mounted) {
