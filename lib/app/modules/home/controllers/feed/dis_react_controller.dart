@@ -31,7 +31,7 @@ class DisReactPostController extends GetxController {
     );
 
     if (response.isSuccess) {
-      _errorMessage = null;
+      _errorMessage = null; 
       isSuccess = true;
       print('Dislike successful for postId: $postId');
     } else {
