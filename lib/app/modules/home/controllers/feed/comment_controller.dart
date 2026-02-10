@@ -10,7 +10,7 @@ class CommentController extends GetxController {
   bool get inProgress => _inProgress.value; // Updated getter to use .value
 
   String? _errorMessage;
-  String? get errorMessage => _errorMessage;
+  String? get errorMessage => _errorMessage; 
 
   CommentModel? commentModel;
   List<CommentItemModel>? get commentData => commentModel?.data;

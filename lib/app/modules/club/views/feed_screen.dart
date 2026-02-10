@@ -20,7 +20,7 @@ class FeedScreen extends StatefulWidget {
 
   @override
   State<FeedScreen> createState() => _FeedScreenState();
-} 
+}
 
 class _FeedScreenState extends State<FeedScreen> {
   final AllClubFeedController allClubFeedController =
@@ -69,9 +69,10 @@ class _FeedScreenState extends State<FeedScreen> {
         int currentLikes =
             allClubFeedController.postList[index].contentMeta?.like ?? 0;
         print('Current likes: $currentLikes');
+        
         allClubFeedController.updatePostLike(postId, true, currentLikes + 1);
         if (mounted) {
-         // showSnackBarMessage(context, 'Like successfully completed');
+          // showSnackBarMessage(context, 'Like successfully completed');
         }
       } else {
         print('Post not found for ID: $postId');

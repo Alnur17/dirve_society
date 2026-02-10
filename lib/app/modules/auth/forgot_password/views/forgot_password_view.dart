@@ -75,7 +75,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 ),
               ),
               sh8,
-              Form(
+              Form( 
                 key: _formKey,
                 child: CustomTextField(
                   hintTextStyle: const TextStyle(color: Colors.white),

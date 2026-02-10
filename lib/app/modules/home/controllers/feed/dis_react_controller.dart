@@ -11,7 +11,7 @@ class DisReactPostController extends GetxController {
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
-
+ 
   String? _otpToken;
   String? get otpToken => _otpToken;
 

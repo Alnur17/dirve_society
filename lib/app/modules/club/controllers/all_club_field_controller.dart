@@ -13,7 +13,7 @@ class AllClubFeedController extends GetxController {
   bool get inProgress => _inProgress;
 
   String? _errorMessage;
-  String? get errorMessage => _errorMessage;
+  String? get errorMessage => _errorMessage; 
 
   var postList = <AllFeedItemModel>[].obs;
   List<AllFeedItemModel> get allPostList => postList;
@@ -25,7 +25,7 @@ class AllClubFeedController extends GetxController {
   int page = 0;
 
   int? lastPage;
-
+ 
   @override
   void onInit() {
     super.onInit();
@@ -68,14 +68,14 @@ class AllClubFeedController extends GetxController {
     _inProgress = false;
     update();
     return isSuccess;
-  }
+  } 
 
   void updatePostLike(String postId, bool isLiked, int likeCount) {
     print(
         'Updating post like for postId: $postId, isLiked: $isLiked, likeCount: $likeCount');
     int index = postList.indexWhere((post) => post.contentMeta?.id == postId);
     if (index != -1) {
-      print('Post found at index: $index');
+      print('Post found at index: $index'); 
       final post = postList[index];
       postList[index] = AllFeedItemModel(
         hideBy: post.hideBy,

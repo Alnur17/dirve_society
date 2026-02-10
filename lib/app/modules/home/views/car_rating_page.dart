@@ -40,7 +40,7 @@ class _CarRatingPageState extends State<CarRatingPage> {
             style: TextStyle(color: AppColors.white),
           ),
         );
-      }
+      } 
       return CardSwiper(
         cardsCount: controller.carRatingList!.length,
         cardBuilder: (context, index, x, y) {
